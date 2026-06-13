@@ -227,22 +227,33 @@ photoViewer.addEventListener('click', (e) => {
 // 支付二维码预览 — 选择支付方式后立即显示
 // ═══════════════════════════════════════════
 
+var selectedPayment = 'wechat';
+
+window.selectPayment = function(pay) {
+  selectedPayment = pay;
+  // 切换选中样式
+  document.querySelectorAll('.payment-option').forEach(el => el.classList.remove('active'));
+  var target = event && event.currentTarget;
+  if (target) target.classList.add('active');
+  // 显示二维码
+  updatePaymentQR();
+};
+
 function updatePaymentQR() {
-  const payment = document.querySelector('input[name="payment"]:checked')?.value || 'wechat';
-  const qrDiv = $('#paymentQR');
-  if (payment === 'wechat' && CONFIG.wechatQR) {
-    qrDiv.innerHTML = `<img src="${CONFIG.wechatQR}" alt="微信收款码" style="max-width:200px;border-radius:8px;"><p style="margin-top:8px;font-size:13px;color:#666;">💚 微信扫码支付 ¥<span id="qrDeposit">20</span></p>`;
-  } else if (payment === 'alipay' && CONFIG.alipayQR) {
-    qrDiv.innerHTML = `<img src="${CONFIG.alipayQR}" alt="支付宝收款码" style="max-width:200px;border-radius:8px;"><p style="margin-top:8px;font-size:13px;color:#666;">💙 支付宝扫码支付 ¥<span id="qrDeposit">20</span></p>`;
-  } else {
-    qrDiv.innerHTML = `<p class="qr-hint">提交预约后显示支付二维码</p>`;
+  var payment = selectedPayment || 'wechat';
+  var qrDiv = $('#paymentQR');
+  try {
+    if (payment === 'wechat' && CONFIG.wechatQR) {
+      qrDiv.innerHTML = '<img src="' + CONFIG.wechatQR + '" alt="微信收款码" style="max-width:180px;border-radius:8px;"><p style="margin-top:8px;font-size:13px;color:#666;">💚 微信扫码支付 ¥20</p>';
+    } else if (payment === 'alipay' && CONFIG.alipayQR) {
+      qrDiv.innerHTML = '<img src="' + CONFIG.alipayQR + '" alt="支付宝收款码" style="max-width:180px;border-radius:8px;"><p style="margin-top:8px;font-size:13px;color:#666;">💙 支付宝扫码支付 ¥20</p>';
+    } else {
+      qrDiv.innerHTML = '<p class="qr-hint">👆 选择支付方式后显示收款码</p>';
+    }
+  } catch(e) {
+    qrDiv.innerHTML = '<p class="qr-hint">请提交预约后支付</p>';
   }
 }
-
-// 支付切换监听
-document.querySelectorAll('input[name="payment"]').forEach(el => {
-  el.addEventListener('change', updatePaymentQR);
-});
 
 // ═══════════════════════════════════════════
 // 预约表单
@@ -278,7 +289,7 @@ bookingForm.addEventListener('submit', (e) => {
   const style = document.querySelector('input[name="style"]:checked')?.value || '日系清新';
   const date = $('#bkDate').value;
   const note = $('#bkNote').value.trim();
-  const payment = document.querySelector('input[name="payment"]:checked')?.value || 'wechat';
+  const payment = selectedPayment || 'wechat';
   const total = count * CONFIG.pricePerPhoto;
 
   // 验证
@@ -345,4 +356,3 @@ window.resetBooking = function() {
 
 updatePricePreview();
 updatePaymentQR();
-
