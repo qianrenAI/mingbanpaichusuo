@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>明办拍出所 · 管理后台</title>
+  <title>明办拍出所 - 管理后台</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
     .admin-login {
@@ -34,18 +34,9 @@
       width: 200px;
       outline: none;
     }
-    .admin-login input:focus {
-      border-color: var(--accent);
-    }
-    .admin-login .btn {
-      margin-top: 16px;
-    }
-    .admin-login .error {
-      color: #ff6b6b;
-      font-size: 13px;
-      margin-top: 12px;
-      display: none;
-    }
+    .admin-login input:focus { border-color: var(--accent); }
+    .admin-login .btn { margin-top: 16px; }
+    .admin-login .error { color: #ff6b6b; font-size: 13px; margin-top: 12px; display: none; }
 
     .admin-panel { display: none; padding-bottom: 100px; }
     .admin-panel.active { display: block; }
@@ -63,10 +54,7 @@
       font-size: 18px;
       letter-spacing: 2px;
     }
-    .admin-header .admin-user {
-      color: rgba(255,255,255,0.5);
-      font-size: 12px;
-    }
+    .admin-header .admin-user { color: rgba(255,255,255,0.5); font-size: 12px; }
 
     .admin-stats {
       display: grid;
@@ -81,20 +69,10 @@
       text-align: center;
       box-shadow: var(--shadow);
     }
-    .stat-number {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--primary);
-    }
-    .stat-label {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
+    .stat-number { font-size: 28px; font-weight: 700; color: var(--primary); }
+    .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
 
-    .admin-section {
-      padding: 0 16px 20px;
-    }
+    .admin-section { padding: 0 16px 20px; }
     .admin-section h3 {
       font-family: var(--font-serif);
       font-size: 16px;
@@ -135,21 +113,10 @@
       margin-bottom: 12px;
       box-shadow: var(--shadow);
     }
-    .order-card .order-id {
-      font-size: 11px;
-      color: var(--text-muted);
-      font-family: monospace;
-    }
-    .order-card .order-info {
-      font-size: 14px;
-      margin: 8px 0;
-    }
+    .order-card .order-id { font-size: 11px; color: var(--text-muted); font-family: monospace; }
+    .order-card .order-info { font-size: 14px; margin: 8px 0; }
     .order-card .order-info strong { color: var(--primary); }
-    .order-card .order-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 8px;
-    }
+    .order-card .order-actions { display: flex; gap: 8px; margin-top: 8px; }
     .order-card .order-actions button {
       padding: 6px 16px;
       border-radius: 6px;
@@ -162,12 +129,7 @@
       color: #fff;
       border-color: #27ae60;
     }
-    .order-card .status-badge {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 10px;
-      font-size: 11px;
-    }
+    .status-badge { display: inline-block; padding: 2px 10px; border-radius: 10px; font-size: 11px; }
     .status-pending { background: #fff3cd; color: #856404; }
     .status-paid { background: #d4edda; color: #155724; }
     .status-completed { background: #cce5ff; color: #004085; }
@@ -197,21 +159,16 @@
       height: 100%;
       object-fit: cover;
     }
-    .photo-manage-item .delete-btn {
+    .photo-manage-item .photo-tag {
       position: absolute;
-      top: 4px;
-      right: 4px;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.5);
+      bottom: 4px;
+      left: 4px;
+      padding: 2px 8px;
+      font-size: 10px;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.6);
       color: #fff;
-      font-size: 12px;
-      display: none;
-      align-items: center;
-      justify-content: center;
     }
-    .photo-manage-item:hover .delete-btn { display: flex; }
 
     .admin-footer {
       text-align: center;
@@ -232,7 +189,7 @@
   </style>
 </head>
 <body>
-  <!-- 登录 -->
+  <!-- 登录页面 -->
   <div id="adminLogin" class="admin-login">
     <h2>明办拍出所</h2>
     <p style="color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:20px;">管理后台</p>
@@ -245,7 +202,7 @@
   <!-- 管理面板 -->
   <div id="adminPanel" class="admin-panel">
     <div class="admin-header">
-      <h1>📊 管理后台</h1>
+      <h1>管理后台</h1>
       <span class="admin-user">摄影师</span>
     </div>
 
@@ -263,55 +220,56 @@
         <div class="stat-label">已支付</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" id="statRevenue">¥0</div>
+        <div class="stat-number" id="statRevenue">0</div>
         <div class="stat-label">总收入</div>
       </div>
     </div>
 
     <div class="admin-section">
       <div class="admin-tabs" id="adminTabs">
-        <div class="admin-tab active" onclick="switchAdminTab('orders')">📋 订单</div>
-        <div class="admin-tab" onclick="switchAdminTab('photos')">🖼️ 作品</div>
-        <div class="admin-tab" onclick="switchAdminTab('settings')">⚙️ 设置</div>
+        <div class="admin-tab active" onclick="switchAdminTab('orders')">订单</div>
+        <div class="admin-tab" onclick="switchAdminTab('photos')">作品</div>
+        <div class="admin-tab" onclick="switchAdminTab('settings')">设置</div>
       </div>
 
       <!-- 订单管理 -->
       <div id="tabOrders" class="admin-tab-content">
-        <h3>📋 预约订单</h3>
+        <h3>预约订单</h3>
         <div id="orderList"></div>
       </div>
 
       <!-- 作品管理 -->
       <div id="tabPhotos" class="admin-tab-content" style="display:none;">
-        <h3>🖼️ 作品管理</h3>
-        <div style="margin-bottom:16px;">
-          <button class="btn btn-outline" style="font-size:12px;padding:8px 16px;" onclick="alert('请将照片放在桌面「颐和路001」文件夹并告诉虾兵')">
-            📤 上传新作品
-          </button>
+        <h3>作品管理</h3>
+        <div style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn btn-outline" style="font-size:12px;padding:8px 12px;" onclick="filterAdminPhotos('all')">全部</button>
+          <button class="btn btn-outline" style="font-size:12px;padding:8px 12px;" onclick="filterAdminPhotos('distant')">远景</button>
+          <button class="btn btn-outline" style="font-size:12px;padding:8px 12px;" onclick="filterAdminPhotos('close')">近景</button>
         </div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" id="photoCountAdmin"></p>
         <div id="photoManageGrid" class="photo-manage-grid"></div>
         <div class="admin-empty" id="photoEmpty">
           <div class="icon">📸</div>
-          <p>暂无作品照片</p>
-          <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">联系虾兵添加照片</p>
+          <p>暂无作品</p>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:4px;">请先运行照片处理脚本 process-photos.js</p>
         </div>
       </div>
 
       <!-- 设置 -->
       <div id="tabSettings" class="admin-tab-content" style="display:none;">
-        <h3>⚙️ 设置</h3>
+        <h3>设置</h3>
         <div class="service-item" style="margin-bottom:12px;">
           <div class="service-icon">💰</div>
           <div class="service-content">
             <h3>单价</h3>
-            <p>当前：¥20/张（含精修）</p>
+            <p>当前：20元/张（含精修）</p>
           </div>
         </div>
         <div class="service-item" style="margin-bottom:12px;">
           <div class="service-icon">💳</div>
           <div class="service-content">
             <h3>定金</h3>
-            <p>当前：¥20</p>
+            <p>当前：20元</p>
           </div>
         </div>
         <div class="service-item" style="margin-bottom:12px;">
@@ -324,42 +282,50 @@
         <div class="service-item" style="margin-bottom:12px;">
           <div class="service-icon">🌐</div>
           <div class="service-content">
-            <h3>网站链接</h3>
+            <h3>网站</h3>
             <p style="font-size:11px;">https://qianrenai.github.io/mingbanpaichusuo/</p>
           </div>
         </div>
-        <button class="btn btn-outline full-width" onclick="if(confirm('确认清除所有订单数据？')){localStorage.removeItem('yh_orders');renderOrders();}" style="margin-top:16px;">
-          🗑️ 清除订单数据
+        <div class="service-item" style="margin-bottom:12px;">
+          <div class="service-icon">🖼️</div>
+          <div class="service-content">
+            <h3>作品统计</h3>
+            <p id="adminPhotoStats" style="font-size:13px;">加载中...</p>
+          </div>
+        </div>
+        <button class="btn btn-outline full-width" onclick="if(confirm('确认清除所有订单数据？')){localStorage.removeItem('yh_orders');renderOrders();renderStats();}" style="margin-top:16px;">
+          清除订单数据
         </button>
       </div>
     </div>
 
     <div class="admin-footer">
-      <a href="/mingbanpaichusuo/">← 返回前台</a>
+      <a href="index.html">← 返回前台</a>
       <br><br>
       <button class="btn btn-ghost" onclick="adminLogout()" style="font-size:12px;">退出登录</button>
     </div>
   </div>
 
   <script>
-    // ═ ═ ═ 登录 ═ ═ ═
-    const ADMIN_PWD = '888888';
+    // ═══ 登录 ═══
+    var ADMIN_PWD = '888888';
+    var adminPhotoFilter = 'all';
 
     window.adminLogin = function() {
-      const pwd = document.getElementById('adminPwd').value;
+      var pwd = document.getElementById('adminPwd').value;
       if (pwd === ADMIN_PWD) {
         document.getElementById('adminLogin').style.display = 'none';
         document.getElementById('adminPanel').classList.add('active');
         renderOrders();
         renderStats();
         initPhotoManage();
+        updatePhotoStats();
       } else {
         document.getElementById('adminError').style.display = 'block';
       }
     };
 
-    // 回车登录
-    document.getElementById('adminPwd').addEventListener('keydown', (e) => {
+    document.getElementById('adminPwd').addEventListener('keydown', function(e) {
       if (e.key === 'Enter') adminLogin();
     });
 
@@ -370,53 +336,49 @@
       document.getElementById('adminError').style.display = 'none';
     };
 
-    // ═ ═ ═ Tab切换 ═ ═ ═
+    // ═══ Tab 切换 ═══
     window.switchAdminTab = function(tab) {
-      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.admin-tab-content').forEach(c => c.style.display = 'none');
+      document.querySelectorAll('.admin-tab').forEach(function(t) { t.classList.remove('active'); });
+      document.querySelectorAll('.admin-tab-content').forEach(function(c) { c.style.display = 'none'; });
       event.target.classList.add('active');
       document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).style.display = 'block';
     };
 
-    // ═ ═ ═ 订单管理 ═ ═ ═
+    // ═══ 订单管理 ═══
     function getOrders() {
       return JSON.parse(localStorage.getItem('yh_orders') || '[]');
     }
 
     function renderOrders() {
-      const orders = getOrders();
-      const list = document.getElementById('orderList');
+      var orders = getOrders();
+      var list = document.getElementById('orderList');
       if (orders.length === 0) {
         list.innerHTML = '<div class="admin-empty"><div class="icon">📋</div><p>暂无订单</p></div>';
         return;
       }
-      list.innerHTML = orders.map((o, i) => `
-        <div class="order-card">
-          <div class="order-id">#${o.id} · ${new Date(o.createdAt).toLocaleString('zh-CN')}</div>
-          <div class="order-info">
-            👤 ${o.name} · ${o.contact}<br>
-            📸 ${o.count}张 ${o.style} · <strong>¥${o.total}</strong><br>
-            📅 ${o.date} ${o.note !== '无' ? '· ' + o.note : ''}
-          </div>
-          <div>
-            <span class="status-badge ${o.status === 'paid' ? 'status-paid' : 'status-pending'}">
-              ${o.status === 'paid' ? '✅ 已支付' : '⏳ 待支付'}
-            </span>
-            <span style="font-size:12px;color:var(--text-muted);margin-left:8px;">
-              ${o.payment === 'wechat' ? '💚 微信' : '💙 支付宝'}
-            </span>
-          </div>
-          ${o.status !== 'paid' ? `
-          <div class="order-actions">
-            <button class="btn-paid" onclick="markPaid(${i})">标记已支付</button>
-            <button onclick="deleteOrder(${i})">删除</button>
-          </div>` : ''}
-        </div>
-      `).join('');
+      list.innerHTML = orders.map(function(o, i) {
+        return '<div class="order-card">' +
+          '<div class="order-id">#' + o.id + ' · ' + new Date(o.createdAt).toLocaleString('zh-CN') + '</div>' +
+          '<div class="order-info">' +
+            '👤 ' + o.name + ' · ' + o.contact + '<br>' +
+            '📸 ' + o.count + '张 ' + o.style + ' · <strong>¥' + o.total + '</strong><br>' +
+            '📅 ' + o.date + (o.note !== '无' ? ' · ' + o.note : '') +
+          '</div>' +
+          '<div>' +
+            '<span class="status-badge ' + (o.status === 'paid' ? 'status-paid' : 'status-pending') + '">' +
+              (o.status === 'paid' ? '✅ 已支付' : '⏳ 待支付') +
+            '</span>' +
+            '<span style="font-size:12px;color:var(--text-muted);margin-left:8px;">' +
+              (o.payment === 'wechat' ? '💚 微信' : '💙 支付宝') +
+            '</span>' +
+          '</div>' +
+          (o.status !== 'paid' ? '<div class="order-actions"><button class="btn-paid" onclick="markPaid(' + i + ')">标记已支付</button><button onclick="deleteOrder(' + i + ')">删除</button></div>' : '') +
+        '</div>';
+      }).join('');
     }
 
     window.markPaid = function(index) {
-      const orders = getOrders();
+      var orders = getOrders();
       orders[index].status = 'paid';
       localStorage.setItem('yh_orders', JSON.stringify(orders));
       renderOrders();
@@ -425,7 +387,7 @@
 
     window.deleteOrder = function(index) {
       if (!confirm('确认删除此订单？')) return;
-      const orders = getOrders();
+      var orders = getOrders();
       orders.splice(index, 1);
       localStorage.setItem('yh_orders', JSON.stringify(orders));
       renderOrders();
@@ -433,11 +395,11 @@
     };
 
     function renderStats() {
-      const orders = getOrders();
-      const total = orders.length;
-      const pending = orders.filter(o => o.status !== 'paid').length;
-      const paid = orders.filter(o => o.status === 'paid').length;
-      const revenue = orders.filter(o => o.status === 'paid').reduce((sum, o) => sum + (o.total || 0), 0);
+      var orders = getOrders();
+      var total = orders.length;
+      var pending = orders.filter(function(o) { return o.status !== 'paid'; }).length;
+      var paid = orders.filter(function(o) { return o.status === 'paid'; }).length;
+      var revenue = orders.filter(function(o) { return o.status === 'paid'; }).reduce(function(sum, o) { return sum + (o.total || 0); }, 0);
 
       document.getElementById('statOrders').textContent = total;
       document.getElementById('statPending').textContent = pending;
@@ -445,39 +407,74 @@
       document.getElementById('statRevenue').textContent = '¥' + revenue;
     }
 
-    // ═ ═ ═ 作品管理 ═ ═ ═
+    // ═══ 作品管理 ═══
+    function getCatLabel(c) {
+      var map = { distant: '远景', close: '近景' };
+      return map[c] || c;
+    }
+
+    window.filterAdminPhotos = function(cat) {
+      adminPhotoFilter = cat;
+      initPhotoManage();
+    };
+
     function initPhotoManage() {
-      const grid = document.getElementById('photoManageGrid');
-      const empty = document.getElementById('photoEmpty');
-      // 读取 PHOTOS 数组（从 main.js 的全局变量）
-      if (typeof PHOTOS !== 'undefined' && PHOTOS.length > 0) {
+      var grid = document.getElementById('photoManageGrid');
+      var empty = document.getElementById('photoEmpty');
+      var count = document.getElementById('photoCountAdmin');
+
+      if (typeof PHOTOS === 'undefined' || PHOTOS.length === 0) {
+        empty.style.display = 'block';
+        grid.innerHTML = '';
+        count.textContent = '';
+        return;
+      }
+
+      var list = PHOTOS;
+      if (adminPhotoFilter !== 'all') {
+        list = PHOTOS.filter(function(p) { return p.c === adminPhotoFilter; });
+      }
+
+      count.textContent = '共 ' + list.length + ' 张照片';
+
+      if (list.length === 0) {
+        empty.style.display = 'block';
+        grid.innerHTML = '';
+      } else {
         empty.style.display = 'none';
-        grid.innerHTML = PHOTOS.map(p => `
-          <div class="photo-manage-item">
-            <img src="${p.src}" alt="${p.title}" loading="lazy" onerror="this.parentElement.innerHTML='<div style=\\'width:100%;height:100%;background:hsl(${(p.id*60)%360},30%,60%);display:flex;align-items:center;justify-content:center;font-size:24px;color:rgba(255,255,255,0.7);\\'>📷</div>'">
-            <button class="delete-btn">✕</button>
-          </div>
-        `).join('');
+        grid.innerHTML = list.map(function(p) {
+          return '<div class="photo-manage-item">' +
+            '<img src="' + p.t + '" alt="' + p.title + '" loading="lazy" onerror="this.style.display=\'none\'">' +
+            '<span class="photo-tag">' + getCatLabel(p.c) + '</span>' +
+          '</div>';
+        }).join('');
       }
     }
 
-    // 密码修改功能
-    // 按顺序按出隐藏的密码设置: 点击"默认密码: 888888"文字
+    function updatePhotoStats() {
+      var el = document.getElementById('adminPhotoStats');
+      if (typeof PHOTOS !== 'undefined' && PHOTOS.length > 0) {
+        var counts = { distant: 0, close: 0 };
+        for (var i = 0; i < PHOTOS.length; i++) { counts[PHOTOS[i].c]++; }
+        el.textContent = '总计 ' + PHOTOS.length + ' 张 | 远景 ' + (counts.distant || 0) + ' | 近景 ' + (counts.close || 0);
+      } else {
+        el.textContent = '照片数据未加载';
+      }
+    }
+
+    // ═══ 密码修改 ═══
     document.querySelector('.admin-login p:last-child').addEventListener('dblclick', function() {
-      const newPwd = prompt('设置新密码（6位数字）:', ADMIN_PWD);
+      var newPwd = prompt('设置新密码（6位数字）:', ADMIN_PWD);
       if (newPwd && /^\d{6}$/.test(newPwd)) {
-        // 只能内存中修改，本地存储可持久化
         localStorage.setItem('admin_pwd', newPwd);
+        ADMIN_PWD = newPwd;
         alert('密码已修改！下次登录请使用新密码。');
       }
     });
 
-    // 从 localStorage 读取密码
-    const savedPwd = localStorage.getItem('admin_pwd');
-    if (savedPwd) {
-      // 替换默认密码
-      window.ADMIN_PWD = savedPwd;
-    }
+    // 从 localStorage 读取自定义密码
+    var savedPwd = localStorage.getItem('admin_pwd');
+    if (savedPwd) { ADMIN_PWD = savedPwd; }
   </script>
 </body>
 </html>

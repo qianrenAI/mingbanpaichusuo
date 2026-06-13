@@ -5,6 +5,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <meta name="theme-color" content="#1a1a2e">
+<meta name="description" content="南京颐和路街拍摄影 · 明办拍出所 · 用镜头记录梧桐树下的故事 · 日系/复古/胶片风格 · 单张¥20含精修">
+<meta name="keywords" content="南京街拍,颐和路,街拍摄影,明办拍出所,南京约拍,街拍写真">
+<meta property="og:title" content="明办拍出所 · 颐和路街拍摄影">
+<meta property="og:description" content="南京颐和路街拍 · 用镜头记录梧桐树下的故事">
+<meta property="og:type" content="website">
+<link rel="icon" href="logos/logo1-seal.svg" type="image/svg+xml">
 <title>明办拍出所 · 颐和路街拍摄影</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
@@ -52,9 +58,8 @@
 <div class="page-header"><h2>作品集</h2><p>颐和路的街头瞬间，每一帧都是故事</p></div>
 <div class="gallery-filter">
 <button class="filter-btn active" data-filter="all">全部</button>
-<button class="filter-btn" data-filter="portrait">人像</button>
-<button class="filter-btn" data-filter="street">街景</button>
-<button class="filter-btn" data-filter="vintage">复古</button>
+<button class="filter-btn" data-filter="distant">远景</button>
+<button class="filter-btn" data-filter="close">近景</button>
 </div>
 <div class="gallery-grid" id="galleryGrid"></div>
 </section>
@@ -133,7 +138,12 @@
 
 <footer id="footer" class="hidden">
 <div class="footer-inner">
-<p>&copy; 2026 明办拍出所 · All Rights Reserved</p>
+<div class="footer-brand"><img src="logos/logo1-seal.svg" class="footer-logo"><span>明办拍出所</span></div>
+<p class="footer-desc">南京 · 颐和路 · 用镜头记录梧桐树下的故事</p>
+<div class="footer-social">
+<a href="https://www.douyin.com/search/明办拍出所" target="_blank">🎵 抖音 @明办拍出所</a>
+</div>
+<p class="footer-copy">&copy; 2026 明办拍出所 · All Rights Reserved</p>
 </div>
 </footer>
 
@@ -143,6 +153,19 @@
 <a href="#pricing" class="tab-item" data-tab="pricing"><span class="tab-icon">💰</span><span class="tab-label">价格</span></a>
 <a href="#services" class="tab-item" data-tab="services"><span class="tab-icon">📋</span><span class="tab-label">服务</span></a>
 <a href="#booking" class="tab-item" data-tab="booking"><span class="tab-icon">📞</span><span class="tab-label">预约</span></a>
+</div>
+
+<!-- Toast 提示容器 -->
+<div id="toast-container"></div>
+
+<!-- 图片查看器 -->
+<div id="photoViewer">
+<button class="viewer-close" onclick="closeViewer()">✕</button>
+<span class="viewer-counter"></span>
+<button class="viewer-nav viewer-prev" onclick="viewerPrev(event)">‹</button>
+<img src="" alt="作品查看">
+<button class="viewer-nav viewer-next" onclick="viewerNext(event)">›</button>
+<div class="viewer-info"></div>
 </div>
 
 <script src="js/main.js"></script>
