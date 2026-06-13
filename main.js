@@ -1,0 +1,11 @@
+const C={pricePerPhoto:20,deposit:20,wechatQR:"images/wechat-qr.jpg",alipayQR:"images/alipay-qr.jpg"};
+var P=[{id:1,src:"images/placeholder-1.jpg"},{id:2,src:"images/placeholder-2.jpg"},{id:3,src:"images/placeholder-3.jpg"},{id:4,src:"images/placeholder-4.jpg"},{id:5,src:"images/placeholder-5.jpg"},{id:6,src:"images/placeholder-6.jpg"}];
+var Q=function(s){return document.querySelector(s);};
+var A=function(s){return document.querySelectorAll(s);};
+var _p="wechat";
+window.sp=function(el){_p=el.textContent.indexOf("微信")>=0?"wechat":"alipay";var a=A(".payment-option");for(var i=0;i<a.length;i++)a[i].classList.remove("active");el.classList.add("active");pq();};
+function pq(){var d=Q("#paymentQR");if(!d)return;if(_p==="wechat"&&C.wechatQR){d.innerHTML='<img src="'+C.wechatQR+'" style="max-width:180px;border-radius:8px;"><p>WeChat Pay 20</p>';}else if(_p==="alipay"&&C.alipayQR){d.innerHTML='<img src="'+C.alipayQR+'" style="max-width:180px;border-radius:8px;"><p>Alipay 20</p>';}}
+setTimeout(function(){Q("#splash").classList.add("fade-out");setTimeout(function(){Q("#splash").classList.add("hidden");Q("#navbar").classList.remove("hidden");Q("#footer").classList.remove("hidden");Q("#tabbar").classList.remove("hidden");gl();pq();},600);},300);
+function gl(){var g=Q("#galleryGrid");if(g){g.innerHTML="";for(var i=0;i<P.length;i++){var it=document.createElement("div");it.className="gallery-item";it.innerHTML='<div style="background:hsl('+((P[i].id*60)%360)+',30%,60%);height:200px;"></div>';g.appendChild(it);}}}
+Q("#navToggle").addEventListener("click",function(){this.classList.toggle("active");Q("#navMenu").classList.toggle("open");});
+Q("#bookingForm").addEventListener("submit",function(e){e.preventDefault();var n=Q("#bkName").value.trim();var c=Q("#bkContact").value.trim();if(!n||!c){alert("Fill required");return;}this.classList.add("hidden");Q("#bookingSuccess").classList.remove("hidden");var q=Q("#bookingSuccess").querySelector(".qr-box");if(_p==="wechat"&&C.wechatQR)q.innerHTML='<img src="'+C.wechatQR+'" style="width:100%;height:100%;object-fit:contain;">';else if(C.alipayQR)q.innerHTML='<img src="'+C.alipayQR+'" style="width:100%;height:100%;object-fit:contain;">';});
