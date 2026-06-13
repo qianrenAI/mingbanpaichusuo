@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="400" height="200">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&amp;family=Noto+Serif+SC:wght@700&amp;display=swap');
+    </style>
+  </defs>
+  <!-- 复古背景 -->
+  <rect x="0" y="0" width="400" height="200" rx="8" fill="#f5e6c8"/>
+  <!-- 顶部边框 -->
+  <rect x="0" y="0" width="400" height="200" rx="8" fill="none" stroke="#8B4513" stroke-width="3"/>
+  <rect x="6" y="6" width="388" height="188" rx="5" fill="none" stroke="#8B4513" stroke-width="0.5" opacity="0.4"/>
+  <!-- 装饰角 -->
+  <path d="M20,20 L40,20 L40,24 L24,24 L24,40 L20,40 Z" fill="#8B4513" opacity="0.3"/>
+  <path d="M380,20 L360,20 L360,24 L376,24 L376,40 L380,40 Z" fill="#8B4513" opacity="0.3"/>
+  <path d="M20,180 L40,180 L40,176 L24,176 L24,160 L20,160 Z" fill="#8B4513" opacity="0.3"/>
+  <path d="M380,180 L360,180 L360,176 L376,176 L376,160 L380,160 Z" fill="#8B4513" opacity="0.3"/>
+  <!-- 标题 -->
+  <text x="200" y="78" text-anchor="middle"
+        font-family="'Noto Serif SC', 'SimSun', 'STSong', serif"
+        font-size="48" font-weight="700" fill="#8B4513"
+        letter-spacing="8">明办拍出所</text>
+  <!-- 装饰线 -->
+  <line x1="60" y1="100" x2="155" y2="100" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
+  <circle cx="175" cy="100" r="3" fill="#8B4513" opacity="0.4"/>
+  <line x1="188" y1="100" x2="212" y2="100" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
+  <circle cx="225" cy="100" r="3" fill="#8B4513" opacity="0.4"/>
+  <line x1="245" y1="100" x2="340" y2="100" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
+  <!-- 副标题 -->
+  <text x="200" y="140" text-anchor="middle"
+        font-family="'ZCOOL KuaiLe', 'Microsoft YaHei', sans-serif"
+        font-size="22" fill="#a0522d" letter-spacing="4">
+    📸 颐和路 · 街拍摄影 📸
+  </text>
+  <!-- 底部小字 -->
+  <text x="200" y="175" text-anchor="middle"
+        font-family="Georgia, serif"
+        font-size="11" fill="#8B4513" opacity="0.5"
+        letter-spacing="3">YIHE ROAD · STREET PHOTOGRAPHY</text>
+</svg>
