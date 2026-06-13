@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a1a2e">
+  <title>明办拍出所 · 颐和路街拍摄�?/title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ══════════════�?加载动画 ══════════════�?-->
+  <div id="splash">
+    <div class="splash-logo">
+      <img src="logos/logo1-seal.svg" alt="明办拍出所" id="splashLogo">
+    </div>
+    <div class="splash-text">明办拍出所</div>
+    <div class="splash-loader"></div>
+  </div>
+
+  <!-- ══════════════�?导航�?══════════════�?-->
+  <nav id="navbar" class="hidden">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <img src="logos/logo1-seal.svg" alt="" class="nav-logo">
+        <span>明办拍出所</span>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="菜单">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-menu" id="navMenu">
+      <a href="#home" class="nav-link active" data-page="home">首页</a>
+      <a href="#gallery" class="nav-link" data-page="gallery">作品�?/a>
+      <a href="#pricing" class="nav-link" data-page="pricing">价格说明</a>
+      <a href="#services" class="nav-link" data-page="services">服务说明</a>
+      <a href="#booking" class="nav-link" data-page="booking">预约下单</a>
+    </div>
+  </nav>
+
+  <!-- ══════════════�?页面容器 ══════════════�?-->
+  <main id="app">
+
+    <!-- ──── 首页 ──── -->
+    <section class="page active" id="page-home">
+      <div class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+          <img src="logos/logo3-retro.svg" alt="明办拍出所" class="hero-logo">
+          <p class="hero-subtitle">南京 · 颐和�?· 街拍摄影</p>
+          <p class="hero-desc">用镜头记录梧桐树下的故事<br>每一张都带着颐和路的温度和光�?/p>
+          <div class="hero-actions">
+            <a href="#gallery" class="btn btn-primary" onclick="navigateTo('gallery')">浏览作品�?/a>
+            <a href="#booking" class="btn btn-outline" onclick="navigateTo('booking')">立即预约</a>
+          </div>
+          <div class="hero-douyin">
+            <span>📱 抖音</span>
+            <a href="https://www.douyin.com/search/明办拍出所" target="_blank" rel="noopener" class="douyin-link">@明办拍出所</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──── 作品�?──── -->
+    <section class="page" id="page-gallery">
+      <div class="page-header">
+        <h2>📷 作品�?/h2>
+        <p>颐和路的街头瞬间，每一帧都是故�?/p>
+      </div>
+      <div class="gallery-filter">
+        <button class="filter-btn active" data-filter="all">全部</button>
+        <button class="filter-btn" data-filter="portrait">人像</button>
+        <button class="filter-btn" data-filter="street">街景</button>
+        <button class="filter-btn" data-filter="vintage">复古</button>
+      </div>
+      <div class="gallery-grid" id="galleryGrid">
+        <!-- 照片�?JS 动态渲�?-->
+      </div>
+      <div class="gallery-empty" id="galleryEmpty">
+        <p>📸 作品集正在加载中�?/p>
+        <p class="hint">摄影师正在整理作品，稍后再来看看</p>
+      </div>
+    </section>
+
+    <!-- ──── 价格说明 ──── -->
+    <section class="page" id="page-pricing">
+      <div class="page-header">
+        <h2>💰 价格说明</h2>
+        <p>透明定价，无隐形消费</p>
+      </div>
+      <div class="pricing-cards">
+        <div class="price-card featured">
+          <div class="price-badge">推荐</div>
+          <div class="price-title">单张街拍</div>
+          <div class="price-amount">
+            <span class="price-symbol">¥</span>
+            <span class="price-number">20</span>
+            <span class="price-unit">/�?/span>
+          </div>
+          <ul class="price-features">
+            <li>�?含精修调�?/li>
+            <li>�?底片全�?/li>
+            <li>�?南京市内街头拍摄</li>
+            <li>�?拍摄时间灵活</li>
+          </ul>
+          <a href="#booking" class="btn btn-primary full-width" onclick="navigateTo('booking')">立即预约</a>
+        </div>
+      </div>
+      <div class="pricing-note">
+        <h4>📌 定金说明</h4>
+        <p>预约需支付定金 <strong>¥20</strong>，拍摄完成后付清尾款�?/p>
+        <p>如因天气等不可抗力需改期，定金可退可延�?/p>
+      </div>
+    </section>
+
+    <!-- ──── 服务说明 ──── -->
+    <section class="page" id="page-services">
+      <div class="page-header">
+        <h2>📋 服务说明</h2>
+        <p>关于街拍的一�?/p>
+      </div>
+      <div class="services-list">
+        <div class="service-item">
+          <div class="service-icon">📍</div>
+          <div class="service-content">
+            <h3>拍摄地点</h3>
+            <p>以南京市颐和路为主，梧桐树荫、民国建筑群、老街巷等天然影棚。其他区域可协商�?/p>
+          </div>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">⏱️</div>
+          <div class="service-content">
+            <h3>拍摄方式</h3>
+            <p>街边即时抓拍 / 跟边走边拍，自然不做作。单张起拍，拍到你满意为止�?/p>
+          </div>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">🎨</div>
+          <div class="service-content">
+            <h3>精修服务</h3>
+            <p>每张照片包含专业后期调色 + 精修，日�?复古/胶片/纪实风格任选�?/p>
+          </div>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">📱</div>
+          <div class="service-content">
+            <h3>交付方式</h3>
+            <p>电子版发微信/网盘，精修照�?48 小时内交付。所有底片（原片）免费赠送�?/p>
+          </div>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">💳</div>
+          <div class="service-content">
+            <h3>支付方式</h3>
+            <p>支持微信 / 支付宝。预约时支付定金 ¥20，拍摄完成付清尾款�?/p>
+          </div>
+        </div>
+        <div class="service-item">
+          <div class="service-icon">⚠️</div>
+          <div class="service-content">
+            <h3>注意事项</h3>
+            <p>如遇恶劣天气自动改期。肖像权归摄影师与顾客共有，如需商业使用请提前沟通�?/p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──── 预约下单 ──── -->
+    <section class="page" id="page-booking">
+      <div class="page-header">
+        <h2>📞 预约下单</h2>
+        <p>选择服务，锁定你的街拍时�?/p>
+      </div>
+      <form id="bookingForm" class="booking-form">
+        <div class="form-group">
+          <label>你的称呼 *</label>
+          <input type="text" id="bkName" placeholder="怎么称呼你？" required>
+        </div>
+        <div class="form-group">
+          <label>联系方式 *</label>
+          <input type="text" id="bkContact" placeholder="微信 / 手机�? required>
+        </div>
+        <div class="form-group">
+          <label>拍摄张数 *</label>
+          <div class="input-counter">
+            <button type="button" class="counter-btn" onclick="adjustCount(-1)">�?/button>
+            <input type="number" id="bkCount" value="1" min="1" max="100" readonly>
+            <button type="button" class="counter-btn" onclick="adjustCount(1)">+</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>拍摄风格</label>
+          <div class="style-chips">
+            <label class="chip">
+              <input type="radio" name="style" value="日系清新" checked>
+              <span>日系清新</span>
+            </label>
+            <label class="chip">
+              <input type="radio" name="style" value="复古胶片">
+              <span>复古胶片</span>
+            </label>
+            <label class="chip">
+              <input type="radio" name="style" value="黑白纪实">
+              <span>黑白纪实</span>
+            </label>
+            <label class="chip">
+              <input type="radio" name="style" value="自然街拍">
+              <span>自然街拍</span>
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>预约日期</label>
+          <input type="date" id="bkDate" min="">
+        </div>
+        <div class="form-group">
+          <label>备注</label>
+          <textarea id="bkNote" rows="3" placeholder="有什么特殊要求？"></textarea>
+        </div>
+
+        <!-- 价格预览 -->
+        <div class="price-preview">
+          <div class="price-row">
+            <span>拍摄 <span id="previewCount">1</span> �?/span>
+            <span>¥<span id="previewTotal">20</span></span>
+          </div>
+          <div class="price-row">
+            <span>定金</span>
+            <span class="price-highlight">¥20</span>
+          </div>
+          <div class="price-row total">
+            <span>尾款</span>
+            <span>¥<span id="previewBalance">0</span></span>
+          </div>
+        </div>
+
+        <!-- 支付方式 -->
+        <div class="payment-section">
+          <h4>选择支付方式</h4>
+          <div class="payment-options">
+            <div class="payment-option" onclick="selectPayment('wechat')">
+              <span class="payment-icon">💚</span>
+              <span>微信支付</span>
+            </div>
+            <div class="payment-option" onclick="selectPayment('alipay')">
+              <span class="payment-icon">💙</span>
+              <span>支付宝</span>
+            </div>
+          </div>
+
+          <!-- 支付二维码 -->
+          <div class="payment-qr" id="paymentQR">
+            <p class="qr-hint">👆 选择支付方式后显示收款码</p>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary full-width btn-large">
+          提交预约 · 定金 ¥20
+        </button>
+      </form>
+
+      <!-- 预约成功 -->
+      <div class="booking-success hidden" id="bookingSuccess">
+        <div class="success-icon">�?/div>
+        <h3>预约已提交！</h3>
+        <p>请扫描下方二维码支付定金 <strong>¥20</strong></p>
+        <p class="success-hint">支付完成后截图发给摄影师，即可确认档�?/p>
+        <div class="success-qr-placeholder">
+          <p>💚 微信支付</p>
+          <div class="qr-box" id="showWechatQR">扫码支付 ¥20</div>
+          <p class="qr-tip">摄影师将尽快联系你确认拍摄时�?/p>
+        </div>
+        <button class="btn btn-outline full-width" onclick="resetBooking()">继续预约</button>
+        <a href="#home" class="btn btn-ghost full-width" onclick="navigateTo('home')">返回首页</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════�?底部页脚 ══════════════�?-->
+  <footer id="footer" class="hidden">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="logos/logo1-seal.svg" alt="" class="footer-logo">
+        <span>明办拍出所</span>
+      </div>
+      <p class="footer-desc">南京 · 颐和�?· 街拍摄影</p>
+      <div class="footer-social">
+        <a href="https://www.douyin.com/search/明办拍出所" target="_blank" rel="noopener">📱 抖音 @明办拍出所</a>
+      </div>
+      <p class="footer-copy">© 2026 明办拍出所 · All Rights Reserved</p>
+    </div>
+  </footer>
+
+  <!-- ══════════════�?底部导航 Tab Bar ══════════════�?-->
+  <div id="tabbar" class="hidden">
+    <a href="#home" class="tab-item active" data-tab="home">
+      <span class="tab-icon">🏠</span>
+      <span class="tab-label">首页</span>
+    </a>
+    <a href="#gallery" class="tab-item" data-tab="gallery">
+      <span class="tab-icon">🖼�?/span>
+      <span class="tab-label">作品</span>
+    </a>
+    <a href="#pricing" class="tab-item" data-tab="pricing">
+      <span class="tab-icon">💰</span>
+      <span class="tab-label">价格</span>
+    </a>
+    <a href="#services" class="tab-item" data-tab="services">
+      <span class="tab-icon">📋</span>
+      <span class="tab-label">服务</span>
+    </a>
+    <a href="#booking" class="tab-item" data-tab="booking">
+      <span class="tab-icon">📞</span>
+      <span class="tab-label">预约</span>
+    </a>
+  </div>
+
+  <script src="js/main.js?v=202606140249"></script>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;700&amp;display=swap');
+    </style>
+  </defs>
+  <!-- 背景圆 -->
+  <circle cx="150" cy="150" r="140" fill="#1a1a2e"/>
+  <circle cx="150" cy="150" r="132" fill="none" stroke="#e8c87a" stroke-width="1" opacity="0.3"/>
+  <!-- 相机镜头图标 -->
+  <circle cx="150" cy="110" r="28" fill="none" stroke="#e8c87a" stroke-width="3"/>
+  <circle cx="150" cy="110" r="12" fill="#e8c87a"/>
+  <circle cx="150" cy="110" r="5" fill="#1a1a2e"/>
+  <!-- 镜头高光 -->
+  <circle cx="143" cy="103" r="4" fill="rgba(255,255,255,0.3)"/>
+  <!-- "明办拍出所" -->
+  <text x="150" y="175" text-anchor="middle"
+        font-family="'Noto Sans SC', 'Microsoft YaHei', sans-serif"
+        font-size="30" font-weight="700" fill="#e8c87a"
+        letter-spacing="3">明办拍出所</text>
+  <!-- 拼音 -->
+  <text x="150" y="200" text-anchor="middle"
+        font-family="'Noto Sans SC', 'Microsoft YaHei', sans-serif"
+        font-size="11" fill="rgba(232,200,122,0.6)"
+        letter-spacing="2">MINGBANPAICHUSUO</text>
+  <!-- 装饰线 -->
+  <line x1="80" y1="215" x2="220" y2="215" stroke="#e8c87a" stroke-width="0.5" opacity="0.4"/>
+  <!-- 副标题 -->
+  <text x="150" y="240" text-anchor="middle"
+        font-family="'Noto Sans SC', 'Microsoft YaHei', sans-serif"
+        font-size="13" fill="rgba(232,200,122,0.7)"
+        letter-spacing="4">颐和路 · 街拍摄影</text>
+</svg>
