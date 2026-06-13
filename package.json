@@ -1,5 +1,17 @@
 {
+  "name": "yihelu-photo",
+  "version": "1.0.0",
+  "description": "南京颐和路街拍预约小程序。",
+  "main": "build.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
   "dependencies": {
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.1"
   }
 }
