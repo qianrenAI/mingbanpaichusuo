@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>明办拍出所 · 名片</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+      background: #f0ebe2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      width: 480px;
+      background: #faf6ef;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .card-header {
+      background: linear-gradient(135deg, #1a1a2e, #2d1f3d);
+      padding: 32px 28px 24px;
+      text-align: center;
+    }
+    .card-header h1 {
+      color: #e8c87a;
+      font-family: 'Noto Serif SC', 'SimSun', serif;
+      font-size: 32px;
+      letter-spacing: 6px;
+      margin-bottom: 4px;
+    }
+    .card-header .sub {
+      color: rgba(232,200,122,0.6);
+      font-size: 13px;
+      letter-spacing: 4px;
+    }
+    .card-body {
+      padding: 28px;
+      display: flex;
+      gap: 24px;
+    }
+    .card-info {
+      flex: 1;
+    }
+    .card-info .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      font-size: 14px;
+      color: #2c2c2c;
+    }
+    .card-info .row:last-child { border-bottom: none; }
+    .card-info .row .icon { font-size: 18px; width: 24px; text-align: center; }
+    .card-info .price-tag {
+      display: inline-block;
+      background: #c41e3a;
+      color: #fff;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+    .qr-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    #qrcode {
+      background: #fff;
+      padding: 8px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    #qrcode img, #qrcode canvas { display: block !important; width: 140px !important; height: 140px !important; }
+    .qr-label {
+      font-size: 11px;
+      color: #9a8c7a;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .card-footer {
+      background: #1a1a2e;
+      padding: 14px 28px;
+      text-align: center;
+    }
+    .card-footer p {
+      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+      letter-spacing: 2px;
+    }
+    .print-btn {
+      display: block;
+      width: 200px;
+      margin: 24px auto 0;
+      padding: 12px;
+      background: #c41e3a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 2px;
+    }
+    .print-btn:hover { background: #a0182f; }
+    @media print {
+      body { background: #fff; padding: 0; }
+      .card { box-shadow: none; border: 1px solid #ddd; }
+      .print-btn { display: none; }
+    }
+    @media (max-width: 520px) {
+      .card { width: 100%; }
+      .card-body { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="card" id="card">
+      <div class="card-header">
+        <h1>明办拍出所</h1>
+        <div class="sub">颐和路 · 街拍摄影</div>
+      </div>
+      <div class="card-body">
+        <div class="card-info">
+          <div class="row">
+            <span class="icon">📸</span>
+            <span>南京 · 颐和路街拍</span>
+          </div>
+          <div class="row">
+            <span class="icon">💰</span>
+            <span>单张 ¥20（含精修）</span>
+          </div>
+          <div class="row">
+            <span class="icon">🎨</span>
+            <span>日系 / 复古 / 胶片</span>
+          </div>
+          <div class="row">
+            <span class="icon">🔗</span>
+            <span>抖音 @明办拍出所</span>
+          </div>
+          <div class="price-tag">📱 扫码预约 · 定金 ¥20</div>
+        </div>
+        <div class="qr-section">
+          <div id="qrcode"></div>
+          <div class="qr-label">扫一扫预约街拍</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <p>扫码浏览作品集 · 在线预约 · 锁定你的街拍时刻</p>
+      </div>
+    </div>
+    <button class="print-btn" onclick="window.print()">🖨️ 打印名片</button>
+  </div>
+
+  <script>
+    new QRCode(document.getElementById('qrcode'), {
+      text: 'https://mingbanpaichusuo-1443019207.cos-website.ap-nanjing.myqcloud.com',
+      width: 140,
+      height: 140,
+      colorDark: '#1a1a2e',
+      colorLight: '#ffffff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  </script>
+</body>
+</html>
