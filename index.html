@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>明办拍出所 - 颐和路街拍摄影</title>
+<meta name="theme-color" content="#1a1a2e">
+<title>明办拍出所 · 颐和路街拍摄影</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -19,6 +20,13 @@
   <div class="nav-inner">
     <div class="nav-brand"><img src="logos/logo1-seal.svg" class="nav-logo"><span>明办拍出所</span></div>
     <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+  </div>
+  <div class="nav-menu" id="navMenu">
+    <a href="#home" class="nav-link active" data-page="home">首页</a>
+    <a href="#gallery" class="nav-link" data-page="gallery">作品集</a>
+    <a href="#pricing" class="nav-link" data-page="pricing">价格说明</a>
+    <a href="#services" class="nav-link" data-page="services">服务说明</a>
+    <a href="#booking" class="nav-link" data-page="booking">预约下单</a>
   </div>
 </nav>
 
@@ -41,7 +49,7 @@
 </section>
 
 <section class="page" id="page-gallery">
-<div class="page-header"><h2>作品集</h2><p>颐和路的街头瞬间</p></div>
+<div class="page-header"><h2>作品集</h2><p>颐和路的街头瞬间，每一帧都是故事</p></div>
 <div class="gallery-filter">
 <button class="filter-btn active" data-filter="all">全部</button>
 <button class="filter-btn" data-filter="portrait">人像</button>
@@ -52,7 +60,7 @@
 </section>
 
 <section class="page" id="page-pricing">
-<div class="page-header"><h2>价格说明</h2><p>透明定价</p></div>
+<div class="page-header"><h2>价格说明</h2><p>透明定价，无隐形消费</p></div>
 <div class="pricing-cards">
 <div class="price-card featured">
 <div class="price-badge">推荐</div>
@@ -66,25 +74,40 @@
 </section>
 
 <section class="page" id="page-services">
-<div class="page-header"><h2>服务说明</h2></div>
+<div class="page-header"><h2>服务说明</h2><p>关于街拍的一切</p></div>
 <div class="services-list">
-<div class="service-item"><div class="service-icon">🎨</div><div class="service-content"><h3>精修服务</h3><p>每张包含专业后期调色</p></div></div>
+<div class="service-item"><div class="service-icon">📍</div><div class="service-content"><h3>拍摄地点</h3><p>以南京市颐和路为主</p></div></div>
+<div class="service-item"><div class="service-icon">🎨</div><div class="service-content"><h3>精修服务</h3><p>每张照片包含专业后期调色</p></div></div>
 <div class="service-item"><div class="service-icon">💳</div><div class="service-content"><h3>支付方式</h3><p>微信 / 支付宝</p></div></div>
 </div>
 </section>
 
 <section class="page" id="page-booking">
-<div class="page-header"><h2>预约下单</h2></div>
+<div class="page-header"><h2>预约下单</h2><p>选择服务，锁定你的街拍时间</p></div>
 <form id="bookingForm" class="booking-form">
-<div class="form-group"><label>称呼</label><input type="text" id="bkName" required></div>
-<div class="form-group"><label>联系方式</label><input type="text" id="bkContact" required></div>
+<div class="form-group"><label>称呼 *</label><input type="text" id="bkName" required></div>
+<div class="form-group"><label>联系方式 *</label><input type="text" id="bkContact" required></div>
+<div class="form-group"><label>拍摄张数</label>
+<div class="input-counter">
+<button type="button" class="counter-btn" onclick="adjustCount(-1)">-</button>
+<input type="number" id="bkCount" value="1" min="1" max="100" readonly>
+<button type="button" class="counter-btn" onclick="adjustCount(1)">+</button>
+</div></div>
 <div class="form-group"><label>拍摄风格</label>
 <div class="style-chips">
 <label class="chip"><input type="radio" name="style" value="日系清新" checked><span>日系清新</span></label>
 <label class="chip"><input type="radio" name="style" value="复古胶片"><span>复古胶片</span></label>
 <label class="chip"><input type="radio" name="style" value="自然街拍"><span>自然街拍</span></label>
+</div></div>
+<div class="form-group"><label>预约日期</label><input type="date" id="bkDate"></div>
+<div class="form-group"><label>备注</label><textarea id="bkNote" rows="3"></textarea></div>
+
+<div class="price-preview">
+<div class="price-row"><span>拍摄 <span id="previewCount">1</span> 张</span><span>¥<span id="previewTotal">20</span></span></div>
+<div class="price-row"><span>定金</span><span class="price-highlight">¥20</span></div>
+<div class="price-row total"><span>尾款</span><span>¥<span id="previewBalance">0</span></span></div>
 </div>
-</div>
+
 <div class="payment-section">
 <h4>选择支付方式</h4>
 <div class="payment-options">
@@ -93,11 +116,14 @@
 </div>
 <div class="payment-qr" id="paymentQR"><p>选择支付方式后显示收款码</p></div>
 </div>
-<button type="submit" class="btn btn-primary full-width btn-large">提交预约 · 定金 ¥20</button>
+
+<button type="submit" class="btn btn-primary full-width btn-large">提交预约</button>
 </form>
+
 <div class="booking-success hidden" id="bookingSuccess">
 <div class="success-icon">✅</div><h3>预约已提交</h3>
 <p>请扫码支付定金 <strong>¥20</strong></p>
+<p class="success-hint">支付后截图发给摄影师确认档期</p>
 <div class="success-qr-placeholder"><div class="qr-box"></div></div>
 <button class="btn btn-outline full-width" onclick="resetBooking()">继续预约</button>
 </div>
@@ -106,7 +132,9 @@
 </main>
 
 <footer id="footer" class="hidden">
-<div class="footer-inner"><p>&copy; 2026 明办拍出所</p></div>
+<div class="footer-inner">
+<p>&copy; 2026 明办拍出所 · All Rights Reserved</p>
+</div>
 </footer>
 
 <div id="tabbar" class="hidden">
