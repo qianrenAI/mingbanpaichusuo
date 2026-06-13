@@ -95,7 +95,7 @@ function toast(msg, type) {
 }
 
 // ═══════════════════ 图片查看器 ═══════════════════
-function openViewer(index) {
+window.openViewer = function(index) {
   var list = state.filteredPhotos;
   if (!list.length) return;
   state.viewerIndex = index;
@@ -110,16 +110,16 @@ function openViewer(index) {
   img.style.transition = 'opacity 0.3s';
   viewer.classList.add('open');
   document.body.style.overflow = 'hidden';
-}
+};
 
-function closeViewer() {
+window.closeViewer = function() {
   $('#photoViewer').classList.remove('open');
   document.body.style.overflow = '';
   state.viewerIndex = -1;
-}
+};
 
-function viewerPrev(e) { e.stopPropagation(); if (state.viewerIndex > 0) openViewer(state.viewerIndex - 1); }
-function viewerNext(e) { e.stopPropagation(); if (state.viewerIndex < state.filteredPhotos.length - 1) openViewer(state.viewerIndex + 1); }
+window.viewerPrev = function(e) { if (e) e.stopPropagation(); if (state.viewerIndex > 0) openViewer(state.viewerIndex - 1); };
+window.viewerNext = function(e) { if (e) e.stopPropagation(); if (state.viewerIndex < state.filteredPhotos.length - 1) openViewer(state.viewerIndex + 1); };
 
 // 键盘导航
 document.addEventListener('keydown', function(e) {
@@ -128,23 +128,6 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowLeft') { e.preventDefault(); viewerPrev(e); }
   if (e.key === 'ArrowRight') { e.preventDefault(); viewerNext(e); }
 });
-
-// 触摸滑动
-(function() {
-  var startX = 0, startY = 0;
-  $('#photoViewer').addEventListener('touchstart', function(e) {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-  });
-  $('#photoViewer').addEventListener('touchend', function(e) {
-    var dx = e.changedTouches[0].clientX - startX;
-    var dy = e.changedTouches[0].clientY - startY;
-    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-      if (dx > 0) viewerPrev(e);
-      else viewerNext(e);
-    }
-  });
-})();
 
 // ═══════════════════ 作品集渲染 ═══════════════════
 function getCatLabel(cat) {
@@ -334,11 +317,12 @@ window.resetBooking = function() {
 };
 
 // ═══════════════════ 页面导航 ═══════════════════
-var _pages = $$('.page');
-var _tabs = $$('.tab-item');
-var _links = $$('.nav-link');
+var _pages, _tabs, _links;
 
 window.navigateTo = function(p) {
+  _pages = _pages || $$('.page');
+  _tabs = _tabs || $$('.tab-item');
+  _links = _links || $$('.nav-link');
   // 切换页面
   for (var i = 0; i < _pages.length; i++) _pages[i].classList.remove('active');
   var target = $('#page-' + p);
@@ -363,78 +347,104 @@ window.navigateTo = function(p) {
   if (p === 'gallery') renderGallery();
 };
 
-function closeNav() {
+window.closeNav = function() {
   var toggle = $('#navToggle');
   var menu = $('#navMenu');
   if (toggle) toggle.classList.remove('active');
   if (menu) menu.classList.remove('open');
-}
-
-// ─── 事件绑定 ───
-
-// 汉堡菜单
-$('#navToggle').addEventListener('click', function() {
-  this.classList.toggle('active');
-  $('#navMenu').classList.toggle('open');
-});
-
-// 导航链接
-for (var i = 0; i < _links.length; i++) {
-  _links[i].addEventListener('click', function(e) {
-    e.preventDefault();
-    navigateTo(this.getAttribute('data-page'));
-  });
-}
-
-// Tab 切换
-for (var i = 0; i < _tabs.length; i++) {
-  _tabs[i].addEventListener('click', function(e) {
-    e.preventDefault();
-    navigateTo(this.getAttribute('data-tab'));
-  });
-}
-
-// 筛选按钮
-var _filters = $$('.filter-btn');
-for (var i = 0; i < _filters.length; i++) {
-  _filters[i].addEventListener('click', function() {
-    var filter = this.getAttribute('data-filter');
-    renderGallery(filter);
-  });
-}
-
-// 表单提交
-$('#bookingForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  submitBooking();
-});
-
-// 表单输入清除错误
-$('#bkName').addEventListener('input', function() { this.classList.remove('error'); });
-$('#bkContact').addEventListener('input', function() { this.classList.remove('error'); });
-
-// 查看器关闭
-$('#photoViewer').addEventListener('click', function(e) {
-  if (e.target === this) closeViewer();
-});
-
-// 导航栏滚动阴影
-window.addEventListener('scroll', function() {
-  var navbar = $('#navbar');
-  if (window.scrollY > 10) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
-});
+};
 
 // ═══════════════════ 启动 ═══════════════════
 window.addEventListener('DOMContentLoaded', function() {
-  // 设置日期最小值
+  // ─── 事件绑定 ───
+
+  // 汉堡菜单
+  var navToggle = $('#navToggle');
+  if (navToggle) {
+    navToggle.addEventListener('click', function() {
+      this.classList.toggle('active');
+      var menu = $('#navMenu');
+      if (menu) menu.classList.toggle('open');
+    });
+  }
+
+  // 导航链接
+  var links = $$('.nav-link');
+  for (var i = 0; i < links.length; i++) {
+    links[i].addEventListener('click', function(e) {
+      e.preventDefault();
+      navigateTo(this.getAttribute('data-page'));
+    });
+  }
+
+  // Tab 切换
+  var tabs = $$('.tab-item');
+  for (var t = 0; t < tabs.length; t++) {
+    tabs[t].addEventListener('click', function(e) {
+      e.preventDefault();
+      navigateTo(this.getAttribute('data-tab'));
+    });
+  }
+
+  // 筛选按钮
+  var filters = $$('.filter-btn');
+  for (var f = 0; f < filters.length; f++) {
+    filters[f].addEventListener('click', function() {
+      var filter = this.getAttribute('data-filter');
+      renderGallery(filter);
+    });
+  }
+
+  // 表单提交
+  var form = $('#bookingForm');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      submitBooking();
+    });
+  }
+
+  // 表单输入清除错误
+  var nameInput = $('#bkName');
+  if (nameInput) nameInput.addEventListener('input', function() { this.classList.remove('error'); });
+  var contactInput = $('#bkContact');
+  if (contactInput) contactInput.addEventListener('input', function() { this.classList.remove('error'); });
+
+  // 查看器背景点击关闭
+  var viewer = $('#photoViewer');
+  if (viewer) {
+    viewer.addEventListener('click', function(e) {
+      if (e.target === this) closeViewer();
+    });
+    // 触摸滑动
+    var startX = 0, startY = 0;
+    viewer.addEventListener('touchstart', function(e) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    }, {passive: true});
+    viewer.addEventListener('touchend', function(e) {
+      var dx = e.changedTouches[0].clientX - startX;
+      var dy = e.changedTouches[0].clientY - startY;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+        if (dx > 0) viewerPrev(e);
+        else viewerNext(e);
+      }
+    });
+  }
+
+  // 导航栏滚动阴影
+  window.addEventListener('scroll', function() {
+    var navbar = $('#navbar');
+    if (navbar) {
+      if (window.scrollY > 10) navbar.classList.add('scrolled');
+      else navbar.classList.remove('scrolled');
+    }
+  }, {passive: true});
+
+  // ─── 初始化 ───
   var di = $('#bkDate');
   if (di) di.setAttribute('min', new Date().toISOString().split('T')[0]);
 
-  // 初始化价格预览
   updatePricePreview();
 
   // 启动动画
@@ -443,9 +453,12 @@ window.addEventListener('DOMContentLoaded', function() {
     if (splash) splash.classList.add('fade-out');
     setTimeout(function() {
       if (splash) splash.classList.add('hidden');
-      $('#navbar').classList.remove('hidden');
-      $('#footer').classList.remove('hidden');
-      $('#tabbar').classList.remove('hidden');
+      var navbar = $('#navbar');
+      var footer = $('#footer');
+      var tabbar = $('#tabbar');
+      if (navbar) navbar.classList.remove('hidden');
+      if (footer) footer.classList.remove('hidden');
+      if (tabbar) tabbar.classList.remove('hidden');
       renderGallery();
       renderPaymentQR();
     }, 600);
