@@ -8,7 +8,8 @@ var CONFIG = {
   pricePerPhoto: 20,
   deposit: 20,
   wechatQR: 'images/wechat-qr-clean.png',
-  wechatLink: 'wxp://f2f0lzW7yM980EIQW5gU1b2-4QDBEWR2zjojaT4_uxpgoC0'
+  alipayQR: 'images/alipay-qr.jpg',
+  alipayLink: 'https://qr.alipay.com/fkx16352ttjqubrzxzhrjce'
 };
 
 // ─── 作品照片数据 ───
@@ -71,6 +72,7 @@ var PHOTOS = [
 // ─── 全局状态 ───
 var state = {
   currentFilter: 'all',
+  currentPayment: 'alipay',
   viewerIndex: -1,
   filteredPhotos: PHOTOS.slice()
 };
@@ -200,78 +202,40 @@ function renderGallery(filter) {
   }
 }
 
-// ═══════════════════ 微信支付 ═══════════════════
-
-// 打开微信支付
-window.openWechatPay = function() {
-  copyPageUrl();
-  toast('链接已复制，请在微信中打开', 'info');
+// ═══════════════════ 支付模块 ═══════════════════
+window.sp = function(el) {
+  state.currentPayment = el.id === 'payAlipay' ? 'alipay' : 'wechat';
+  $$('.payment-option').forEach(function(o) { o.classList.remove('active'); });
+  el.classList.add('active');
+  renderPayment();
 };
 
-// 复制当前页面链接
-function copyPageUrl() {
-  var url = window.location.href;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(url);
-  } else {
-    var ta = document.createElement('textarea');
-    ta.value = url;
-    ta.style.position = 'fixed'; ta.style.left = '-9999px';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-  }
-}
-
-// 复制金额
-window.copyAmount = function() {
-  var text = '¥' + CONFIG.deposit + ' 明办拍出所';
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(function() {
-      toast('已复制：' + text, 'success');
-    });
-  } else {
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed'; ta.style.left = '-9999px';
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    toast('已复制：' + text, 'success');
-  }
+window.openAlipay = function() {
+  window.location.href = CONFIG.alipayLink;
 };
 
-function renderWechatPayment() {
+function renderPayment() {
   var d = $('#paymentQR');
   if (!d) return;
   var amount = CONFIG.deposit;
 
-  if (isWeChat) {
-    // 微信浏览器内 — 长按识别最方便
+  if (state.currentPayment === 'alipay') {
     d.innerHTML =
-      '<div style="text-align:center;padding:8px 0;">' +
-        '<p style="font-size:14px;color:#333;margin-bottom:16px;"><strong>微信支付 ¥' + amount + '</strong></p>' +
-        '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;margin-bottom:12px;box-shadow:0 2px 16px rgba(0,0,0,0.08);">' +
-          '<img src="' + CONFIG.wechatQR + '" style="width:220px;height:220px;display:block;" alt="微信收款码">' +
-        '</div>' +
-        '<p style="font-size:15px;color:#07c160;font-weight:700;margin-bottom:4px;">👆 长按上方二维码</p>' +
-        '<p style="font-size:13px;color:#666;margin-bottom:12px;">选择「识别图中二维码」即可支付</p>' +
+      '<div style="text-align:center;padding:12px 0;">' +
+        '<p style="font-size:14px;color:#333;margin-bottom:12px;">支付 <strong>¥' + amount + '</strong> 定金</p>' +
+        '<button class="btn btn-primary full-width btn-large" onclick="openAlipay()" style="background:#1677ff;border-color:#1677ff;">' +
+          '📱 打开支付宝支付 ¥' + amount +
+        '</button>' +
+        '<p style="font-size:12px;color:#999;margin-top:8px;">自动唤起支付宝 App，无需扫码</p>' +
       '</div>';
   } else {
-    // 非微信浏览器 — 复制链接去微信
     d.innerHTML =
       '<div style="text-align:center;padding:8px 0;">' +
-        '<p style="font-size:14px;color:#333;margin-bottom:12px;"><strong>微信支付 ¥' + amount + '</strong></p>' +
+        '<p style="font-size:14px;color:#333;margin-bottom:12px;">支付 <strong>¥' + amount + '</strong> 定金</p>' +
         '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;margin-bottom:12px;box-shadow:0 2px 16px rgba(0,0,0,0.08);">' +
           '<img src="' + CONFIG.wechatQR + '" style="width:200px;height:200px;display:block;" alt="微信收款码">' +
         '</div>' +
-        '<p style="font-size:12px;color:#999;margin-bottom:12px;">截图后去微信扫一扫</p>' +
-        '<button class="btn btn-primary full-width" onclick="openWechatPay()" style="background:#07c160;border-color:#07c160;margin-bottom:8px;">' +
-          '📋 复制链接 · 在微信中打开' +
-        '</button>' +
-        '<p style="font-size:11px;color:#999;">在微信中打开 → 长按二维码 → 识别支付</p>' +
+        '<p style="font-size:12px;color:#999;">截图后去微信扫一扫</p>' +
       '</div>';
   }
 }
@@ -348,27 +312,23 @@ function submitBooking() {
   form.classList.add('hidden');
   $('#paymentStep').classList.remove('hidden');
 
-  // 渲染支付二维码到支付步骤
+  // 渲染支付方式到支付步骤
   var body = $('#paymentStepBody');
-  if (isWeChat) {
-    body.innerHTML =
-      '<div style="text-align:center;padding:8px;">' +
-        '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;margin-bottom:12px;box-shadow:0 2px 16px rgba(0,0,0,0.08);">' +
-          '<img src="' + CONFIG.wechatQR + '" style="width:220px;height:220px;display:block;" alt="微信收款码">' +
-        '</div>' +
-        '<p style="font-size:15px;color:#07c160;font-weight:700;margin-bottom:8px;">👆 长按二维码 → 识别图中二维码</p>' +
-        '<p style="font-size:13px;color:#666;">支付 ¥' + CONFIG.deposit + ' 后点击下方「我已完成支付」</p>' +
-      '</div>';
-  } else {
-    body.innerHTML =
-      '<div style="text-align:center;padding:8px;">' +
-        '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;margin-bottom:12px;box-shadow:0 2px 16px rgba(0,0,0,0.08);">' +
-          '<img src="' + CONFIG.wechatQR + '" style="width:200px;height:200px;display:block;" alt="微信收款码">' +
-        '</div>' +
-        '<p style="font-size:13px;color:#666;margin-bottom:12px;">截图后去微信扫一扫支付 ¥' + CONFIG.deposit + '</p>' +
-        '<p style="font-size:12px;color:#999;">支付完成后返回本页点击下方按钮</p>' +
-      '</div>';
-  }
+  body.innerHTML =
+    '<div style="text-align:center;padding:8px;">' +
+      '<p style="font-size:15px;color:#333;margin-bottom:16px;">请支付定金 <strong>¥' + CONFIG.deposit + '</strong></p>' +
+      // 支付宝一键支付
+      '<button class="btn btn-primary full-width btn-large" onclick="openAlipay()" style="background:#1677ff;border-color:#1677ff;margin-bottom:8px;">' +
+        '📱 支付宝一键支付 ¥' + CONFIG.deposit +
+      '</button>' +
+      '<p style="font-size:11px;color:#999;margin-bottom:16px;">自动唤起支付宝 App</p>' +
+      // 微信备选
+      '<p style="font-size:13px;color:#999;margin-bottom:8px;">或用微信支付</p>' +
+      '<div style="background:#fff;border-radius:12px;padding:8px;display:inline-block;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06);">' +
+        '<img src="' + CONFIG.wechatQR + '" style="width:160px;height:160px;display:block;" alt="微信收款码">' +
+      '</div>' +
+      '<p style="font-size:11px;color:#999;">截图去微信扫一扫</p>' +
+    '</div>';
 
   toast('请支付定金 ¥' + CONFIG.deposit, 'info');
   window.scrollTo(0, 0);
@@ -421,7 +381,7 @@ window.resetBooking = function() {
   $('#bkName').classList.remove('error');
   $('#bkContact').classList.remove('error');
   updatePricePreview();
-  renderWechatPayment();
+  renderPayment();
   _pendingOrder = null;
   toast('可以继续预约了', 'info');
 };
@@ -570,7 +530,7 @@ window.addEventListener('DOMContentLoaded', function() {
       if (footer) footer.classList.remove('hidden');
       if (tabbar) tabbar.classList.remove('hidden');
       renderGallery();
-      renderWechatPayment();
+      renderPayment();
     }, 600);
   }, 400);
 });

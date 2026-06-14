@@ -114,10 +114,12 @@
 </div>
 
 <div class="payment-section">
-<h4>支付定金</h4>
-<div class="payment-wechat-only" id="paymentQR">
-<p>选择支付方式后显示收款码</p>
+<h4>支付定金 — 选择方式</h4>
+<div class="payment-options">
+<div class="payment-option active" onclick="sp(this)" id="payAlipay"><span class="payment-icon">💙</span><span>支付宝（推荐·一键支付）</span></div>
+<div class="payment-option" onclick="sp(this)" id="payWechat"><span class="payment-icon">💚</span><span>微信支付</span></div>
 </div>
+<div id="paymentQR"><p>选择支付方式后显示</p></div>
 </div>
 
 <button type="submit" class="btn btn-primary full-width btn-large">提交预约</button>
