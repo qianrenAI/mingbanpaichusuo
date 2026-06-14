@@ -118,21 +118,27 @@
 
 <!-- 支付步骤 -->
 <div class="payment-step hidden" id="paymentStep">
-<div class="page-header"><h2>支付定金</h2><p>支付 ¥20 确认预约</p></div>
+<div class="page-header"><h2>支付定金 ¥20</h2><p>截图保存收款码 → 打开支付宝或微信扫一扫</p></div>
 <div style="padding:0 16px 24px;max-width:400px;margin:0 auto;">
-  <button class="btn btn-primary full-width btn-large" onclick="openAlipay()" style="background:#1677ff;border-color:#1677ff;margin-bottom:12px;">
-    📱 支付宝一键支付 ¥20
-  </button>
-  <p style="text-align:center;font-size:12px;color:#999;margin-bottom:24px;">自动唤起支付宝 App，无需扫码</p>
-  <p style="text-align:center;font-size:13px;color:#999;margin-bottom:12px;">—— 或用微信支付 ——</p>
-  <div style="text-align:center;margin-bottom:16px;">
-    <div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-      <img src="images/wechat-qr-clean.png" style="width:180px;height:180px;display:block;" alt="微信收款码">
+  <!-- 收款码放大 -->
+  <div style="display:flex;gap:12px;justify-content:center;margin-bottom:20px;">
+    <div style="text-align:center;flex:1;">
+      <div style="background:#fff;border-radius:16px;padding:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+        <img src="images/alipay-qr.jpg" style="width:100%;display:block;border-radius:8px;" alt="支付宝收款码">
+      </div>
+      <p style="font-size:13px;color:#1677ff;font-weight:700;margin-top:6px;">💙 支付宝</p>
     </div>
-    <p style="font-size:12px;color:#999;margin-top:8px;">截图去微信扫一扫</p>
+    <div style="text-align:center;flex:1;">
+      <div style="background:#fff;border-radius:16px;padding:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+        <img src="images/wechat-qr-clean.png" style="width:100%;display:block;border-radius:8px;" alt="微信收款码">
+      </div>
+      <p style="font-size:13px;color:#07c160;font-weight:700;margin-top:6px;">💚 微信</p>
+    </div>
   </div>
+  <p style="text-align:center;font-size:14px;color:#333;margin-bottom:8px;"><strong>📸 截图 → 打开支付 App 扫相册</strong></p>
+  <p style="text-align:center;font-size:12px;color:#999;margin-bottom:20px;">付款后点下方按钮，摄影师将核实到账</p>
   <button class="btn btn-primary full-width btn-large" onclick="confirmPayment()" style="background:#07c160;border-color:#07c160;">
-    ✅ 我已完成支付
+    ✅ 我已完成支付 ¥20
   </button>
   <button class="btn btn-ghost full-width" onclick="backToForm()" style="font-size:13px;margin-top:8px;">← 返回修改</button>
 </div>
@@ -140,11 +146,11 @@
 
 <!-- 预约成功 -->
 <div class="booking-success hidden" id="bookingSuccess">
-<div class="success-icon">✅</div>
-<h3>预约成功</h3>
-<p>定金已支付 <strong>¥20</strong></p>
+<div class="success-icon">📸</div>
+<h3>预约已提交</h3>
+<p>请支付定金 <strong>¥20</strong></p>
 <p id="bkResultInfo" style="font-size:13px;color:var(--text-light);margin-top:8px;"></p>
-<p class="success-hint">摄影师将尽快与你联系确认档期</p>
+<p class="success-hint" style="color:#e67e22;">⚠️ 摄影师核实到账后确认预约，请留意联系</p>
 <button class="btn btn-outline full-width" onclick="resetBooking()">继续预约</button>
 </div>
 </section>
