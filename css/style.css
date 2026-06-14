@@ -389,6 +389,10 @@ ul { list-style: none; }
   border-radius: var(--radius); border: 1px dashed rgba(0,0,0,0.1);
 }
 
+/* 支付步骤 */
+.payment-step { padding: 0 16px 24px; animation: fadeIn 0.35s ease; }
+.payment-step-body { max-width: 400px; margin: 0 auto; }
+
 /* 预约成功 */
 .booking-success { text-align: center; padding: 40px 20px; animation: fadeIn 0.4s ease; }
 .success-icon { font-size: 56px; margin-bottom: 16px; }

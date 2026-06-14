@@ -123,11 +123,21 @@
 <button type="submit" class="btn btn-primary full-width btn-large">提交预约</button>
 </form>
 
+<!-- 支付步骤 -->
+<div class="payment-step hidden" id="paymentStep">
+<div class="page-header"><h2>支付定金</h2><p>支付完成后点击下方按钮确认</p></div>
+<div class="payment-step-body" id="paymentStepBody"></div>
+<button class="btn btn-primary full-width btn-large" onclick="confirmPayment()" style="background:#07c160;border-color:#07c160;margin-top:16px;">✅ 我已完成支付 ¥20</button>
+<button class="btn btn-ghost full-width" onclick="backToForm()" style="font-size:13px;margin-top:8px;">← 返回修改</button>
+</div>
+
+<!-- 预约成功 -->
 <div class="booking-success hidden" id="bookingSuccess">
-<div class="success-icon">✅</div><h3>预约已提交</h3>
-<p>请扫码支付定金 <strong>¥20</strong></p>
-<p class="success-hint">支付后截图发给摄影师确认档期</p>
-<div class="success-qr-placeholder"><div class="qr-box"></div></div>
+<div class="success-icon">✅</div>
+<h3>预约成功</h3>
+<p>定金已支付 <strong>¥20</strong></p>
+<p id="bkResultInfo" style="font-size:13px;color:var(--text-light);margin-top:8px;"></p>
+<p class="success-hint">摄影师将尽快与你联系确认档期</p>
 <button class="btn btn-outline full-width" onclick="resetBooking()">继续预约</button>
 </div>
 </section>

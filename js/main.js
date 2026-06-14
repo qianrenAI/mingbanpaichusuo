@@ -300,6 +300,8 @@ function updatePricePreview() {
 }
 
 // ═══════════════════ 预约提交 ═══════════════════
+var _pendingOrder = null;
+
 function submitBooking() {
   var form = $('#bookingForm');
   if (!form) return false;
@@ -310,7 +312,6 @@ function submitBooking() {
   var style = (document.querySelector('input[name="style"]:checked') || {}).value || '日系清新';
   var date = $('#bkDate').value || '未指定';
   var note = ($('#bkNote').value || '').trim() || '无';
-  var payment = 'wechat';
 
   // 校验
   if (!name || !contact) {
@@ -341,42 +342,87 @@ function submitBooking() {
   orders.push(order);
   localStorage.setItem('yh_orders', JSON.stringify(orders));
 
-  // 显示成功页
-  form.classList.add('hidden');
-  var success = $('#bookingSuccess');
-  success.classList.remove('hidden');
+  _pendingOrder = order;
 
-  // 渲染支付二维码
-  var qrBox = success.querySelector('.qr-box');
+  // 隐藏表单，显示支付步骤
+  form.classList.add('hidden');
+  $('#paymentStep').classList.remove('hidden');
+
+  // 渲染支付二维码到支付步骤
+  var body = $('#paymentStepBody');
   if (isWeChat) {
-    qrBox.innerHTML = '<div style="text-align:center;padding:8px;">' +
-      '<img src="' + CONFIG.wechatQR + '" style="width:200px;height:200px;border-radius:12px;display:block;margin:0 auto 12px;" alt="微信收款码">' +
-      '<p style="font-size:15px;color:#07c160;font-weight:700;">👆 长按二维码 → 识别图中二维码</p>' +
-    '</div>';
+    body.innerHTML =
+      '<div style="text-align:center;padding:8px;">' +
+        '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;margin-bottom:12px;box-shadow:0 2px 16px rgba(0,0,0,0.08);">' +
+          '<img src="' + CONFIG.wechatQR + '" style="width:220px;height:220px;display:block;" alt="微信收款码">' +
+        '</div>' +
+        '<p style="font-size:15px;color:#07c160;font-weight:700;margin-bottom:8px;">👆 长按二维码 → 识别图中二维码</p>' +
+        '<p style="font-size:13px;color:#666;">支付 ¥' + CONFIG.deposit + ' 后点击下方「我已完成支付」</p>' +
+      '</div>';
   } else {
-    qrBox.innerHTML = '<div style="text-align:center;padding:8px;">' +
-      '<img src="' + CONFIG.wechatQR + '" style="width:200px;height:200px;border-radius:12px;display:block;margin:0 auto 12px;" alt="微信收款码">' +
-      '<p style="font-size:12px;color:#999;margin-bottom:8px;">截图后去微信扫一扫</p>' +
-      '<button class="btn btn-primary full-width" onclick="openWechatPay()" style="background:#07c160;border-color:#07c160;">📋 复制链接 · 在微信中打开</button>' +
-    '</div>';
+    body.innerHTML =
+      '<div style="text-align:center;padding:8px;">' +
+        '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;margin-bottom:12px;box-shadow:0 2px 16px rgba(0,0,0,0.08);">' +
+          '<img src="' + CONFIG.wechatQR + '" style="width:200px;height:200px;display:block;" alt="微信收款码">' +
+        '</div>' +
+        '<p style="font-size:13px;color:#666;margin-bottom:12px;">截图后去微信扫一扫支付 ¥' + CONFIG.deposit + '</p>' +
+        '<p style="font-size:12px;color:#999;">支付完成后返回本页点击下方按钮</p>' +
+      '</div>';
   }
 
-  toast('预约已提交 · ' + order.id, 'success');
+  toast('请支付定金 ¥' + CONFIG.deposit, 'info');
   window.scrollTo(0, 0);
   return true;
 }
+
+// 确认支付 → 显示成功
+window.confirmPayment = function() {
+  if (!_pendingOrder) return;
+
+  // 更新订单状态
+  var orders = JSON.parse(localStorage.getItem('yh_orders') || '[]');
+  for (var i = orders.length - 1; i >= 0; i--) {
+    if (orders[i].id === _pendingOrder.id) {
+      orders[i].status = 'paid';
+      break;
+    }
+  }
+  localStorage.setItem('yh_orders', JSON.stringify(orders));
+
+  // 更新内存中的订单
+  _pendingOrder.status = 'paid';
+
+  // 隐藏支付步骤，显示成功
+  $('#paymentStep').classList.add('hidden');
+  var success = $('#bookingSuccess');
+  success.classList.remove('hidden');
+
+  // 显示订单信息
+  $('#bkResultInfo').textContent = '订单号 ' + _pendingOrder.id + ' · ' + _pendingOrder.count + '张 ' + _pendingOrder.style;
+
+  toast('预约成功！', 'success');
+  window.scrollTo(0, 0);
+};
+
+// 返回表单
+window.backToForm = function() {
+  $('#paymentStep').classList.add('hidden');
+  $('#bookingForm').classList.remove('hidden');
+  window.scrollTo(0, 0);
+};
 
 window.resetBooking = function() {
   var form = $('#bookingForm');
   form.reset();
   form.classList.remove('hidden');
+  $('#paymentStep').classList.add('hidden');
   $('#bookingSuccess').classList.add('hidden');
   if ($('#bkCount')) $('#bkCount').value = 1;
-  // 清除错误状态
   $('#bkName').classList.remove('error');
   $('#bkContact').classList.remove('error');
   updatePricePreview();
   renderWechatPayment();
+  _pendingOrder = null;
   toast('可以继续预约了', 'info');
 };
 
