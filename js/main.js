@@ -217,7 +217,7 @@ function updatePricePreview() {
 
 // ═══════════════════ 支付 ═══════════════════
 window.openAlipay = function() {
-  window.open(CONFIG.alipayLink, '_blank');
+  window.location.href = CONFIG.alipayLink;
 };
 
 // ═══════════════════ 预约提交 ═══════════════════
