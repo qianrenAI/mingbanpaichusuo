@@ -8,8 +8,11 @@ var CONFIG = {
   pricePerPhoto: 20,
   deposit: 20,
   wechatQR: 'images/wechat-qr.jpg',
-  alipayQR: 'images/alipay-qr.jpg'
+  alipayQR: 'images/alipay-qr.jpg',
+  alipayLink: 'https://qr.alipay.com/fkx16352ttjqubrzxzhrjce',
+  wechatLink: 'wxp://f2f0lzW7yM980EIQW5gU1b2-4QDBEWR2zjojaT4_uxpgoC0'
 };
+var isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 // ─── 作品照片数据 ───
 var PHOTOS = [
@@ -209,13 +212,89 @@ window.sp = function(el) {
   renderPaymentQR();
 };
 
+// 直接打开支付宝
+window.openAlipay = function() {
+  var amount = CONFIG.deposit;
+  // 尝试支付宝 App 深度链接
+  var alipayDeepLink = 'alipays://platformapi/startapp?appId=20000067&url=' + encodeURIComponent(CONFIG.alipayLink);
+  window.location.href = alipayDeepLink;
+  // 如果 2 秒后还在页面上说明没装 App，跳转网页版
+  setTimeout(function() {
+    if (!document.hidden) {
+      window.open(CONFIG.alipayLink, '_blank');
+    }
+  }, 2000);
+};
+
+// 复制支付信息
+window.copyAmount = function() {
+  var amount = CONFIG.deposit;
+  var text = '¥' + amount + ' 明办拍出所 定金';
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() {
+      toast('已复制：' + text, 'success');
+    });
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    toast('已复制：' + text, 'success');
+  }
+};
+
 function renderPaymentQR() {
   var d = $('#paymentQR');
   if (!d) return;
-  if (state.currentPayment === 'wechat' && CONFIG.wechatQR) {
-    d.innerHTML = '<img src="' + CONFIG.wechatQR + '" style="max-width:180px;border-radius:8px;" alt="微信收款码"><p style="margin:8px 0 0;font-size:13px;color:#666;">微信扫码支付 ¥' + CONFIG.deposit + '</p>';
-  } else if (state.currentPayment === 'alipay' && CONFIG.alipayQR) {
-    d.innerHTML = '<img src="' + CONFIG.alipayQR + '" style="max-width:180px;border-radius:8px;" alt="支付宝收款码"><p style="margin:8px 0 0;font-size:13px;color:#666;">支付宝扫码支付 ¥' + CONFIG.deposit + '</p>';
+  var amount = CONFIG.deposit;
+
+  if (state.currentPayment === 'alipay') {
+    if (isMobile) {
+      // 移动端：点击直接跳转支付宝
+      d.innerHTML =
+        '<div style="text-align:center;">' +
+          '<img src="' + CONFIG.alipayQR + '" style="width:180px;height:180px;border-radius:12px;margin-bottom:12px;" alt="支付宝收款码">' +
+          '<p style="font-size:14px;color:#333;margin-bottom:8px;"><strong style="color:#1677ff;">支付宝扫码支付 ¥' + amount + '</strong></p>' +
+          '<p style="font-size:12px;color:#999;margin-bottom:12px;">保存图片 → 打开支付宝扫一扫</p>' +
+          '<button class="btn btn-primary full-width" onclick="openAlipay()" style="background:#1677ff;border-color:#1677ff;margin-bottom:8px;">' +
+            '📱 打开支付宝支付 ¥' + amount +
+          '</button>' +
+          '<button class="btn btn-ghost full-width" onclick="copyAmount()" style="font-size:13px;">' +
+            '📋 复制金额 ¥' + amount +
+          '</button>' +
+        '</div>';
+    } else {
+      // 桌面端：显示二维码
+      d.innerHTML =
+        '<div style="text-align:center;">' +
+          '<img src="' + CONFIG.alipayQR + '" style="width:180px;border-radius:12px;" alt="支付宝收款码">' +
+          '<p style="margin:8px 0 0;font-size:13px;color:#666;">支付宝扫码支付 ¥' + amount + '</p>' +
+        '</div>';
+    }
+  } else {
+    // 微信支付（wxp:// 只能在微信内识别）
+    if (isMobile) {
+      d.innerHTML =
+        '<div style="text-align:center;">' +
+          '<img src="' + CONFIG.wechatQR + '" style="width:180px;height:180px;border-radius:12px;margin-bottom:12px;" alt="微信收款码">' +
+          '<p style="font-size:14px;color:#333;margin-bottom:4px;"><strong style="color:#07c160;">微信扫码支付 ¥' + amount + '</strong></p>' +
+          '<p style="font-size:12px;color:#999;margin-bottom:12px;">长按上方二维码 → 识别图中二维码</p>' +
+          '<button class="btn btn-ghost full-width" onclick="copyAmount()" style="font-size:13px;">' +
+            '📋 复制金额 ¥' + amount +
+          '</button>' +
+        '</div>';
+    } else {
+      // 桌面端
+      d.innerHTML =
+        '<div style="text-align:center;">' +
+          '<img src="' + CONFIG.wechatQR + '" style="width:180px;border-radius:12px;" alt="微信收款码">' +
+          '<p style="margin:8px 0 0;font-size:13px;color:#666;">微信扫码支付 ¥' + amount + '</p>' +
+        '</div>';
+    }
   }
 }
 
