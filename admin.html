@@ -188,16 +188,18 @@
         return '<div class="order-card ' + (isPending ? 'pending' : 'paid') + '">' +
           '<div class="order-id">#' + o.id + ' · ' + new Date(o.createdAt).toLocaleString('zh-CN') + '</div>' +
           '<div class="order-info">' +
-            '👤 ' + o.name + (o.wechat && o.wechat !== '未填写' ? ' · 💬 ' + o.wechat : '') + ' · 📞 ' + o.contact + '<br>' +
-            '📸 ' + o.count + '张 ' + o.style + ' · <strong>合计 ¥' + o.total + '</strong>（定金 ¥' + o.deposit + '）<br>' +
-            '📅 ' + o.date + (o.note !== '无' ? ' · 💬 ' + o.note : '') +
+            '👤 ' + o.name + (o.wechat && o.wechat !== '未填写' ? ' · 💬 ' + o.wechat : '') + '<br>' +
+            '👥 ' + o.count + '人 · 📅 ' + o.date + (o.timeLabel ? ' · 🕐 ' + o.timeLabel : '') + '<br>' +
+            '🎨 ' + o.style + ' · <strong>定金 ¥' + o.deposit + '</strong> · ' + (o.payment === 'wechat' ? '💚微信' : '💙支付宝') + '<br>' +
+            (o.note && o.note !== '无' ? '💬 ' + o.note + '<br>' : '') +
           '</div>' +
           '<div>' +
             '<span class="status-badge ' + (isPending ? 'status-pending' : 'status-paid') + '">' +
               (isPending ? '⏳ 待核实' : '✅ 已核实') +
             '</span>' +
           '</div>' +
-          (isPending ? '<div class="alert-box" style="margin-top:12px;">📱 请检查支付宝/微信收款记录，确认到账后点下方核实</div>' +
+          (o.proof ? '<div style="margin-top:12px;"><p style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">📎 支付凭证：</p><img src="' + o.proof + '" style="max-width:100%;max-height:200px;border-radius:8px;cursor:pointer;" onclick="this.style.maxHeight=this.style.maxHeight==\'200px\'?\'none\':\'200px\'"></div>' : '') +
+          (isPending ? '<div class="alert-box" style="margin-top:12px;">📱 请核对支付凭证与收款记录，确认到账后点下方核实</div>' +
           '<div class="order-actions">' +
             '<button class="btn-paid" onclick="markPaid(\'' + o.id + '\')">✅ 确认到账 · 核实通过</button>' +
             '<button onclick="deleteOrderById(\'' + o.id + '\')">🗑 删除</button>' +

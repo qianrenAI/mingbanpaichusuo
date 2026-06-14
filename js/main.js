@@ -1,16 +1,11 @@
 /* ═══════════════════════════════════════════════════════════════
-   明办拍出所 · 颐和路街拍摄影
-   v2.0 — 真实照片 · 智能筛选 · 订单系统 · 图片查看器
+   明办拍出所 · 颐和路街拍摄影 v3.0
+   四步预约向导 · 时间段选择 · 支付凭证上传
    ═══════════════════════════════════════════════════════════════ */
 
-// ─── 配置 ───
-var CONFIG = {
-  pricePerPhoto: 20,
-  deposit: 20,
-  alipayAccount: '17536826272'
-};
+var CONFIG = { pricePerPhoto: 20, deposit: 20 };
+var isWeChat = /MicroMessenger/i.test(navigator.userAgent);
 
-// ─── 作品照片数据 ───
 var PHOTOS = [
   {id:1,s:'images/photos/DSC_0854.jpg',t:'images/thumbs/DSC_0854.jpg',title:'DSC 0854',c:'close'},
   {id:2,s:'images/photos/DSC_2708.jpg',t:'images/thumbs/DSC_2708.jpg',title:'DSC 2708',c:'close'},
@@ -67,55 +62,32 @@ var PHOTOS = [
   {id:53,s:'images/photos/NIU_6793.jpg',t:'images/thumbs/NIU_6793.jpg',title:'NIU 6793',c:'distant'}
 ];
 
-// ─── 全局状态 ───
-var state = {
-  currentFilter: 'all',
-  viewerIndex: -1,
-  filteredPhotos: PHOTOS.slice()
-};
-
-// ─── 快捷选择器 ───
+var state = { currentFilter: 'all', currentStep: 1, viewerIndex: -1, filteredPhotos: PHOTOS.slice(), proofData: null };
 var $ = function(s) { return document.querySelector(s); };
 var $$ = function(s) { return document.querySelectorAll(s); };
 
-// ═══════════════════ Toast 通知 ═══════════════════
+// ═══ Toast ═══
 function toast(msg, type) {
   type = type || 'info';
-  var container = $('#toast-container');
+  var c = $('#toast-container');
   var el = document.createElement('div');
-  el.className = 'toast ' + type;
-  el.textContent = msg;
-  container.appendChild(el);
-  setTimeout(function() {
-    el.classList.add('fade-out');
-    setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 300);
-  }, 2200);
+  el.className = 'toast ' + type; el.textContent = msg;
+  c.appendChild(el);
+  setTimeout(function() { el.classList.add('fade-out'); setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 300); }, 2200);
 }
 
-// ═══════════════════ 图片查看器 ═══════════════════
-window.openViewer = function(index) {
-  var list = state.filteredPhotos;
-  if (!list.length) return;
-  state.viewerIndex = index;
-  var viewer = $('#photoViewer');
-  var img = viewer.querySelector('img');
-  var counter = viewer.querySelector('.viewer-counter');
-  var fullSrc = list[index].s;
-  counter.textContent = (index + 1) + ' / ' + list.length;
-  img.style.opacity = '0';
-  img.src = fullSrc;
+// ═══ 图片查看器 ═══
+window.openViewer = function(i) {
+  var list = state.filteredPhotos; if (!list.length) return;
+  state.viewerIndex = i;
+  var v = $('#photoViewer'); var img = v.querySelector('img');
+  img.style.opacity = '0'; img.src = list[i].s;
   img.onload = function() { img.style.opacity = '1'; };
   img.style.transition = 'opacity 0.3s';
-  viewer.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  v.querySelector('.viewer-counter').textContent = (i + 1) + ' / ' + list.length;
+  v.classList.add('open'); document.body.style.overflow = 'hidden';
 };
-
-window.closeViewer = function() {
-  $('#photoViewer').classList.remove('open');
-  document.body.style.overflow = '';
-  state.viewerIndex = -1;
-};
-
+window.closeViewer = function() { $('#photoViewer').classList.remove('open'); document.body.style.overflow = ''; state.viewerIndex = -1; };
 window.viewerPrev = function(e) { if (e) e.stopPropagation(); if (state.viewerIndex > 0) openViewer(state.viewerIndex - 1); };
 window.viewerNext = function(e) { if (e) e.stopPropagation(); if (state.viewerIndex < state.filteredPhotos.length - 1) openViewer(state.viewerIndex + 1); };
 
@@ -126,308 +98,216 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowRight') { e.preventDefault(); viewerNext(e); }
 });
 
-// ═══════════════════ 作品集渲染 ═══════════════════
-function getCatLabel(cat) {
-  var map = { distant: '远景', close: '近景' };
-  return map[cat] || cat;
-}
-
+// ═══ 作品集 ═══
+function getCatLabel(c) { var m = { distant: '远景', close: '近景' }; return m[c] || c; }
 function renderGallery(filter) {
-  filter = filter || state.currentFilter;
-  state.currentFilter = filter;
-  var grid = $('#galleryGrid');
-  if (!grid) return;
-
-  if (filter === 'all') {
-    state.filteredPhotos = PHOTOS.slice();
-  } else {
-    state.filteredPhotos = PHOTOS.filter(function(p) { return p.c === filter; });
-  }
-
+  filter = filter || state.currentFilter; state.currentFilter = filter;
+  var grid = $('#galleryGrid'); if (!grid) return;
+  state.filteredPhotos = filter === 'all' ? PHOTOS.slice() : PHOTOS.filter(function(p) { return p.c === filter; });
   var btns = $$('.filter-btn');
-  for (var i = 0; i < btns.length; i++) {
-    btns[i].classList.remove('active');
-    if (btns[i].getAttribute('data-filter') === filter) {
-      btns[i].classList.add('active');
-    }
-  }
-
+  for (var i = 0; i < btns.length; i++) { btns[i].classList.toggle('active', btns[i].getAttribute('data-filter') === filter); }
   if (filter === 'all') {
     var counts = { all: PHOTOS.length, distant: 0, close: 0 };
-    for (var j = 0; j < PHOTOS.length; j++) { counts[PHOTOS[j].c]++; }
+    for (var j = 0; j < PHOTOS.length; j++) counts[PHOTOS[j].c]++;
     for (var k = 0; k < btns.length; k++) {
-      var f = btns[k].getAttribute('data-filter');
-      var existing = btns[k].querySelector('.count');
-      if (existing) existing.remove();
-      if (f !== 'all' && counts[f]) {
-        var span = document.createElement('span');
-        span.className = 'count';
-        span.textContent = counts[f];
-        btns[k].appendChild(span);
-      }
+      var f = btns[k].getAttribute('data-filter'), ex = btns[k].querySelector('.count');
+      if (ex) ex.remove();
+      if (f !== 'all' && counts[f]) { var sp = document.createElement('span'); sp.className = 'count'; sp.textContent = counts[f]; btns[k].appendChild(sp); }
     }
   }
-
-  if (state.filteredPhotos.length === 0) {
-    grid.innerHTML = '<div class="gallery-empty"><div class="empty-icon">📸</div><p>该分类暂无作品</p><p class="hint">敬请期待更多照片</p></div>';
-    return;
-  }
-
+  if (!state.filteredPhotos.length) { grid.innerHTML = '<div class="gallery-empty"><div class="empty-icon">📸</div><p>该分类暂无作品</p></div>'; return; }
   grid.innerHTML = '';
   for (var i = 0; i < state.filteredPhotos.length; i++) {
-    var photo = state.filteredPhotos[i];
-    var item = document.createElement('div');
-    item.className = 'gallery-item';
-    item.setAttribute('data-index', i);
-    item.innerHTML =
-      '<img src="' + photo.t + '" alt="' + photo.title + '" loading="lazy" onerror="this.style.opacity=\'0\'">' +
-      '<div class="gallery-overlay">' +
-        '<span class="gallery-tag">' + getCatLabel(photo.c) + '</span>' +
-      '</div>' +
-      '<div class="gallery-index">' + (i + 1) + '</div>';
-    item.addEventListener('click', (function(idx) {
-      return function() { openViewer(idx); };
-    })(i));
+    var p = state.filteredPhotos[i], item = document.createElement('div');
+    item.className = 'gallery-item'; item.setAttribute('data-index', i);
+    item.innerHTML = '<img src="' + p.t + '" loading="lazy" onerror="this.style.opacity=0"><div class="gallery-overlay"><span class="gallery-tag">' + getCatLabel(p.c) + '</span></div><div class="gallery-index">' + (i + 1) + '</div>';
+    item.addEventListener('click', (function(idx) { return function() { openViewer(idx); }; })(i));
     grid.appendChild(item);
   }
 }
 
-// ═══════════════════ 数量调整 ═══════════════════
-window.adjustCount = function(delta) {
-  var input = $('#bkCount');
-  if (!input) return;
-  var v = parseInt(input.value) + delta;
-  if (v < 1) v = 1;
-  if (v > 100) v = 100;
-  input.value = v;
-  updatePricePreview();
+// ═══ 复制 ═══
+window.copyText = function(t) {
+  if (navigator.clipboard) { navigator.clipboard.writeText(t).then(function() { toast('已复制: ' + t, 'success'); }); }
+  else { var ta = document.createElement('textarea'); ta.value = t; ta.style.cssText = 'position:fixed;left:-9999px'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); toast('已复制: ' + t, 'success'); }
 };
 
-function updatePricePreview() {
-  var countEl = $('#bkCount');
-  var totalEl = $('#previewTotal');
-  var balanceEl = $('#previewBalance');
-  if (!countEl || !totalEl || !balanceEl) return;
-  var v = parseInt(countEl.value) || 1;
-  var price = CONFIG.pricePerPhoto;
-  $('#previewCount').textContent = v;
-  totalEl.textContent = v * price;
-  balanceEl.textContent = Math.max(0, v * price - CONFIG.deposit);
+// ═══════════════════ 预约向导 ═══════════════════
+window.goToStep = function(n) {
+  state.currentStep = n;
+  // 面板
+  for (var i = 1; i <= 4; i++) { var p = $('#stepPanel' + i); if (p) p.classList.toggle('active', i === n); }
+  // 进度条
+  var nodes = $$('.step-node');
+  for (var j = 0; j < nodes.length; j++) {
+    var step = parseInt(nodes[j].getAttribute('data-step'));
+    nodes[j].classList.remove('active', 'done');
+    if (step < n) nodes[j].classList.add('done');
+    if (step === n) nodes[j].classList.add('active');
+  }
+  var lines = $$('.step-line');
+  for (var k = 0; k < lines.length; k++) { lines[k].classList.toggle('done', k + 1 < n); }
+  // Step 3 特殊处理
+  if (n === 3) { renderPaymentQR(); }
+  window.scrollTo(0, $('#stepper').offsetTop - 70);
+};
+
+// ═══ 时间段选择 ═══
+window.selectTimeSlot = function(el) {
+  $$('.time-slot').forEach(function(s) { s.classList.remove('active'); s.querySelector('input').checked = false; });
+  el.classList.add('active'); el.querySelector('input').checked = true;
+};
+
+// ═══ 支付方式选择 ═══
+window.selectPayment = function(el) {
+  $$('.time-slot').forEach(function(s) { s.classList.remove('active'); s.querySelector('input').checked = false; });
+  el.classList.add('active'); el.querySelector('input').checked = true;
+  renderPaymentQR();
+};
+
+function renderPaymentQR() {
+  var d = $('#paymentQRDisplay'); if (!d) return;
+  var payment = (document.querySelector('input[name="payment"]:checked') || {}).value || 'alipay';
+  if (payment === 'wechat') {
+    d.innerHTML = '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;box-shadow:0 2px 12px rgba(0,0,0,0.08);"><img src="images/wechat-qr-clean.png" style="width:200px;height:200px;display:block;border-radius:8px;"></div><p style="font-size:13px;color:#07c160;font-weight:700;margin-top:8px;">💚 微信收款码</p>';
+  } else {
+    d.innerHTML = '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;box-shadow:0 2px 12px rgba(0,0,0,0.08);"><img src="images/alipay-qr.jpg" style="width:200px;height:200px;display:block;border-radius:8px;"></div><p style="font-size:13px;color:#1677ff;font-weight:700;margin-top:8px;">💙 支付宝收款码</p>';
+  }
 }
 
-// ═══════════════════ 支付 ═══════════════════
-window.openAlipay = function() {
-  var amount = CONFIG.deposit;
-  var deepLink = 'alipays://platformapi/startapp?appId=20000123&actionType=toAccount&account=' +
-    CONFIG.alipayAccount + '&amount=' + amount + '&memo=' + encodeURIComponent('明办拍出所');
-  window.location.href = deepLink;
+// ═══ 上传支付凭证 ═══
+window.handleProofUpload = function(input) {
+  var file = input.files[0]; if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { toast('图片不能超过5MB', 'error'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      var canvas = document.createElement('canvas');
+      var maxW = 800, scale = Math.min(1, maxW / img.width);
+      canvas.width = img.width * scale; canvas.height = img.height * scale;
+      var ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      state.proofData = canvas.toDataURL('image/jpeg', 0.7);
+      var preview = $('#uploadPreview'); preview.src = state.proofData; preview.style.display = 'block';
+      $('#uploadPlaceholder').style.display = 'none';
+      $('#uploadArea').classList.add('has-file');
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
 };
 
-// ═══════════════════ 预约提交 ═══════════════════
-var _pendingOrder = null;
-
-function submitBooking() {
-  var form = $('#bookingForm');
-  if (!form) return false;
-
+// ═══ 提交预约 ═══
+window.submitFullBooking = function() {
   var name = ($('#bkName').value || '').trim();
-  var wechat = ($('#bkWechat').value || '').trim() || '未填写';
-  var contact = ($('#bkContact').value || '').trim();
+  var wechat = ($('#bkWechat').value || '').trim();
   var count = parseInt($('#bkCount').value) || 1;
+  var date = $('#bkDate').value;
+  var timeSlot = (document.querySelector('input[name="timeSlot"]:checked') || {}).value;
   var style = (document.querySelector('input[name="style"]:checked') || {}).value || '日系清新';
-  var date = $('#bkDate').value || '未指定';
   var note = ($('#bkNote').value || '').trim() || '无';
+  var payment = (document.querySelector('input[name="payment"]:checked') || {}).value || 'alipay';
 
-  if (!name || !contact) {
-    toast('请填写称呼和联系方式', 'error');
-    if (!name) $('#bkName').classList.add('error');
-    if (!contact) $('#bkContact').classList.add('error');
-    return false;
-  }
+  if (!name) { toast('请填写称呼', 'error'); goToStep(1); return; }
+  if (!wechat) { toast('请填写微信号', 'error'); goToStep(1); return; }
+  if (!date) { toast('请选择预约日期', 'error'); goToStep(2); return; }
+  if (!timeSlot) { toast('请选择时间段', 'error'); goToStep(2); return; }
+  if (!state.proofData) { toast('请上传支付凭证', 'error'); return; }
 
+  var slotLabels = { afternoon: '14:00-19:00 下午·郁郁葱葱', evening: '19:00-22:00 晚间·灯火阑珊', night: '22:00-3:00 凌晨·轻声细语' };
   var total = count * CONFIG.pricePerPhoto;
+
   var order = {
     id: 'YH' + Date.now().toString(36).toUpperCase(),
-    name: name, wechat: wechat, contact: contact, count: count,
-    style: style, date: date, note: note,
-    total: total, deposit: CONFIG.deposit,
-    status: 'pending', createdAt: new Date().toISOString()
+    name: name, wechat: wechat, count: count, date: date,
+    timeSlot: timeSlot, timeLabel: slotLabels[timeSlot] || timeSlot,
+    style: style, note: note, payment: payment,
+    total: total, deposit: CONFIG.deposit, status: 'pending',
+    proof: state.proofData,
+    createdAt: new Date().toISOString()
   };
 
   var orders = JSON.parse(localStorage.getItem('yh_orders') || '[]');
   orders.push(order);
   localStorage.setItem('yh_orders', JSON.stringify(orders));
 
-  _pendingOrder = order;
-
-  form.classList.add('hidden');
-  $('#paymentStep').classList.remove('hidden');
-  toast('请支付定金 ¥' + CONFIG.deposit, 'info');
-  window.scrollTo(0, 0);
-  return true;
-}
-
-window.confirmPayment = function() {
-  if (!_pendingOrder) return;
-
-  var orders = JSON.parse(localStorage.getItem('yh_orders') || '[]');
-  for (var i = orders.length - 1; i >= 0; i--) {
-    if (orders[i].id === _pendingOrder.id) {
-      orders[i].status = 'paid';
-      break;
-    }
-  }
-  localStorage.setItem('yh_orders', JSON.stringify(orders));
-
-  $('#paymentStep').classList.add('hidden');
-  var success = $('#bookingSuccess');
-  success.classList.remove('hidden');
-  $('#bkResultInfo').textContent = '订单号 ' + _pendingOrder.id + ' · ' + _pendingOrder.count + '张 ' + _pendingOrder.style;
+  $('#bkResultInfo').textContent = '订单号 ' + order.id + ' · ' + count + '人 · ' + (slotLabels[timeSlot] || '');
+  goToStep(4);
   toast('预约成功！', 'success');
-  window.scrollTo(0, 0);
-};
-
-window.backToForm = function() {
-  $('#paymentStep').classList.add('hidden');
-  $('#bookingForm').classList.remove('hidden');
-  window.scrollTo(0, 0);
 };
 
 window.resetBooking = function() {
-  var form = $('#bookingForm');
-  form.reset();
-  form.classList.remove('hidden');
-  $('#paymentStep').classList.add('hidden');
-  $('#bookingSuccess').classList.add('hidden');
+  $('#bookingForm').reset();
+  state.proofData = null; state.currentStep = 1;
+  $('#uploadPreview').style.display = 'none'; $('#uploadPlaceholder').style.display = 'block';
+  $('#uploadArea').classList.remove('has-file');
   if ($('#bkCount')) $('#bkCount').value = 1;
-  $('#bkName').classList.remove('error');
-  $('#bkContact').classList.remove('error');
-  updatePricePreview();
-  _pendingOrder = null;
-  toast('可以继续预约了', 'info');
+  updatePricePreview(); renderPaymentQR();
+  goToStep(1);
 };
 
-// ═══════════════════ 页面导航 ═══════════════════
-var _pages, _tabs, _links;
+// ═══ 数量 + 价格 ═══
+window.adjustCount = function(d) {
+  var input = $('#bkCount'); if (!input) return;
+  var v = parseInt(input.value) + d; if (v < 1) v = 1; if (v > 5) v = 5;
+  input.value = v; updatePricePreview();
+};
+function updatePricePreview() {
+  var c = $('#bkCount'), t = $('#previewTotal'), b = $('#previewBalance');
+  if (!c || !t || !b) return;
+  var v = parseInt(c.value) || 1, price = CONFIG.pricePerPhoto;
+  $('#previewCount').textContent = v;
+  t.textContent = v * price;
+  b.textContent = Math.max(0, v * price - CONFIG.deposit);
+}
 
+// ═══ 页面导航 ═══
+var _pages, _tabs, _links;
 window.navigateTo = function(p) {
-  _pages = _pages || $$('.page');
-  _tabs = _tabs || $$('.tab-item');
-  _links = _links || $$('.nav-link');
+  _pages = _pages || $$('.page'); _tabs = _tabs || $$('.tab-item'); _links = _links || $$('.nav-link');
   for (var i = 0; i < _pages.length; i++) _pages[i].classList.remove('active');
-  var target = $('#page-' + p);
-  if (target) target.classList.add('active');
+  var t = $('#page-' + p); if (t) t.classList.add('active');
   window.scrollTo(0, 0);
   for (var j = 0; j < _links.length; j++) _links[j].classList.remove('active');
-  var al = document.querySelector('.nav-link[data-page="' + p + '"]');
-  if (al) al.classList.add('active');
+  var al = document.querySelector('.nav-link[data-page="' + p + '"]'); if (al) al.classList.add('active');
   for (var k = 0; k < _tabs.length; k++) _tabs[k].classList.remove('active');
-  var at = document.querySelector('.tab-item[data-tab="' + p + '"]');
-  if (at) at.classList.add('active');
+  var at = document.querySelector('.tab-item[data-tab="' + p + '"]'); if (at) at.classList.add('active');
   closeNav();
   if (p === 'gallery') renderGallery();
+  if (p === 'booking') { goToStep(1); renderPaymentQR(); }
 };
-
 window.closeNav = function() {
-  var toggle = $('#navToggle');
-  var menu = $('#navMenu');
-  if (toggle) toggle.classList.remove('active');
-  if (menu) menu.classList.remove('open');
+  var t = $('#navToggle'), m = $('#navMenu');
+  if (t) t.classList.remove('active'); if (m) m.classList.remove('open');
 };
 
-// ═══════════════════ 启动 ═══════════════════
+// ═══ 启动 ═══
 window.addEventListener('DOMContentLoaded', function() {
   var navToggle = $('#navToggle');
-  if (navToggle) {
-    navToggle.addEventListener('click', function() {
-      this.classList.toggle('active');
-      var menu = $('#navMenu');
-      if (menu) menu.classList.toggle('open');
-    });
-  }
-
+  if (navToggle) navToggle.addEventListener('click', function() { this.classList.toggle('active'); var m = $('#navMenu'); if (m) m.classList.toggle('open'); });
   var links = $$('.nav-link');
-  for (var i = 0; i < links.length; i++) {
-    links[i].addEventListener('click', function(e) {
-      e.preventDefault();
-      navigateTo(this.getAttribute('data-page'));
-    });
-  }
-
+  for (var i = 0; i < links.length; i++) links[i].addEventListener('click', function(e) { e.preventDefault(); navigateTo(this.getAttribute('data-page')); });
   var tabs = $$('.tab-item');
-  for (var t = 0; t < tabs.length; t++) {
-    tabs[t].addEventListener('click', function(e) {
-      e.preventDefault();
-      navigateTo(this.getAttribute('data-tab'));
-    });
-  }
-
+  for (var t = 0; t < tabs.length; t++) tabs[t].addEventListener('click', function(e) { e.preventDefault(); navigateTo(this.getAttribute('data-tab')); });
   var filters = $$('.filter-btn');
-  for (var f = 0; f < filters.length; f++) {
-    filters[f].addEventListener('click', function() {
-      var filter = this.getAttribute('data-filter');
-      renderGallery(filter);
-    });
-  }
-
-  var form = $('#bookingForm');
-  if (form) {
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-      submitBooking();
-    });
-  }
-
-  var nameInput = $('#bkName');
-  if (nameInput) nameInput.addEventListener('input', function() { this.classList.remove('error'); });
-  var contactInput = $('#bkContact');
-  if (contactInput) contactInput.addEventListener('input', function() { this.classList.remove('error'); });
-
+  for (var f = 0; f < filters.length; f++) filters[f].addEventListener('click', function() { renderGallery(this.getAttribute('data-filter')); });
   var viewer = $('#photoViewer');
   if (viewer) {
-    viewer.addEventListener('click', function(e) {
-      if (e.target === this) closeViewer();
-    });
-    var startX = 0, startY = 0;
-    viewer.addEventListener('touchstart', function(e) {
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-    }, {passive: true});
-    viewer.addEventListener('touchend', function(e) {
-      var dx = e.changedTouches[0].clientX - startX;
-      var dy = e.changedTouches[0].clientY - startY;
-      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
-        if (dx > 0) viewerPrev(e);
-        else viewerNext(e);
-      }
-    });
+    viewer.addEventListener('click', function(e) { if (e.target === this) closeViewer(); });
+    var sx = 0, sy = 0;
+    viewer.addEventListener('touchstart', function(e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, {passive: true});
+    viewer.addEventListener('touchend', function(e) { var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) { if (dx > 0) viewerPrev(e); else viewerNext(e); } });
   }
-
-  window.addEventListener('scroll', function() {
-    var navbar = $('#navbar');
-    if (navbar) {
-      if (window.scrollY > 10) navbar.classList.add('scrolled');
-      else navbar.classList.remove('scrolled');
-    }
-  }, {passive: true});
-
-  var di = $('#bkDate');
-  if (di) di.setAttribute('min', new Date().toISOString().split('T')[0]);
-
+  window.addEventListener('scroll', function() { var nb = $('#navbar'); if (nb) nb.classList.toggle('scrolled', window.scrollY > 10); }, {passive: true});
+  var di = $('#bkDate'); if (di) di.setAttribute('min', new Date().toISOString().split('T')[0]);
   updatePricePreview();
-
   setTimeout(function() {
-    var splash = $('#splash');
-    if (splash) splash.classList.add('fade-out');
+    var splash = $('#splash'); if (splash) splash.classList.add('fade-out');
     setTimeout(function() {
       if (splash) splash.classList.add('hidden');
-      var navbar = $('#navbar');
-      var footer = $('#footer');
-      var tabbar = $('#tabbar');
-      if (navbar) navbar.classList.remove('hidden');
-      if (footer) footer.classList.remove('hidden');
-      if (tabbar) tabbar.classList.remove('hidden');
-      renderGallery();
+      var n = $('#navbar'), f = $('#footer'), t = $('#tabbar');
+      if (n) n.classList.remove('hidden'); if (f) f.classList.remove('hidden'); if (t) t.classList.remove('hidden');
+      renderGallery(); renderPaymentQR();
     }, 600);
   }, 400);
 });

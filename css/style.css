@@ -447,6 +447,84 @@ ul { list-style: none; }
 .tab-item.active .tab-icon { transform: scale(1.1); }
 .tab-label { font-size: 10px; }
 
+/* ═══════════════════ 预约进度条 ═══════════════════ */
+.stepper {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 8px 24px; gap: 0; max-width: 500px; margin: 0 auto;
+}
+.step-node { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
+.step-circle {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700;
+  background: var(--bg-alt); color: var(--text-muted);
+  border: 2px solid rgba(0,0,0,0.08); transition: 0.3s;
+}
+.step-node.active .step-circle { background: var(--primary); color: #fff; border-color: var(--primary); }
+.step-node.done .step-circle { background: #27ae60; color: #fff; border-color: #27ae60; }
+.step-text { font-size: 10px; color: var(--text-muted); white-space: nowrap; transition: 0.3s; }
+.step-node.active .step-text { color: var(--primary); font-weight: 700; }
+.step-node.done .step-text { color: #27ae60; }
+.step-line { flex: 1; height: 2px; background: var(--bg-alt); margin: 0 4px; margin-bottom: 18px; transition: 0.3s; min-width: 16px; }
+.step-line.done { background: #27ae60; }
+
+/* ═══════════════════ 步骤面板 ═══════════════════ */
+.step-panel { display: none; animation: fadeIn 0.35s ease; }
+.step-panel.active { display: block; }
+.step-title { font-family: var(--font-serif); font-size: 17px; margin-bottom: 20px; color: var(--text); text-align: center; }
+
+/* ═══════════════════ 时间段卡片 ═══════════════════ */
+.time-slots { display: flex; flex-direction: column; gap: 10px; }
+.time-slot { cursor: pointer; display: block; }
+.time-slot input { display: none; }
+.time-slot-card {
+  border: 2px solid rgba(0,0,0,0.08); border-radius: var(--radius); padding: 14px 16px;
+  transition: 0.2s; background: var(--card);
+}
+.time-slot input:checked + .time-slot-card {
+  border-color: var(--primary); background: rgba(196,30,58,0.03); box-shadow: 0 0 0 3px rgba(196,30,58,0.06);
+}
+.time-range { font-size: 18px; font-weight: 700; color: var(--text); }
+.time-tag { font-size: 12px; color: var(--primary); font-weight: 700; margin-top: 2px; }
+.time-desc { font-size: 13px; color: var(--text-light); margin-top: 4px; }
+
+/* ═══════════════════ 支付指引 ═══════════════════ */
+.payment-instructions {
+  background: #f8f4ed; border-radius: var(--radius); padding: 16px; margin-bottom: 16px;
+}
+.instruction-item {
+  display: flex; align-items: center; gap: 10px; padding: 8px 0;
+  font-size: 13px; color: var(--text-light);
+}
+.instruction-item + .instruction-item { border-top: 1px solid rgba(0,0,0,0.04); }
+.inst-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--primary); color: #fff; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+/* ═══════════════════ 上传区域 ═══════════════════ */
+.upload-area {
+  border: 2px dashed rgba(0,0,0,0.12); border-radius: var(--radius);
+  padding: 24px; text-align: center; cursor: pointer; transition: 0.2s;
+  color: var(--text-muted); font-size: 14px;
+}
+.upload-area:hover { border-color: var(--primary); background: rgba(196,30,58,0.02); }
+.upload-area.has-file { border-style: solid; border-color: #27ae60; padding: 8px; }
+
+/* ═══════════════════ 摄影师联系方式 ═══════════════════ */
+.photographer-contact {
+  background: var(--card); border-radius: var(--radius); padding: 20px;
+  box-shadow: var(--shadow); margin-top: 16px;
+}
+.contact-copy {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: var(--bg-alt); border-radius: var(--radius-sm);
+  cursor: pointer; transition: 0.15s; font-size: 14px;
+}
+.contact-copy:active { background: #e0dbd0; transform: scale(0.98); }
+.copy-hint { font-size: 11px; color: var(--primary); }
+
 /* ═══════════════════ 页脚 ═══════════════════ */
 #footer {
   background: #1a1a2e; color: rgba(255,255,255,0.6);

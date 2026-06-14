@@ -88,72 +88,168 @@
 </section>
 
 <section class="page" id="page-booking">
-<div class="page-header"><h2>预约下单</h2><p>选择服务，锁定你的街拍时间</p></div>
-<form id="bookingForm" class="booking-form">
-<div class="form-group"><label>称呼 *</label><input type="text" id="bkName" required></div>
-<div class="form-group"><label>微信号</label><input type="text" id="bkWechat" placeholder="方便摄影师联系你"></div>
-<div class="form-group"><label>联系方式 *</label><input type="text" id="bkContact" required placeholder="手机号或其他联系方式"></div>
-<div class="form-group"><label>拍摄张数</label>
-<div class="input-counter">
-<button type="button" class="counter-btn" onclick="adjustCount(-1)">-</button>
-<input type="number" id="bkCount" value="1" min="1" max="100" readonly>
-<button type="button" class="counter-btn" onclick="adjustCount(1)">+</button>
-</div></div>
-<div class="form-group"><label>拍摄风格</label>
-<div class="style-chips">
-<label class="chip"><input type="radio" name="style" value="日系清新" checked><span>日系清新</span></label>
-<label class="chip"><input type="radio" name="style" value="复古胶片"><span>复古胶片</span></label>
-<label class="chip"><input type="radio" name="style" value="自然街拍"><span>自然街拍</span></label>
-</div></div>
-<div class="form-group"><label>预约日期</label><input type="date" id="bkDate"></div>
-<div class="form-group"><label>备注</label><textarea id="bkNote" rows="3"></textarea></div>
+<div class="page-header"><h2>预约下单</h2><p>四步完成预约，锁定你的街拍时刻</p></div>
 
-<div class="price-preview">
-<div class="price-row"><span>拍摄 <span id="previewCount">1</span> 张</span><span>¥<span id="previewTotal">20</span></span></div>
-<div class="price-row"><span>定金</span><span class="price-highlight">¥20</span></div>
-<div class="price-row total"><span>尾款</span><span>¥<span id="previewBalance">0</span></span></div>
+<!-- 进度条 -->
+<div class="stepper" id="stepper">
+  <div class="step-node active" data-step="1">
+    <div class="step-circle">1</div>
+    <div class="step-text">联系方式</div>
+  </div>
+  <div class="step-line"></div>
+  <div class="step-node" data-step="2">
+    <div class="step-circle">2</div>
+    <div class="step-text">预约时间</div>
+  </div>
+  <div class="step-line"></div>
+  <div class="step-node" data-step="3">
+    <div class="step-circle">3</div>
+    <div class="step-text">支付定金</div>
+  </div>
+  <div class="step-line"></div>
+  <div class="step-node" data-step="4">
+    <div class="step-circle">4</div>
+    <div class="step-text">预约成功</div>
+  </div>
 </div>
 
-<button type="submit" class="btn btn-primary full-width btn-large">提交预约</button>
-</form>
+<form id="bookingForm" class="booking-form">
 
-<!-- 支付步骤 -->
-<div class="payment-step hidden" id="paymentStep">
-<div class="page-header"><h2>支付定金 ¥20</h2><p>截图保存收款码 → 打开支付宝或微信扫一扫</p></div>
-<div style="padding:0 16px 24px;max-width:400px;margin:0 auto;">
-  <!-- 收款码放大 -->
-  <div style="display:flex;gap:12px;justify-content:center;margin-bottom:20px;">
-    <div style="text-align:center;flex:1;">
-      <div style="background:#fff;border-radius:16px;padding:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-        <img src="images/alipay-qr.jpg" style="width:100%;display:block;border-radius:8px;" alt="支付宝收款码">
-      </div>
-      <p style="font-size:13px;color:#1677ff;font-weight:700;margin-top:6px;">💙 支付宝</p>
+<!-- ═══ 第一步：联系方式 ═══ -->
+<div class="step-panel active" id="stepPanel1">
+  <h3 class="step-title">第一步 · 如何称呼您？</h3>
+  <div class="form-group"><label>您的称呼 *</label><input type="text" id="bkName" placeholder="例如：小明" required></div>
+  <div class="form-group"><label>微信号 *</label><input type="text" id="bkWechat" placeholder="方便摄影师联系您" required></div>
+  <div class="form-group"><label>拍摄人数</label>
+    <div class="input-counter">
+      <button type="button" class="counter-btn" onclick="adjustCount(-1)">-</button>
+      <input type="number" id="bkCount" value="1" min="1" max="5" readonly>
+      <button type="button" class="counter-btn" onclick="adjustCount(1)">+</button>
     </div>
-    <div style="text-align:center;flex:1;">
-      <div style="background:#fff;border-radius:16px;padding:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-        <img src="images/wechat-qr-clean.png" style="width:100%;display:block;border-radius:8px;" alt="微信收款码">
-      </div>
-      <p style="font-size:13px;color:#07c160;font-weight:700;margin-top:6px;">💚 微信</p>
+    <p style="font-size:11px;color:var(--text-muted);margin-top:4px;">不超过5人</p>
+  </div>
+  <div class="price-preview">
+    <div class="price-row"><span>拍摄 <span id="previewCount">1</span> 人</span><span>¥<span id="previewTotal">20</span></span></div>
+    <div class="price-row"><span>定金</span><span class="price-highlight">¥20</span></div>
+    <div class="price-row total"><span>尾款</span><span>¥<span id="previewBalance">0</span></span></div>
+  </div>
+  <button type="button" class="btn btn-primary full-width btn-large" onclick="goToStep(2)">下一步 →</button>
+</div>
+
+<!-- ═══ 第二步：预约时间 ═══ -->
+<div class="step-panel" id="stepPanel2">
+  <h3 class="step-title">第二步 · 选择拍摄时间</h3>
+  <div class="form-group"><label>预约日期 *</label><input type="date" id="bkDate"></div>
+  <div class="form-group"><label>时间段 *</label>
+    <div class="time-slots">
+      <label class="time-slot" onclick="selectTimeSlot(this)">
+        <input type="radio" name="timeSlot" value="afternoon">
+        <div class="time-slot-card">
+          <div class="time-range">14:00 - 19:00</div>
+          <div class="time-tag">下午时段</div>
+          <div class="time-desc">🌿 郁郁葱葱</div>
+        </div>
+      </label>
+      <label class="time-slot" onclick="selectTimeSlot(this)">
+        <input type="radio" name="timeSlot" value="evening">
+        <div class="time-slot-card">
+          <div class="time-range">19:00 - 22:00</div>
+          <div class="time-tag">晚间时段</div>
+          <div class="time-desc">💡 路灯亮起 · 灯火阑珊</div>
+        </div>
+      </label>
+      <label class="time-slot" onclick="selectTimeSlot(this)">
+        <input type="radio" name="timeSlot" value="night">
+        <div class="time-slot-card">
+          <div class="time-range">22:00 - 3:00</div>
+          <div class="time-tag">凌晨时段</div>
+          <div class="time-desc">🌙 轻声细语</div>
+        </div>
+      </label>
     </div>
   </div>
-  <p style="text-align:center;font-size:14px;color:#333;margin-bottom:8px;"><strong>📸 截图 → 打开支付 App 扫相册</strong></p>
-  <p style="text-align:center;font-size:12px;color:#999;margin-bottom:20px;">付款后点下方按钮，摄影师将核实到账</p>
-  <button class="btn btn-primary full-width btn-large" onclick="confirmPayment()" style="background:#07c160;border-color:#07c160;">
-    ✅ 我已完成支付 ¥20
-  </button>
-  <button class="btn btn-ghost full-width" onclick="backToForm()" style="font-size:13px;margin-top:8px;">← 返回修改</button>
-</div>
+  <div class="form-group"><label>拍摄风格</label>
+    <div class="style-chips">
+      <label class="chip"><input type="radio" name="style" value="日系清新" checked><span>日系清新</span></label>
+      <label class="chip"><input type="radio" name="style" value="复古胶片"><span>复古胶片</span></label>
+      <label class="chip"><input type="radio" name="style" value="自然街拍"><span>自然街拍</span></label>
+    </div>
+  </div>
+  <div class="form-group"><label>备注</label><textarea id="bkNote" rows="2" placeholder="有什么想对摄影师说的？"></textarea></div>
+  <div style="display:flex;gap:8px;">
+    <button type="button" class="btn btn-outline" onclick="goToStep(1)" style="flex:1;">← 上一步</button>
+    <button type="button" class="btn btn-primary" onclick="goToStep(3)" style="flex:1;">下一步 →</button>
+  </div>
 </div>
 
-<!-- 预约成功 -->
-<div class="booking-success hidden" id="bookingSuccess">
-<div class="success-icon">📸</div>
-<h3>预约已提交</h3>
-<p>请支付定金 <strong>¥20</strong></p>
-<p id="bkResultInfo" style="font-size:13px;color:var(--text-light);margin-top:8px;"></p>
-<p class="success-hint" style="color:#e67e22;">⚠️ 摄影师核实到账后确认预约，请留意联系</p>
-<button class="btn btn-outline full-width" onclick="resetBooking()">继续预约</button>
+<!-- ═══ 第三步：支付定金 ═══ -->
+<div class="step-panel" id="stepPanel3">
+  <h3 class="step-title">第三步 · 支付定金 ¥20</h3>
+  <div class="form-group"><label>支付方式 *</label>
+    <div class="time-slots">
+      <label class="time-slot" onclick="selectPayment(this)">
+        <input type="radio" name="payment" value="wechat">
+        <div class="time-slot-card" style="text-align:center;">
+          <div style="font-size:28px;">💚</div>
+          <div class="time-range">微信支付</div>
+        </div>
+      </label>
+      <label class="time-slot" onclick="selectPayment(this)">
+        <input type="radio" name="payment" value="alipay" checked>
+        <div class="time-slot-card" style="text-align:center;">
+          <div style="font-size:28px;">💙</div>
+          <div class="time-range">支付宝</div>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <div id="paymentQRDisplay" style="text-align:center;margin-bottom:16px;"></div>
+
+  <div class="payment-instructions">
+    <div class="instruction-item"><span class="inst-num">1</span> 截图保存上方收款码</div>
+    <div class="instruction-item"><span class="inst-num">2</span> 退出页面 → 打开支付App扫相册付款</div>
+    <div class="instruction-item"><span class="inst-num">3</span> 截图保存支付成功凭证</div>
+    <div class="instruction-item"><span class="inst-num">4</span> 返回本页面上传支付凭证</div>
+  </div>
+
+  <div class="form-group"><label>上传支付凭证 *</label>
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('proofFile').click()">
+      <div id="uploadPlaceholder">📷 点击上传支付成功截图</div>
+      <img id="uploadPreview" style="display:none;max-width:100%;max-height:200px;border-radius:8px;">
+    </div>
+    <input type="file" id="proofFile" accept="image/*" style="display:none;" onchange="handleProofUpload(this)">
+  </div>
+
+  <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:16px;">⚠️ 支付 ¥20 定金后上传截图，摄影师核实到账后确认预约</p>
+
+  <div style="display:flex;gap:8px;">
+    <button type="button" class="btn btn-outline" onclick="goToStep(2)" style="flex:1;">← 上一步</button>
+    <button type="button" class="btn btn-primary" onclick="submitFullBooking()" style="flex:1;background:#07c160;border-color:#07c160;" id="btnSubmitBooking">提交预约</button>
+  </div>
 </div>
+
+<!-- ═══ 第四步：预约成功 ═══ -->
+<div class="step-panel" id="stepPanel4">
+  <div class="success-icon">🎉</div>
+  <h3 style="text-align:center;font-family:var(--font-serif);margin-bottom:12px;">预约成功！</h3>
+  <p style="text-align:center;color:var(--text-light);margin-bottom:8px;" id="bkResultInfo"></p>
+  <div class="photographer-contact">
+    <p style="font-weight:700;margin-bottom:8px;">📸 添加摄影师微信确认档期</p>
+    <div class="contact-copy" onclick="copyText('HELLOqianren2021')">
+      <span>💬 HELLOqianren2021</span>
+      <span class="copy-hint">点击复制</span>
+    </div>
+    <div class="contact-copy" onclick="copyText('17536826272')" style="margin-top:8px;">
+      <span>📞 17536826272</span>
+      <span class="copy-hint">点击复制</span>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:12px;text-align:center;">摄影师核实支付凭证后将与你联系</p>
+  </div>
+  <button class="btn btn-outline full-width" onclick="resetBooking()" style="margin-top:20px;">继续预约</button>
+</div>
+
+</form>
 </section>
 
 </main>
