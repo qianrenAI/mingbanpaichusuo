@@ -231,6 +231,7 @@ function submitBooking() {
   if (!form) return false;
 
   var name = ($('#bkName').value || '').trim();
+  var wechat = ($('#bkWechat').value || '').trim() || '未填写';
   var contact = ($('#bkContact').value || '').trim();
   var count = parseInt($('#bkCount').value) || 1;
   var style = (document.querySelector('input[name="style"]:checked') || {}).value || '日系清新';
@@ -247,7 +248,7 @@ function submitBooking() {
   var total = count * CONFIG.pricePerPhoto;
   var order = {
     id: 'YH' + Date.now().toString(36).toUpperCase(),
-    name: name, contact: contact, count: count,
+    name: name, wechat: wechat, contact: contact, count: count,
     style: style, date: date, note: note,
     total: total, deposit: CONFIG.deposit,
     status: 'pending', createdAt: new Date().toISOString()
