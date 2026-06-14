@@ -7,7 +7,7 @@
 var CONFIG = {
   pricePerPhoto: 20,
   deposit: 20,
-  wechatQR: 'images/wechat-qr.jpg',
+  wechatQR: 'images/wechat-qr-clean.png',
   wechatLink: 'wxp://f2f0lzW7yM980EIQW5gU1b2-4QDBEWR2zjojaT4_uxpgoC0'
 };
 
