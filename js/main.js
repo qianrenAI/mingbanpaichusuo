@@ -7,7 +7,7 @@
 var CONFIG = {
   pricePerPhoto: 20,
   deposit: 20,
-  alipayLink: 'https://qr.alipay.com/fkx16352ttjqubrzxzhrjce'
+  alipayAccount: '17536826272'
 };
 
 // ─── 作品照片数据 ───
@@ -217,7 +217,10 @@ function updatePricePreview() {
 
 // ═══════════════════ 支付 ═══════════════════
 window.openAlipay = function() {
-  window.location.href = CONFIG.alipayLink;
+  var amount = CONFIG.deposit;
+  var deepLink = 'alipays://platformapi/startapp?appId=20000123&actionType=toAccount&account=' +
+    CONFIG.alipayAccount + '&amount=' + amount + '&memo=' + encodeURIComponent('明办拍出所');
+  window.location.href = deepLink;
 };
 
 // ═══════════════════ 预约提交 ═══════════════════
