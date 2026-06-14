@@ -202,15 +202,10 @@ function renderGallery(filter) {
 
 // ═══════════════════ 微信支付 ═══════════════════
 
-// 打开微信支付（微信内 wxp:// 直接跳转）
+// 打开微信支付
 window.openWechatPay = function() {
-  if (isWeChat) {
-    window.location.href = CONFIG.wechatLink;
-  } else {
-    // 不在微信内，复制链接提示在微信中打开
-    copyPageUrl();
-    toast('链接已复制，请在微信中粘贴打开', 'info');
-  }
+  copyPageUrl();
+  toast('链接已复制，请在微信中打开', 'info');
 };
 
 // 复制当前页面链接
@@ -254,32 +249,29 @@ function renderWechatPayment() {
   var amount = CONFIG.deposit;
 
   if (isWeChat) {
-    // 微信浏览器内 — 直接跳转付款
+    // 微信浏览器内 — 长按识别最方便
     d.innerHTML =
-      '<div style="text-align:center;padding:16px 0;">' +
-        '<div style="font-size:48px;margin-bottom:12px;">💚</div>' +
-        '<p style="font-size:16px;color:#333;margin-bottom:8px;"><strong>微信支付 ¥' + amount + '</strong></p>' +
-        '<p style="font-size:13px;color:#666;margin-bottom:16px;">点击下方按钮直接付款</p>' +
-        '<button class="btn btn-primary full-width btn-large" onclick="openWechatPay()" style="background:#07c160;border-color:#07c160;">' +
-          '💚 微信支付 ¥' + amount +
-        '</button>' +
+      '<div style="text-align:center;padding:8px 0;">' +
+        '<p style="font-size:14px;color:#333;margin-bottom:16px;"><strong>微信支付 ¥' + amount + '</strong></p>' +
+        '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;margin-bottom:12px;box-shadow:0 2px 16px rgba(0,0,0,0.08);">' +
+          '<img src="' + CONFIG.wechatQR + '" style="width:220px;height:220px;display:block;" alt="微信收款码">' +
+        '</div>' +
+        '<p style="font-size:15px;color:#07c160;font-weight:700;margin-bottom:4px;">👆 长按上方二维码</p>' +
+        '<p style="font-size:13px;color:#666;margin-bottom:12px;">选择「识别图中二维码」即可支付</p>' +
       '</div>';
   } else {
-    // 外部浏览器 — 显示二维码 + 引导在微信中打开
+    // 非微信浏览器 — 复制链接去微信
     d.innerHTML =
       '<div style="text-align:center;padding:8px 0;">' +
         '<p style="font-size:14px;color:#333;margin-bottom:12px;"><strong>微信支付 ¥' + amount + '</strong></p>' +
-        '<div style="background:#fff;border-radius:16px;padding:16px;display:inline-block;margin-bottom:12px;box-shadow:0 2px 16px rgba(0,0,0,0.08);">' +
+        '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;margin-bottom:12px;box-shadow:0 2px 16px rgba(0,0,0,0.08);">' +
           '<img src="' + CONFIG.wechatQR + '" style="width:200px;height:200px;display:block;" alt="微信收款码">' +
         '</div>' +
-        '<p style="font-size:12px;color:#999;margin-bottom:6px;">👆 截图或用另一台手机扫码</p>' +
-        '<p style="font-size:13px;color:#333;margin-bottom:16px;">或</p>' +
+        '<p style="font-size:12px;color:#999;margin-bottom:12px;">截图后去微信扫一扫</p>' +
         '<button class="btn btn-primary full-width" onclick="openWechatPay()" style="background:#07c160;border-color:#07c160;margin-bottom:8px;">' +
           '📋 复制链接 · 在微信中打开' +
         '</button>' +
-        '<button class="btn btn-ghost full-width" onclick="copyAmount()" style="font-size:13px;">' +
-          '📋 复制金额 ¥' + amount +
-        '</button>' +
+        '<p style="font-size:11px;color:#999;">在微信中打开 → 长按二维码 → 识别支付</p>' +
       '</div>';
   }
 }
@@ -356,13 +348,18 @@ function submitBooking() {
 
   // 渲染支付二维码
   var qrBox = success.querySelector('.qr-box');
-  qrBox.innerHTML = '<div style="text-align:center;padding:8px;">' +
-    '<img src="' + CONFIG.wechatQR + '" style="width:180px;height:180px;border-radius:12px;display:block;margin:0 auto 12px;" alt="微信收款码">' +
-    (isWeChat
-      ? '<button class="btn btn-primary full-width" onclick="openWechatPay()" style="background:#07c160;border-color:#07c160;">💚 点击支付 ¥' + CONFIG.deposit + '</button>'
-      : '<p style="font-size:12px;color:#999;">截图或用另一台手机扫码</p>' +
-        '<button class="btn btn-primary full-width" onclick="openWechatPay()" style="background:#07c160;border-color:#07c160;margin-top:8px;">📋 复制链接 · 在微信中打开</button>') +
+  if (isWeChat) {
+    qrBox.innerHTML = '<div style="text-align:center;padding:8px;">' +
+      '<img src="' + CONFIG.wechatQR + '" style="width:200px;height:200px;border-radius:12px;display:block;margin:0 auto 12px;" alt="微信收款码">' +
+      '<p style="font-size:15px;color:#07c160;font-weight:700;">👆 长按二维码 → 识别图中二维码</p>' +
     '</div>';
+  } else {
+    qrBox.innerHTML = '<div style="text-align:center;padding:8px;">' +
+      '<img src="' + CONFIG.wechatQR + '" style="width:200px;height:200px;border-radius:12px;display:block;margin:0 auto 12px;" alt="微信收款码">' +
+      '<p style="font-size:12px;color:#999;margin-bottom:8px;">截图后去微信扫一扫</p>' +
+      '<button class="btn btn-primary full-width" onclick="openWechatPay()" style="background:#07c160;border-color:#07c160;">📋 复制链接 · 在微信中打开</button>' +
+    '</div>';
+  }
 
   toast('预约已提交 · ' + order.id, 'success');
   window.scrollTo(0, 0);
