@@ -6,10 +6,7 @@
 // ─── 配置 ───
 var CONFIG = {
   pricePerPhoto: 20,
-  deposit: 20,
-  wechatQR: 'images/wechat-qr-clean.png',
-  alipayQR: 'images/alipay-qr.jpg',
-  alipayLink: 'https://qr.alipay.com/fkx16352ttjqubrzxzhrjce'
+  deposit: 20
 };
 
 // ─── 作品照片数据 ───
@@ -72,11 +69,9 @@ var PHOTOS = [
 // ─── 全局状态 ───
 var state = {
   currentFilter: 'all',
-  currentPayment: 'alipay',
   viewerIndex: -1,
   filteredPhotos: PHOTOS.slice()
 };
-var isWeChat = /MicroMessenger/i.test(navigator.userAgent);
 
 // ─── 快捷选择器 ───
 var $ = function(s) { return document.querySelector(s); };
@@ -123,7 +118,6 @@ window.closeViewer = function() {
 window.viewerPrev = function(e) { if (e) e.stopPropagation(); if (state.viewerIndex > 0) openViewer(state.viewerIndex - 1); };
 window.viewerNext = function(e) { if (e) e.stopPropagation(); if (state.viewerIndex < state.filteredPhotos.length - 1) openViewer(state.viewerIndex + 1); };
 
-// 键盘导航
 document.addEventListener('keydown', function(e) {
   if (state.viewerIndex < 0) return;
   if (e.key === 'Escape') closeViewer();
@@ -143,14 +137,12 @@ function renderGallery(filter) {
   var grid = $('#galleryGrid');
   if (!grid) return;
 
-  // 筛选
   if (filter === 'all') {
     state.filteredPhotos = PHOTOS.slice();
   } else {
     state.filteredPhotos = PHOTOS.filter(function(p) { return p.c === filter; });
   }
 
-  // 更新筛选按钮状态
   var btns = $$('.filter-btn');
   for (var i = 0; i < btns.length; i++) {
     btns[i].classList.remove('active');
@@ -159,7 +151,6 @@ function renderGallery(filter) {
     }
   }
 
-  // 更新计数
   if (filter === 'all') {
     var counts = { all: PHOTOS.length, distant: 0, close: 0 };
     for (var j = 0; j < PHOTOS.length; j++) { counts[PHOTOS[j].c]++; }
@@ -176,13 +167,11 @@ function renderGallery(filter) {
     }
   }
 
-  // 空状态
   if (state.filteredPhotos.length === 0) {
     grid.innerHTML = '<div class="gallery-empty"><div class="empty-icon">📸</div><p>该分类暂无作品</p><p class="hint">敬请期待更多照片</p></div>';
     return;
   }
 
-  // 渲染
   grid.innerHTML = '';
   for (var i = 0; i < state.filteredPhotos.length; i++) {
     var photo = state.filteredPhotos[i];
@@ -199,44 +188,6 @@ function renderGallery(filter) {
       return function() { openViewer(idx); };
     })(i));
     grid.appendChild(item);
-  }
-}
-
-// ═══════════════════ 支付模块 ═══════════════════
-window.sp = function(el) {
-  state.currentPayment = el.id === 'payAlipay' ? 'alipay' : 'wechat';
-  $$('.payment-option').forEach(function(o) { o.classList.remove('active'); });
-  el.classList.add('active');
-  renderPayment();
-};
-
-window.openAlipay = function() {
-  window.location.href = CONFIG.alipayLink;
-};
-
-function renderPayment() {
-  var d = $('#paymentQR');
-  if (!d) return;
-  var amount = CONFIG.deposit;
-
-  if (state.currentPayment === 'alipay') {
-    d.innerHTML =
-      '<div style="text-align:center;padding:12px 0;">' +
-        '<p style="font-size:14px;color:#333;margin-bottom:12px;">支付 <strong>¥' + amount + '</strong> 定金</p>' +
-        '<button class="btn btn-primary full-width btn-large" onclick="openAlipay()" style="background:#1677ff;border-color:#1677ff;">' +
-          '📱 打开支付宝支付 ¥' + amount +
-        '</button>' +
-        '<p style="font-size:12px;color:#999;margin-top:8px;">自动唤起支付宝 App，无需扫码</p>' +
-      '</div>';
-  } else {
-    d.innerHTML =
-      '<div style="text-align:center;padding:8px 0;">' +
-        '<p style="font-size:14px;color:#333;margin-bottom:12px;">支付 <strong>¥' + amount + '</strong> 定金</p>' +
-        '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;margin-bottom:12px;box-shadow:0 2px 16px rgba(0,0,0,0.08);">' +
-          '<img src="' + CONFIG.wechatQR + '" style="width:200px;height:200px;display:block;" alt="微信收款码">' +
-        '</div>' +
-        '<p style="font-size:12px;color:#999;">截图后去微信扫一扫</p>' +
-      '</div>';
   }
 }
 
@@ -264,8 +215,6 @@ function updatePricePreview() {
 }
 
 // ═══════════════════ 预约提交 ═══════════════════
-var _pendingOrder = null;
-
 function submitBooking() {
   var form = $('#bookingForm');
   if (!form) return false;
@@ -277,7 +226,6 @@ function submitBooking() {
   var date = $('#bkDate').value || '未指定';
   var note = ($('#bkNote').value || '').trim() || '无';
 
-  // 校验
   if (!name || !contact) {
     toast('请填写称呼和联系方式', 'error');
     if (!name) $('#bkName').classList.add('error');
@@ -288,101 +236,35 @@ function submitBooking() {
   var total = count * CONFIG.pricePerPhoto;
   var order = {
     id: 'YH' + Date.now().toString(36).toUpperCase(),
-    name: name,
-    contact: contact,
-    count: count,
-    style: style,
-    date: date,
-    note: note,
-    payment: 'wechat',
-    total: total,
-    deposit: CONFIG.deposit,
-    status: 'pending',
-    createdAt: new Date().toISOString()
+    name: name, contact: contact, count: count,
+    style: style, date: date, note: note,
+    total: total, deposit: CONFIG.deposit,
+    status: 'pending', createdAt: new Date().toISOString()
   };
 
-  // 保存到 localStorage
   var orders = JSON.parse(localStorage.getItem('yh_orders') || '[]');
   orders.push(order);
   localStorage.setItem('yh_orders', JSON.stringify(orders));
 
-  _pendingOrder = order;
-
-  // 隐藏表单，显示支付步骤
   form.classList.add('hidden');
-  $('#paymentStep').classList.remove('hidden');
-
-  // 渲染支付方式到支付步骤
-  var body = $('#paymentStepBody');
-  body.innerHTML =
-    '<div style="text-align:center;padding:8px;">' +
-      '<p style="font-size:15px;color:#333;margin-bottom:16px;">请支付定金 <strong>¥' + CONFIG.deposit + '</strong></p>' +
-      // 支付宝一键支付
-      '<button class="btn btn-primary full-width btn-large" onclick="openAlipay()" style="background:#1677ff;border-color:#1677ff;margin-bottom:8px;">' +
-        '📱 支付宝一键支付 ¥' + CONFIG.deposit +
-      '</button>' +
-      '<p style="font-size:11px;color:#999;margin-bottom:16px;">自动唤起支付宝 App</p>' +
-      // 微信备选
-      '<p style="font-size:13px;color:#999;margin-bottom:8px;">或用微信支付</p>' +
-      '<div style="background:#fff;border-radius:12px;padding:8px;display:inline-block;margin-bottom:12px;box-shadow:0 1px 8px rgba(0,0,0,0.06);">' +
-        '<img src="' + CONFIG.wechatQR + '" style="width:160px;height:160px;display:block;" alt="微信收款码">' +
-      '</div>' +
-      '<p style="font-size:11px;color:#999;">截图去微信扫一扫</p>' +
-    '</div>';
-
-  toast('请支付定金 ¥' + CONFIG.deposit, 'info');
-  window.scrollTo(0, 0);
-  return true;
-}
-
-// 确认支付 → 显示成功
-window.confirmPayment = function() {
-  if (!_pendingOrder) return;
-
-  // 更新订单状态
-  var orders = JSON.parse(localStorage.getItem('yh_orders') || '[]');
-  for (var i = orders.length - 1; i >= 0; i--) {
-    if (orders[i].id === _pendingOrder.id) {
-      orders[i].status = 'paid';
-      break;
-    }
-  }
-  localStorage.setItem('yh_orders', JSON.stringify(orders));
-
-  // 更新内存中的订单
-  _pendingOrder.status = 'paid';
-
-  // 隐藏支付步骤，显示成功
-  $('#paymentStep').classList.add('hidden');
   var success = $('#bookingSuccess');
   success.classList.remove('hidden');
-
-  // 显示订单信息
-  $('#bkResultInfo').textContent = '订单号 ' + _pendingOrder.id + ' · ' + _pendingOrder.count + '张 ' + _pendingOrder.style;
+  $('#bkResultInfo').textContent = '订单号 ' + order.id + ' · ' + order.count + '张 ' + order.style;
 
   toast('预约成功！', 'success');
   window.scrollTo(0, 0);
-};
-
-// 返回表单
-window.backToForm = function() {
-  $('#paymentStep').classList.add('hidden');
-  $('#bookingForm').classList.remove('hidden');
-  window.scrollTo(0, 0);
-};
+  return true;
+}
 
 window.resetBooking = function() {
   var form = $('#bookingForm');
   form.reset();
   form.classList.remove('hidden');
-  $('#paymentStep').classList.add('hidden');
   $('#bookingSuccess').classList.add('hidden');
   if ($('#bkCount')) $('#bkCount').value = 1;
   $('#bkName').classList.remove('error');
   $('#bkContact').classList.remove('error');
   updatePricePreview();
-  renderPayment();
-  _pendingOrder = null;
   toast('可以继续预约了', 'info');
 };
 
@@ -393,27 +275,17 @@ window.navigateTo = function(p) {
   _pages = _pages || $$('.page');
   _tabs = _tabs || $$('.tab-item');
   _links = _links || $$('.nav-link');
-  // 切换页面
   for (var i = 0; i < _pages.length; i++) _pages[i].classList.remove('active');
   var target = $('#page-' + p);
   if (target) target.classList.add('active');
-
-  // 回到顶部
   window.scrollTo(0, 0);
-
-  // 导航高亮
   for (var j = 0; j < _links.length; j++) _links[j].classList.remove('active');
   var al = document.querySelector('.nav-link[data-page="' + p + '"]');
   if (al) al.classList.add('active');
-
-  // Tab 高亮
   for (var k = 0; k < _tabs.length; k++) _tabs[k].classList.remove('active');
   var at = document.querySelector('.tab-item[data-tab="' + p + '"]');
   if (at) at.classList.add('active');
-
   closeNav();
-
-  // 如果进入作品集页面，重新渲染
   if (p === 'gallery') renderGallery();
 };
 
@@ -426,9 +298,6 @@ window.closeNav = function() {
 
 // ═══════════════════ 启动 ═══════════════════
 window.addEventListener('DOMContentLoaded', function() {
-  // ─── 事件绑定 ───
-
-  // 汉堡菜单
   var navToggle = $('#navToggle');
   if (navToggle) {
     navToggle.addEventListener('click', function() {
@@ -438,7 +307,6 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 导航链接
   var links = $$('.nav-link');
   for (var i = 0; i < links.length; i++) {
     links[i].addEventListener('click', function(e) {
@@ -447,7 +315,6 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Tab 切换
   var tabs = $$('.tab-item');
   for (var t = 0; t < tabs.length; t++) {
     tabs[t].addEventListener('click', function(e) {
@@ -456,7 +323,6 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 筛选按钮
   var filters = $$('.filter-btn');
   for (var f = 0; f < filters.length; f++) {
     filters[f].addEventListener('click', function() {
@@ -465,7 +331,6 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 表单提交
   var form = $('#bookingForm');
   if (form) {
     form.addEventListener('submit', function(e) {
@@ -474,19 +339,16 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 表单输入清除错误
   var nameInput = $('#bkName');
   if (nameInput) nameInput.addEventListener('input', function() { this.classList.remove('error'); });
   var contactInput = $('#bkContact');
   if (contactInput) contactInput.addEventListener('input', function() { this.classList.remove('error'); });
 
-  // 查看器背景点击关闭
   var viewer = $('#photoViewer');
   if (viewer) {
     viewer.addEventListener('click', function(e) {
       if (e.target === this) closeViewer();
     });
-    // 触摸滑动
     var startX = 0, startY = 0;
     viewer.addEventListener('touchstart', function(e) {
       startX = e.touches[0].clientX;
@@ -502,7 +364,6 @@ window.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // 导航栏滚动阴影
   window.addEventListener('scroll', function() {
     var navbar = $('#navbar');
     if (navbar) {
@@ -511,13 +372,11 @@ window.addEventListener('DOMContentLoaded', function() {
     }
   }, {passive: true});
 
-  // ─── 初始化 ───
   var di = $('#bkDate');
   if (di) di.setAttribute('min', new Date().toISOString().split('T')[0]);
 
   updatePricePreview();
 
-  // 启动动画
   setTimeout(function() {
     var splash = $('#splash');
     if (splash) splash.classList.add('fade-out');
@@ -530,7 +389,6 @@ window.addEventListener('DOMContentLoaded', function() {
       if (footer) footer.classList.remove('hidden');
       if (tabbar) tabbar.classList.remove('hidden');
       renderGallery();
-      renderPayment();
     }, 600);
   }, 400);
 });
