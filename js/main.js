@@ -214,16 +214,8 @@ window.sp = function(el) {
 
 // 直接打开支付宝
 window.openAlipay = function() {
-  var amount = CONFIG.deposit;
-  // 尝试支付宝 App 深度链接
-  var alipayDeepLink = 'alipays://platformapi/startapp?appId=20000067&url=' + encodeURIComponent(CONFIG.alipayLink);
-  window.location.href = alipayDeepLink;
-  // 如果 2 秒后还在页面上说明没装 App，跳转网页版
-  setTimeout(function() {
-    if (!document.hidden) {
-      window.open(CONFIG.alipayLink, '_blank');
-    }
-  }, 2000);
+  // qr.alipay.com 是支付宝官方短链，手机会自动唤起 App
+  window.location.href = CONFIG.alipayLink;
 };
 
 // 复制支付信息
