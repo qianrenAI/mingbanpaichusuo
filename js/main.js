@@ -6,7 +6,8 @@
 // ─── 配置 ───
 var CONFIG = {
   pricePerPhoto: 20,
-  deposit: 20
+  deposit: 20,
+  alipayLink: 'https://qr.alipay.com/fkx16352ttjqubrzxzhrjce'
 };
 
 // ─── 作品照片数据 ───
@@ -214,7 +215,14 @@ function updatePricePreview() {
   balanceEl.textContent = Math.max(0, v * price - CONFIG.deposit);
 }
 
+// ═══════════════════ 支付 ═══════════════════
+window.openAlipay = function() {
+  window.open(CONFIG.alipayLink, '_blank');
+};
+
 // ═══════════════════ 预约提交 ═══════════════════
+var _pendingOrder = null;
+
 function submitBooking() {
   var form = $('#bookingForm');
   if (!form) return false;
@@ -246,25 +254,52 @@ function submitBooking() {
   orders.push(order);
   localStorage.setItem('yh_orders', JSON.stringify(orders));
 
-  form.classList.add('hidden');
-  var success = $('#bookingSuccess');
-  success.classList.remove('hidden');
-  $('#bkResultInfo').textContent = '订单号 ' + order.id + ' · ' + order.count + '张 ' + order.style;
+  _pendingOrder = order;
 
-  toast('预约成功！', 'success');
+  form.classList.add('hidden');
+  $('#paymentStep').classList.remove('hidden');
+  toast('请支付定金 ¥' + CONFIG.deposit, 'info');
   window.scrollTo(0, 0);
   return true;
 }
+
+window.confirmPayment = function() {
+  if (!_pendingOrder) return;
+
+  var orders = JSON.parse(localStorage.getItem('yh_orders') || '[]');
+  for (var i = orders.length - 1; i >= 0; i--) {
+    if (orders[i].id === _pendingOrder.id) {
+      orders[i].status = 'paid';
+      break;
+    }
+  }
+  localStorage.setItem('yh_orders', JSON.stringify(orders));
+
+  $('#paymentStep').classList.add('hidden');
+  var success = $('#bookingSuccess');
+  success.classList.remove('hidden');
+  $('#bkResultInfo').textContent = '订单号 ' + _pendingOrder.id + ' · ' + _pendingOrder.count + '张 ' + _pendingOrder.style;
+  toast('预约成功！', 'success');
+  window.scrollTo(0, 0);
+};
+
+window.backToForm = function() {
+  $('#paymentStep').classList.add('hidden');
+  $('#bookingForm').classList.remove('hidden');
+  window.scrollTo(0, 0);
+};
 
 window.resetBooking = function() {
   var form = $('#bookingForm');
   form.reset();
   form.classList.remove('hidden');
+  $('#paymentStep').classList.add('hidden');
   $('#bookingSuccess').classList.add('hidden');
   if ($('#bkCount')) $('#bkCount').value = 1;
   $('#bkName').classList.remove('error');
   $('#bkContact').classList.remove('error');
   updatePricePreview();
+  _pendingOrder = null;
   toast('可以继续预约了', 'info');
 };
 

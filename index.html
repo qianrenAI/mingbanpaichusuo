@@ -10,7 +10,7 @@
 <meta property="og:title" content="明办拍出所 · 颐和路街拍摄影">
 <meta property="og:description" content="南京颐和路街拍 · 用镜头记录梧桐树下的故事">
 <meta property="og:type" content="website">
-<link rel="stylesheet" href="css/style.css?v=2">
+<link rel="stylesheet" href="css/style.css?v=3">
 <link rel="icon" href="logos/logo1-seal.svg" type="image/svg+xml">
 <title>明办拍出所 · 颐和路街拍摄影</title>
 </head>
@@ -116,11 +116,33 @@
 <button type="submit" class="btn btn-primary full-width btn-large">提交预约</button>
 </form>
 
+<!-- 支付步骤 -->
+<div class="payment-step hidden" id="paymentStep">
+<div class="page-header"><h2>支付定金</h2><p>支付 ¥20 确认预约</p></div>
+<div style="padding:0 16px 24px;max-width:400px;margin:0 auto;">
+  <button class="btn btn-primary full-width btn-large" onclick="openAlipay()" style="background:#1677ff;border-color:#1677ff;margin-bottom:12px;">
+    📱 支付宝一键支付 ¥20
+  </button>
+  <p style="text-align:center;font-size:12px;color:#999;margin-bottom:24px;">自动唤起支付宝 App，无需扫码</p>
+  <p style="text-align:center;font-size:13px;color:#999;margin-bottom:12px;">—— 或用微信支付 ——</p>
+  <div style="text-align:center;margin-bottom:16px;">
+    <div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+      <img src="images/wechat-qr-clean.png" style="width:180px;height:180px;display:block;" alt="微信收款码">
+    </div>
+    <p style="font-size:12px;color:#999;margin-top:8px;">截图去微信扫一扫</p>
+  </div>
+  <button class="btn btn-primary full-width btn-large" onclick="confirmPayment()" style="background:#07c160;border-color:#07c160;">
+    ✅ 我已完成支付
+  </button>
+  <button class="btn btn-ghost full-width" onclick="backToForm()" style="font-size:13px;margin-top:8px;">← 返回修改</button>
+</div>
+</div>
+
 <!-- 预约成功 -->
 <div class="booking-success hidden" id="bookingSuccess">
 <div class="success-icon">✅</div>
 <h3>预约成功</h3>
-<p>定金 <strong>¥20</strong></p>
+<p>定金已支付 <strong>¥20</strong></p>
 <p id="bkResultInfo" style="font-size:13px;color:var(--text-light);margin-top:8px;"></p>
 <p class="success-hint">摄影师将尽快与你联系确认档期</p>
 <button class="btn btn-outline full-width" onclick="resetBooking()">继续预约</button>
@@ -161,6 +183,6 @@
 <div class="viewer-info"></div>
 </div>
 
-<script src="js/main.js?v=2"></script>
+<script src="js/main.js?v=3"></script>
 </body>
 </html>
