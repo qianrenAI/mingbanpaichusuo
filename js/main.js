@@ -62,7 +62,8 @@ var PHOTOS = [
   {id:53,s:'images/photos/NIU_6793.jpg',t:'images/thumbs/NIU_6793.jpg',title:'NIU 6793',c:'distant'}
 ];
 
-var state = { currentFilter: 'all', currentStep: 1, viewerIndex: -1, filteredPhotos: PHOTOS.slice(), proofData: null };
+var state = { currentFilter: 'all', currentStep: 1, viewerIndex: -1, filteredPhotos: PHOTOS.slice(), proofData: null, galleryPage: 0 };
+var GALLERY_PAGE_SIZE = 20;
 var $ = function(s) { return document.querySelector(s); };
 var $$ = function(s) { return document.querySelectorAll(s); };
 
@@ -116,13 +117,39 @@ function renderGallery(filter) {
     }
   }
   if (!state.filteredPhotos.length) { grid.innerHTML = '<div class="gallery-empty"><div class="empty-icon">📸</div><p>该分类暂无作品</p></div>'; return; }
-  grid.innerHTML = '';
-  for (var i = 0; i < state.filteredPhotos.length; i++) {
+  state.galleryPage = 1;
+  renderGalleryPage();
+}
+
+function renderGalleryPage() {
+  var grid = $('#galleryGrid'); if (!grid) return;
+  var start = 0, end = state.galleryPage * GALLERY_PAGE_SIZE;
+  if (end > state.filteredPhotos.length) end = state.filteredPhotos.length;
+  if (state.galleryPage === 1) grid.innerHTML = '';
+
+  // Remove old load-more button
+  var oldBtn = grid.querySelector('.load-more-wrap');
+  if (oldBtn) oldBtn.remove();
+
+  for (var i = start; i < end; i++) {
     var p = state.filteredPhotos[i], item = document.createElement('div');
     item.className = 'gallery-item'; item.setAttribute('data-index', i);
-    item.innerHTML = '<img src="' + p.t + '" loading="lazy" onerror="this.style.opacity=0"><div class="gallery-overlay"><span class="gallery-tag">' + getCatLabel(p.c) + '</span></div><div class="gallery-index">' + (i + 1) + '</div>';
+    var src = p.thumb_sm || p.t;
+    item.innerHTML = '<img src="' + src + '" loading="lazy" onerror="this.style.opacity=0"><div class="gallery-overlay"><span class="gallery-tag">' + getCatLabel(p.c) + '</span></div><div class="gallery-index">' + (i + 1) + '</div>';
     item.addEventListener('click', (function(idx) { return function() { openViewer(idx); }; })(i));
     grid.appendChild(item);
+  }
+
+  // 还有更多？
+  if (end < state.filteredPhotos.length) {
+    var wrap = document.createElement('div'); wrap.className = 'load-more-wrap';
+    var btn = document.createElement('button');
+    btn.className = 'btn btn-outline full-width';
+    btn.style.cssText = 'margin-top:16px;';
+    btn.textContent = '加载更多 (' + (end) + '/' + state.filteredPhotos.length + ')';
+    btn.addEventListener('click', function() { state.galleryPage++; renderGalleryPage(); window.scrollBy(0, 200); });
+    wrap.appendChild(btn);
+    grid.appendChild(wrap);
   }
 }
 
