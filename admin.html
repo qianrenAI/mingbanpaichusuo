@@ -163,6 +163,8 @@
       document.querySelectorAll('.admin-tab-content').forEach(function(c) { c.style.display = 'none'; });
       event.target.classList.add('active');
       document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).style.display = 'block';
+      if (tab === 'orders') { renderOrders(); renderStats(); }
+      if (tab === 'joins') renderJoins();
     };
 
     // ═══ 订单 ═══
@@ -312,6 +314,12 @@
 
     var sp = localStorage.getItem('admin_pwd');
     if (sp) ADMIN_PWD = sp;
+
+    // 实时监听其他标签页的数据变化
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'yh_orders') { renderOrders(); renderStats(); }
+      if (e.key === 'yh_joins') renderJoins();
+    });
   </script>
 </body>
 </html>
