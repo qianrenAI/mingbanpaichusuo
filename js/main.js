@@ -310,11 +310,7 @@ window.adjustCount = function(d) {
   input.value = v; updatePricePreview();
 };
 function updatePricePreview() {
-  var c = $('#bkCount'), t = $('#previewTotal');
-  if (!c || !t) return;
-  var v = parseInt(c.value) || 1;
-  $('#previewCount').textContent = v;
-  t.textContent = v * CONFIG.pricePerPhoto;
+  // 价格固定，无需动态更新
 }
 
 // ═══ 页面导航 ═══
