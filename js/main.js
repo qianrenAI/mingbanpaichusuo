@@ -171,19 +171,44 @@ window.selectRole = function(role, el) {
   if (btn) { btn.disabled = false; btn.textContent = '确认'; }
 };
 
-window.showContact = function() {
+// Step 1 → 2: 选好身份，填信息
+window.goToJoinStep2 = function() {
   if (!selectedRole) return;
   var d = roleData[selectedRole];
   document.getElementById('joinStep1').style.display = 'none';
   document.getElementById('joinStep2').style.display = 'block';
-  document.getElementById('joinResultRole').textContent = d.icon + ' ' + d.name;
+  document.getElementById('joinStep3').style.display = 'none';
+  document.getElementById('joinStep2Role').innerHTML = '<p style="font-size:14px;color:var(--text-light);">您将作为 <strong>' + d.icon + ' ' + d.name + '</strong> 加入</p>';
   window.scrollTo(0, document.getElementById('joinStep2').offsetTop - 80);
+};
+
+// Step 2 → 1: 返回
+window.goToJoinStep1 = function() {
+  document.getElementById('joinStep1').style.display = 'block';
+  document.getElementById('joinStep2').style.display = 'none';
+  window.scrollTo(0, 0);
+};
+
+// Step 2 → 3: 确认信息，显示联系方式
+window.showContact = function() {
+  var name = (document.getElementById('joinName').value || '').trim();
+  var contact = (document.getElementById('joinContact').value || '').trim();
+  if (!name) { toast('请填写您的称呼', 'error'); return; }
+  if (!contact) { toast('请填写手机号码或微信号', 'error'); return; }
+  var d = roleData[selectedRole];
+  document.getElementById('joinStep2').style.display = 'none';
+  document.getElementById('joinStep3').style.display = 'block';
+  document.getElementById('joinResultRole').textContent = d.icon + ' ' + d.name + ' · ' + name;
+  window.scrollTo(0, document.getElementById('joinStep3').offsetTop - 80);
 };
 
 window.resetJoin = function() {
   selectedRole = null;
   document.getElementById('joinStep1').style.display = 'block';
   document.getElementById('joinStep2').style.display = 'none';
+  document.getElementById('joinStep3').style.display = 'none';
+  document.getElementById('joinName').value = '';
+  document.getElementById('joinContact').value = '';
   var btn = document.getElementById('btnGetContact');
   if (btn) { btn.disabled = true; btn.textContent = '确认'; }
   var cards = document.querySelectorAll('.join-card');
