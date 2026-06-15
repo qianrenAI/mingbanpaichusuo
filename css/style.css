@@ -531,6 +531,16 @@ ul { list-style: none; }
 .contact-copy:active { background: #e0dbd0; transform: scale(0.98); }
 .copy-hint { font-size: 11px; color: var(--primary); }
 
+/* ═══════════════════ 加入我们 ═══════════════════ */
+.join-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 0 16px 20px; }
+.join-card { background: var(--card); border-radius: var(--radius); padding: 20px 16px; text-align: center; box-shadow: var(--shadow); transition: transform 0.2s; }
+.join-card:hover { transform: translateY(-2px); }
+.join-icon { font-size: 36px; margin-bottom: 8px; }
+.join-card h3 { font-family: var(--font-serif); font-size: 16px; margin-bottom: 6px; color: var(--text); }
+.join-card p { font-size: 12px; color: var(--text-light); line-height: 1.6; }
+@media (min-width: 480px) { .join-grid { grid-template-columns: repeat(2, 1fr); max-width: 500px; margin: 0 auto 20px; } }
+@media (min-width: 768px) { .join-grid { grid-template-columns: repeat(4, 1fr); max-width: 900px; } }
+
 /* ═══════════════════ 页脚 ═══════════════════ */
 #footer {
   background: #1a1a2e; color: rgba(255,255,255,0.6);
