@@ -260,7 +260,7 @@
       else {
         empty.style.display = 'none';
         grid.innerHTML = list.map(function(p) {
-          return '<div class="photo-manage-item"><img src="' + p.t + '" alt="' + p.title + '" loading="lazy" onerror="this.style.display=\'none\'"><span class="photo-tag">' + getCatLabel(p.c) + '</span></div>';
+          return '<div class="photo-manage-item"><img src="' + (p.thumb_sm || p.t) + '" alt="' + p.title + '" loading="lazy" onerror="this.style.display=\'none\'"><span class="photo-tag">' + getCatLabel(p.c) + '</span></div>';
         }).join('');
       }
     }

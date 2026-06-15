@@ -63,7 +63,7 @@ var PHOTOS = [
 ];
 
 var state = { currentFilter: 'all', currentStep: 1, viewerIndex: -1, filteredPhotos: PHOTOS.slice(), proofData: null, galleryPage: 0 };
-var GALLERY_PAGE_SIZE = 20;
+var GALLERY_PAGE_SIZE = 12;
 var $ = function(s) { return document.querySelector(s); };
 var $$ = function(s) { return document.querySelectorAll(s); };
 
@@ -134,7 +134,7 @@ function renderGalleryPage() {
   for (var i = start; i < end; i++) {
     var p = state.filteredPhotos[i], item = document.createElement('div');
     item.className = 'gallery-item'; item.setAttribute('data-index', i);
-    var src = p.thumb_sm || p.t;
+    var src = p.thumb_mini || p.thumb_sm || p.t;
     item.innerHTML = '<img src="' + src + '" loading="lazy" onerror="this.style.opacity=0"><div class="gallery-overlay"><span class="gallery-tag">' + getCatLabel(p.c) + '</span></div><div class="gallery-index">' + (i + 1) + '</div>';
     item.addEventListener('click', (function(idx) { return function() { openViewer(idx); }; })(i));
     grid.appendChild(item);
