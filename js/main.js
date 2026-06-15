@@ -315,8 +315,14 @@ window.selectTimeSlot = function(el) {
 
 // ═══ 支付宝一键支付 ═══
 window.openAlipayPay = function() {
-  // qr.alipay.com 是支付宝官方短链，手机浏览器打开会弹窗「在支付宝中打开」
-  window.location.href = 'https://qr.alipay.com/fkx16352ttjqubrzxzhrjce';
+  var url = 'https://qr.alipay.com/fkx16352ttjqubrzxzhrjce';
+  // 先尝试 window.open
+  var w = window.open(url, '_blank');
+  if (!w || w.closed) {
+    // 弹窗被拦截，降级到当前页跳转
+    window.location.href = url;
+  }
+  toast('正在打开支付宝...', 'info');
 };
 
 // ═══ 上传支付凭证 ═══
