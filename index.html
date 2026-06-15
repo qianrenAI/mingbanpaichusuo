@@ -284,7 +284,7 @@
 
 <!-- 选身份 -->
 <div id="joinStep1">
-  <p style="text-align:center;font-size:14px;color:var(--text-light);margin-bottom:16px;">您想以什么身份加入我们？</p>
+  <p style="text-align:center;font-size:15px;color:var(--text);margin-bottom:20px;"><strong>您将以何种身份加入</strong></p>
   <div class="join-grid">
     <div class="join-card" onclick="selectRole('photographer', this)">
       <div class="join-icon">📸</div>
@@ -307,14 +307,17 @@
       <p>看好街拍市场，为品牌提供资金或资源支持</p>
     </div>
   </div>
-  <div style="text-align:center;margin-top:16px;">
-    <button class="btn btn-primary" id="btnGetContact" onclick="showContact()" disabled>获取联系方式</button>
+  <div style="text-align:center;margin-top:20px;">
+    <button class="btn btn-primary full-width btn-large" id="btnGetContact" onclick="showContact()" disabled>确认</button>
   </div>
 </div>
 
-<!-- 结果 -->
 <div id="joinStep2" style="display:none;">
-  <div id="joinResultDesc" style="text-align:center;padding:20px;background:var(--card);border-radius:var(--radius);margin:0 16px 20px;box-shadow:var(--shadow);"></div>
+  <div style="text-align:center;padding:40px 20px;">
+    <div style="font-size:48px;margin-bottom:16px;">🤝</div>
+    <h3 style="font-family:var(--font-serif);margin-bottom:8px;">我们将尽快与您建立联系</h3>
+    <p style="font-size:13px;color:var(--text-light);margin-bottom:24px;" id="joinResultRole"></p>
+  </div>
   <div class="pricing-note" style="margin:0 16px 20px;">
     <h4>📩 联系方式</h4>
     <div class="contact-copy" onclick="copyText('HELLOqianren2021')" style="margin-bottom:8px;">
