@@ -153,6 +153,47 @@ function renderGalleryPage() {
   }
 }
 
+// ═══ 加入我们 ═══
+var selectedRole = null;
+var roleData = {
+  photographer: { icon:'📸', name:'摄影师', desc:'热爱街拍，有独立审美。我们提供拍摄机会和作品展示平台，期待你的镜头语言加入明办拍出所，一起记录颐和路的街头故事。' },
+  assistant: { icon:'💡', name:'摄影助理', desc:'协助摄影师完成拍摄，负责补光、道具、引导客人。无需经验，对摄影有兴趣即可，在实践中学习成长，未来可晋升为独立摄影师。' },
+  sales: { icon:'🤝', name:'业务员', desc:'负责线上推广与客户对接，通过抖音、小红书等平台为明办拍出所引流。善于沟通、了解街拍市场者优先，多劳多得，按单提成。' },
+  investor: { icon:'🚀', name:'投资人', desc:'看好街拍市场，愿意为明办拍出所的品牌发展提供资金或资源支持。我们正在打造南京颐和路标志性街拍品牌，共享增长红利。' }
+};
+
+window.selectRole = function(role, el) {
+  selectedRole = role;
+  var cards = document.querySelectorAll('.join-card');
+  for (var i = 0; i < cards.length; i++) cards[i].classList.remove('selected');
+  el.classList.add('selected');
+  var btn = document.getElementById('btnGetContact');
+  if (btn) { btn.disabled = false; btn.textContent = '获取联系方式'; }
+};
+
+window.showContact = function() {
+  if (!selectedRole) return;
+  var d = roleData[selectedRole];
+  document.getElementById('joinStep1').style.display = 'none';
+  document.getElementById('joinStep2').style.display = 'block';
+  document.getElementById('joinResultDesc').innerHTML =
+    '<div style="font-size:48px;margin-bottom:8px;">' + d.icon + '</div>' +
+    '<h3 style="font-family:var(--font-serif);margin-bottom:8px;">' + d.name + '</h3>' +
+    '<p style="font-size:13px;color:var(--text-light);line-height:1.8;">' + d.desc + '</p>';
+  window.scrollTo(0, document.getElementById('joinStep2').offsetTop - 80);
+};
+
+window.resetJoin = function() {
+  selectedRole = null;
+  document.getElementById('joinStep1').style.display = 'block';
+  document.getElementById('joinStep2').style.display = 'none';
+  var btn = document.getElementById('btnGetContact');
+  if (btn) { btn.disabled = true; btn.textContent = '获取联系方式'; }
+  var cards = document.querySelectorAll('.join-card');
+  for (var i = 0; i < cards.length; i++) cards[i].classList.remove('selected');
+  window.scrollTo(0, 0);
+};
+
 // ═══ 复制 ═══
 window.copyText = function(t) {
   if (navigator.clipboard) { navigator.clipboard.writeText(t).then(function() { toast('已复制: ' + t, 'success'); }); }

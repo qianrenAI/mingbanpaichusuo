@@ -280,32 +280,56 @@
 </section>
 
 <section class="page" id="page-join">
-<div class="page-header"><h2>加入我们</h2><p>一起记录颐和路的每一个瞬间</p></div>
-<div class="join-grid">
-  <div class="join-card">
-    <div class="join-icon">📸</div>
-    <h3>摄影师</h3>
-    <p>热爱街拍，有独立审美，能用镜头捕捉街头的故事与情绪。熟悉日系、复古或胶片风格优先。</p>
+<div class="page-header"><h2>加入我们</h2><p>选择你的身份，一起记录颐和路的每一个瞬间</p></div>
+
+<!-- 选身份 -->
+<div id="joinStep1">
+  <p style="text-align:center;font-size:14px;color:var(--text-light);margin-bottom:16px;">您想以什么身份加入我们？</p>
+  <div class="join-grid">
+    <div class="join-card" onclick="selectRole('photographer', this)">
+      <div class="join-icon">📸</div>
+      <h3>摄影师</h3>
+      <p>热爱街拍，有独立审美，能用镜头捕捉街头的故事与情绪</p>
+    </div>
+    <div class="join-card" onclick="selectRole('assistant', this)">
+      <div class="join-icon">💡</div>
+      <h3>摄影助理</h3>
+      <p>协助摄影师完成拍摄，补光、道具、引导客人</p>
+    </div>
+    <div class="join-card" onclick="selectRole('sales', this)">
+      <div class="join-icon">🤝</div>
+      <h3>业务员</h3>
+      <p>线上推广与客户对接，抖音、小红书等平台引流</p>
+    </div>
+    <div class="join-card" onclick="selectRole('investor', this)">
+      <div class="join-icon">🚀</div>
+      <h3>投资人</h3>
+      <p>看好街拍市场，为品牌提供资金或资源支持</p>
+    </div>
   </div>
-  <div class="join-card">
-    <div class="join-icon">💡</div>
-    <h3>摄影助理</h3>
-    <p>协助摄影师完成拍摄，负责补光、道具、引导客人。对摄影有兴趣，愿意学习成长。</p>
-  </div>
-  <div class="join-card">
-    <div class="join-icon">🤝</div>
-    <h3>业务员</h3>
-    <p>负责线上推广与客户对接，通过抖音、小红书等平台引流。善于沟通，了解街拍市场。</p>
-  </div>
-  <div class="join-card">
-    <div class="join-icon">🚀</div>
-    <h3>投资人</h3>
-    <p>看好街拍市场，愿意为品牌发展提供资金或资源支持。共享颐和路街拍的增长红利。</p>
+  <div style="text-align:center;margin-top:16px;">
+    <button class="btn btn-primary" id="btnGetContact" onclick="showContact()" disabled>获取联系方式</button>
   </div>
 </div>
-<div class="pricing-note" style="margin:20px 16px;">
-  <h4>📩 如何加入</h4>
-  <p>添加摄影师微信 <strong>HELLOqianren2021</strong> 或 <strong>17536826272</strong>，备注你想加入的身份，我们聊聊。</p>
+
+<!-- 结果 -->
+<div id="joinStep2" style="display:none;">
+  <div id="joinResultDesc" style="text-align:center;padding:20px;background:var(--card);border-radius:var(--radius);margin:0 16px 20px;box-shadow:var(--shadow);"></div>
+  <div class="pricing-note" style="margin:0 16px 20px;">
+    <h4>📩 联系方式</h4>
+    <div class="contact-copy" onclick="copyText('HELLOqianren2021')" style="margin-bottom:8px;">
+      <span>💬 HELLOqianren2021</span>
+      <span class="copy-hint">点击复制</span>
+    </div>
+    <div class="contact-copy" onclick="copyText('17536826272')">
+      <span>📞 17536826272</span>
+      <span class="copy-hint">点击复制</span>
+    </div>
+    <p style="font-size:12px;color:var(--text-muted);margin-top:12px;text-align:center;">添加时请备注您想加入的身份</p>
+  </div>
+  <div style="text-align:center;padding:0 16px;">
+    <button class="btn btn-outline full-width" onclick="resetJoin()">重新选择</button>
+  </div>
 </div>
 </section>
 
