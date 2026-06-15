@@ -315,8 +315,8 @@ window.selectTimeSlot = function(el) {
 
 // ═══ 支付宝一键支付 ═══
 window.openAlipayPay = function() {
-  var link = 'alipays://platformapi/startapp?appId=20000123&actionType=toAccount&account=17536826272&amount=20&memo=' + encodeURIComponent('明办拍出所定金');
-  window.location.href = link;
+  // qr.alipay.com 是支付宝官方短链，手机浏览器打开会弹窗「在支付宝中打开」
+  window.location.href = 'https://qr.alipay.com/fkx16352ttjqubrzxzhrjce';
 };
 
 // ═══ 上传支付凭证 ═══
