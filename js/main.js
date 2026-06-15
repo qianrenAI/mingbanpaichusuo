@@ -133,11 +133,66 @@ window.copyText = function(t) {
 };
 
 // ═══════════════════ 预约向导 ═══════════════════
+
+// 保存草稿（去支付前自动保存）
+function saveDraft() {
+  var draft = {
+    name: ($('#bkName').value || '').trim(),
+    wechat: ($('#bkWechat').value || '').trim(),
+    count: parseInt($('#bkCount').value) || 1,
+    date: $('#bkDate').value || '',
+    timeSlot: (document.querySelector('input[name="timeSlot"]:checked') || {}).value || '',
+    style: (document.querySelector('input[name="style"]:checked') || {}).value || '日系清新',
+    note: ($('#bkNote').value || '').trim() || '无',
+    savedAt: Date.now()
+  };
+  localStorage.setItem('yh_draft', JSON.stringify(draft));
+}
+
+// 恢复草稿
+function loadDraft() {
+  try {
+    var raw = localStorage.getItem('yh_draft');
+    if (!raw) return null;
+    var d = JSON.parse(raw);
+    if (Date.now() - d.savedAt > 3600000) { localStorage.removeItem('yh_draft'); return null; } // 1小时过期
+    return d;
+  } catch(e) { return null; }
+}
+
+// 清除草稿
+function clearDraft() { localStorage.removeItem('yh_draft'); }
+
+// 恢复草稿
+window.resumeDraft = function() {
+  var d = loadDraft(); if (!d) { toast('草稿已过期', 'error'); return; }
+  $('#bkName').value = d.name || '';
+  $('#bkWechat').value = d.wechat || '';
+  $('#bkCount').value = d.count || 1;
+  $('#bkDate').value = d.date || '';
+  if (d.timeSlot) { var ts = document.querySelector('input[name="timeSlot"][value="' + d.timeSlot + '"]'); if (ts) { ts.checked = true; var tsl = ts.closest('.time-slot'); if (tsl) tsl.classList.add('active'); } }
+  var st = document.querySelector('input[name="style"][value="' + (d.style || '日系清新') + '"]'); if (st) st.checked = true;
+  $('#bkNote').value = d.note !== '无' ? d.note : '';
+  updatePricePreview();
+  $('#draftBanner').classList.add('hidden');
+  goToStep(3);
+};
+
+// 清除草稿提示
+window.clearDraftBanner = function() {
+  clearDraft(); $('#draftBanner').classList.add('hidden'); goToStep(1);
+};
+
+// 检查草稿
+function checkDraft() {
+  var d = loadDraft();
+  if (d) { $('#draftBanner').classList.remove('hidden'); }
+  else { $('#draftBanner').classList.add('hidden'); }
+}
+
 window.goToStep = function(n) {
   state.currentStep = n;
-  // 面板
   for (var i = 1; i <= 4; i++) { var p = $('#stepPanel' + i); if (p) p.classList.toggle('active', i === n); }
-  // 进度条
   var nodes = $$('.step-node');
   for (var j = 0; j < nodes.length; j++) {
     var step = parseInt(nodes[j].getAttribute('data-step'));
@@ -147,8 +202,8 @@ window.goToStep = function(n) {
   }
   var lines = $$('.step-line');
   for (var k = 0; k < lines.length; k++) { lines[k].classList.toggle('done', k + 1 < n); }
-  // Step 3 特殊处理
-  if (n === 3) { renderPaymentQR(); }
+  // 进入支付步骤时保存草稿
+  if (n === 3) { saveDraft(); renderPaymentQR(); }
   window.scrollTo(0, $('#stepper').offsetTop - 70);
 };
 
@@ -232,6 +287,7 @@ window.submitFullBooking = function() {
   localStorage.setItem('yh_orders', JSON.stringify(orders));
 
   $('#bkResultInfo').textContent = '订单号 ' + order.id + ' · ' + count + '人 · ' + (slotLabels[timeSlot] || '');
+  clearDraft();
   goToStep(4);
   toast('预约成功！', 'success');
 };
@@ -243,6 +299,7 @@ window.resetBooking = function() {
   $('#uploadArea').classList.remove('has-file');
   if ($('#bkCount')) $('#bkCount').value = 1;
   updatePricePreview(); renderPaymentQR();
+  clearDraft();
   goToStep(1);
 };
 
@@ -274,7 +331,7 @@ window.navigateTo = function(p) {
   var at = document.querySelector('.tab-item[data-tab="' + p + '"]'); if (at) at.classList.add('active');
   closeNav();
   if (p === 'gallery') renderGallery();
-  if (p === 'booking') { goToStep(1); renderPaymentQR(); }
+  if (p === 'booking') { checkDraft(); goToStep(1); renderPaymentQR(); }
 };
 window.closeNav = function() {
   var t = $('#navToggle'), m = $('#navMenu');

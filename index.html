@@ -93,6 +93,15 @@
 <section class="page" id="page-booking">
 <div class="page-header"><h2>预约下单</h2><p>四步完成预约，锁定你的街拍时刻</p></div>
 
+<!-- 草稿恢复提示 -->
+<div class="draft-banner hidden" id="draftBanner">
+  <div>📝 检测到未完成的预约，是否继续？</div>
+  <div style="display:flex;gap:8px;margin-top:8px;">
+    <button class="btn btn-primary" onclick="resumeDraft()" style="font-size:12px;padding:8px 16px;">继续支付</button>
+    <button class="btn btn-ghost" onclick="clearDraftBanner()" style="font-size:12px;">重新预约</button>
+  </div>
+</div>
+
 <!-- 进度条 -->
 <div class="stepper" id="stepper">
   <div class="step-node active" data-step="1">

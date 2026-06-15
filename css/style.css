@@ -447,6 +447,12 @@ ul { list-style: none; }
 .tab-item.active .tab-icon { transform: scale(1.1); }
 .tab-label { font-size: 10px; }
 
+/* ═══════════════════ 草稿恢复 ═══════════════════ */
+.draft-banner {
+  background: #fef3e2; border: 1px solid #f0c78e; border-radius: var(--radius);
+  padding: 16px; margin: 0 16px 16px; text-align: center; font-size: 14px; color: #e67e22;
+}
+
 /* ═══════════════════ 预约进度条 ═══════════════════ */
 .stepper {
   display: flex; align-items: center; justify-content: center;
