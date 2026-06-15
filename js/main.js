@@ -204,6 +204,7 @@ window.showContact = function() {
     createdAt: new Date().toISOString()
   });
   localStorage.setItem('yh_joins', JSON.stringify(joins));
+  toast('申请已提交！', 'success');
   // 显示结果
   document.getElementById('joinStep2').style.display = 'none';
   document.getElementById('joinStep3').style.display = 'block';
