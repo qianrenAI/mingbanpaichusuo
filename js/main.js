@@ -160,7 +160,7 @@ window.selectTimeSlot = function(el) {
 
 // ═══ 支付方式选择 ═══
 window.selectPayment = function(el) {
-  $$('.time-slot').forEach(function(s) { s.classList.remove('active'); s.querySelector('input').checked = false; });
+  $$('.payment-slot').forEach(function(s) { s.classList.remove('active'); s.querySelector('input').checked = false; });
   el.classList.add('active'); el.querySelector('input').checked = true;
   renderPaymentQR();
 };
