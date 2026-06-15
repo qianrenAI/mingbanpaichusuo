@@ -196,6 +196,15 @@ window.showContact = function() {
   if (!name) { toast('请填写您的称呼', 'error'); return; }
   if (!contact) { toast('请填写手机号码或微信号', 'error'); return; }
   var d = roleData[selectedRole];
+  // 保存到 localStorage
+  var joins = JSON.parse(localStorage.getItem('yh_joins') || '[]');
+  joins.push({
+    id: 'JN' + Date.now().toString(36).toUpperCase(),
+    role: selectedRole, roleName: d.name, name: name, contact: contact,
+    createdAt: new Date().toISOString()
+  });
+  localStorage.setItem('yh_joins', JSON.stringify(joins));
+  // 显示结果
   document.getElementById('joinStep2').style.display = 'none';
   document.getElementById('joinStep3').style.display = 'block';
   document.getElementById('joinResultRole').textContent = d.icon + ' ' + d.name + ' · ' + name;

@@ -82,6 +82,7 @@
       <div class="admin-tabs">
         <div class="admin-tab active" onclick="switchAdminTab('orders')">订单</div>
         <div class="admin-tab" onclick="switchAdminTab('photos')">作品</div>
+        <div class="admin-tab" onclick="switchAdminTab('joins')">加入</div>
         <div class="admin-tab" onclick="switchAdminTab('settings')">设置</div>
       </div>
 
@@ -95,6 +96,11 @@
           </div>
         </div>
         <div id="orderList"></div>
+      </div>
+
+      <div id="tabJoins" class="admin-tab-content" style="display:none;">
+        <h3>加入申请</h3>
+        <div id="joinList"></div>
       </div>
 
       <div id="tabPhotos" class="admin-tab-content" style="display:none;">
@@ -135,7 +141,7 @@
       if (document.getElementById('adminPwd').value === ADMIN_PWD) {
         document.getElementById('adminLogin').style.display = 'none';
         document.getElementById('adminPanel').classList.add('active');
-        renderOrders(); renderStats(); initPhotoManage(); updatePhotoStats();
+        renderOrders(); renderStats(); initPhotoManage(); updatePhotoStats(); renderJoins();
       } else {
         document.getElementById('adminError').style.display = 'block';
       }
@@ -273,6 +279,30 @@
         el.textContent = '总计 ' + PHOTOS.length + ' 张 | 远景 ' + (counts.distant || 0) + ' | 近景 ' + (counts.close || 0);
       } else { el.textContent = '无数据'; }
     }
+
+    // ═══ 加入申请 ═══
+    function renderJoins() {
+      var joins = JSON.parse(localStorage.getItem('yh_joins') || '[]');
+      var list = document.getElementById('joinList');
+      if (joins.length === 0) {
+        list.innerHTML = '<div class="admin-empty"><div class="icon">🤝</div><p>暂无加入申请</p></div>';
+        return;
+      }
+      joins.reverse();
+      var icons = { photographer:'📸', assistant:'💡', sales:'🤝', investor:'🚀' };
+      list.innerHTML = joins.map(function(j) {
+        return '<div class="order-card"><div class="order-id">#' + j.id + ' · ' + new Date(j.createdAt).toLocaleString('zh-CN') + '</div>' +
+          '<div class="order-info">' + (icons[j.role]||'👤') + ' <strong>' + j.roleName + '</strong> · ' + j.name + ' · 📞 ' + j.contact + '</div>' +
+          '<button onclick="deleteJoin(\'' + j.id + '\')" style="margin-top:8px;padding:4px 12px;font-size:11px;border:1px solid rgba(0,0,0,0.1);border-radius:4px;">删除</button></div>';
+      }).join('');
+    }
+
+    window.deleteJoin = function(id) {
+      if (!confirm('确认删除？')) return;
+      var joins = JSON.parse(localStorage.getItem('yh_joins') || '[]').filter(function(j) { return j.id !== id; });
+      localStorage.setItem('yh_joins', JSON.stringify(joins));
+      renderJoins();
+    };
 
     // ═══ 密码修改 ═══
     document.querySelector('.admin-login p:last-child').addEventListener('dblclick', function() {
