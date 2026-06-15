@@ -206,43 +206,27 @@
 <div class="step-panel" id="stepPanel3">
   <h3 class="step-title">第三步 · 支付定金 ¥20</h3>
 
-  <!-- 操作步骤说明 -->
-  <div class="payment-instructions">
-    <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-bottom:12px;">为节省您的宝贵时间 请一次性浏览步骤</p>
-    <div class="instruction-item"><span class="inst-num">1</span> 选择支付方式后截图保存收款码</div>
-    <div class="instruction-item"><span class="inst-num">2</span> 点击右上角 ··· 选择「浮窗」</div>
-    <div class="instruction-item"><span class="inst-num">3</span> 退出页面 → 打开支付App扫码付款 → 截图支付成功页面</div>
-    <div class="instruction-item"><span class="inst-num">4</span> 点击浮窗 或 重新扫描二维码返回本页面</div>
-    <div class="instruction-item"><span class="inst-num">5</span> 支付成功后点击下方「继续预约」</div>
-    <div class="instruction-item"><span class="inst-num">6</span> 上传支付截图 → 提交 → 完成预约</div>
+  <!-- 支付宝一键支付 -->
+  <div style="text-align:center;margin-bottom:20px;">
+    <button class="btn btn-primary full-width btn-large" onclick="openAlipayPay()" style="background:#1677ff;border-color:#1677ff;font-size:18px;padding:18px;">
+      💙 支付宝一键支付 ¥20
+    </button>
+    <p style="font-size:12px;color:#999;margin-top:6px;">点击自动唤起支付宝App，金额已填好，确认即可</p>
   </div>
 
-  <!-- 支付方式 + 收款码 -->
-  <div class="form-group"><label>选择支付方式</label>
-    <div class="time-slots">
-      <label class="payment-slot" onclick="selectPayment(this)">
-        <input type="radio" name="payment" value="wechat">
-        <div class="time-slot-card" style="text-align:center;">
-          <div style="font-size:28px;">💚</div>
-          <div class="time-range">微信支付</div>
-        </div>
-      </label>
-      <label class="payment-slot" onclick="selectPayment(this)">
-        <input type="radio" name="payment" value="alipay" checked>
-        <div class="time-slot-card" style="text-align:center;">
-          <div style="font-size:28px;">💙</div>
-          <div class="time-range">支付宝</div>
-        </div>
-      </label>
+  <!-- 或微信 -->
+  <p style="text-align:center;font-size:13px;color:#999;margin-bottom:12px;">—— 或使用微信支付 ——</p>
+  <div style="text-align:center;margin-bottom:20px;">
+    <div style="background:#fff;border-radius:16px;padding:10px;display:inline-block;box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+      <img src="images/wechat-qr-clean.png" style="width:180px;height:180px;display:block;border-radius:8px;">
     </div>
+    <p style="font-size:12px;color:#999;margin-top:6px;">截图保存 → 微信扫一扫</p>
   </div>
-
-  <div id="paymentQRDisplay" style="text-align:center;margin-bottom:16px;"></div>
 
   <!-- 上传凭证 -->
   <div class="form-group"><label>上传支付凭证 *</label>
     <div class="upload-area" id="uploadArea" onclick="document.getElementById('proofFile').click()">
-      <div id="uploadPlaceholder">📷 点击上传支付成功截图</div>
+      <div id="uploadPlaceholder">📷 支付成功后截图上传</div>
       <img id="uploadPreview" style="display:none;max-width:100%;max-height:200px;border-radius:8px;">
     </div>
     <input type="file" id="proofFile" accept="image/*" style="display:none;" onchange="handleProofUpload(this)">

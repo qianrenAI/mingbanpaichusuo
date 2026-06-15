@@ -303,7 +303,7 @@ window.goToStep = function(n) {
   var lines = $$('.step-line');
   for (var k = 0; k < lines.length; k++) { lines[k].classList.toggle('done', k + 1 < n); }
   // 进入支付步骤时保存草稿
-  if (n === 3) { saveDraft(); renderPaymentQR(); }
+  if (n === 3) { saveDraft(); }
   window.scrollTo(0, $('#stepper').offsetTop - 70);
 };
 
@@ -313,22 +313,11 @@ window.selectTimeSlot = function(el) {
   el.classList.add('active'); el.querySelector('input').checked = true;
 };
 
-// ═══ 支付方式选择 ═══
-window.selectPayment = function(el) {
-  $$('.payment-slot').forEach(function(s) { s.classList.remove('active'); s.querySelector('input').checked = false; });
-  el.classList.add('active'); el.querySelector('input').checked = true;
-  renderPaymentQR();
+// ═══ 支付宝一键支付 ═══
+window.openAlipayPay = function() {
+  var link = 'alipays://platformapi/startapp?appId=20000123&actionType=toAccount&account=17536826272&amount=20&memo=' + encodeURIComponent('明办拍出所定金');
+  window.location.href = link;
 };
-
-function renderPaymentQR() {
-  var d = $('#paymentQRDisplay'); if (!d) return;
-  var payment = (document.querySelector('input[name="payment"]:checked') || {}).value || 'alipay';
-  if (payment === 'wechat') {
-    d.innerHTML = '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;box-shadow:0 2px 12px rgba(0,0,0,0.08);"><img src="images/wechat-qr-clean.png" style="width:200px;height:200px;display:block;border-radius:8px;"></div><p style="font-size:13px;color:#07c160;font-weight:700;margin-top:8px;">💚 微信收款码</p>';
-  } else {
-    d.innerHTML = '<div style="background:#fff;border-radius:16px;padding:12px;display:inline-block;box-shadow:0 2px 12px rgba(0,0,0,0.08);"><img src="images/alipay-qr.jpg" style="width:200px;height:200px;display:block;border-radius:8px;"></div><p style="font-size:13px;color:#1677ff;font-weight:700;margin-top:8px;">💙 支付宝收款码</p>';
-  }
-}
 
 // ═══ 上传支付凭证 ═══
 window.handleProofUpload = function(input) {
@@ -398,8 +387,7 @@ window.resetBooking = function() {
   $('#uploadPreview').style.display = 'none'; $('#uploadPlaceholder').style.display = 'block';
   $('#uploadArea').classList.remove('has-file');
   if ($('#bkCount')) $('#bkCount').value = 1;
-  updatePricePreview(); renderPaymentQR();
-  clearDraft();
+  updatePricePreview();   clearDraft();
   goToStep(1);
 };
 
@@ -459,7 +447,6 @@ window.addEventListener('DOMContentLoaded', function() {
       if (splash) splash.classList.add('hidden');
       var n = $('#navbar'), f = $('#footer'), t = $('#tabbar');
       if (n) n.classList.remove('hidden'); if (f) f.classList.remove('hidden'); if (t) t.classList.remove('hidden');
-      renderGallery(); renderPaymentQR();
-    }, 600);
+      renderGallery();     }, 600);
   }, 400);
 });
