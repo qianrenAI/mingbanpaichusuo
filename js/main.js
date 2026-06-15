@@ -310,12 +310,11 @@ window.adjustCount = function(d) {
   input.value = v; updatePricePreview();
 };
 function updatePricePreview() {
-  var c = $('#bkCount'), t = $('#previewTotal'), b = $('#previewBalance');
-  if (!c || !t || !b) return;
-  var v = parseInt(c.value) || 1, price = CONFIG.pricePerPhoto;
+  var c = $('#bkCount'), t = $('#previewTotal');
+  if (!c || !t) return;
+  var v = parseInt(c.value) || 1;
   $('#previewCount').textContent = v;
-  t.textContent = v * price;
-  b.textContent = Math.max(0, v * price - CONFIG.deposit);
+  t.textContent = v * CONFIG.pricePerPhoto;
 }
 
 // ═══ 页面导航 ═══
