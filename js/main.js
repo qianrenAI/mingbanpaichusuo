@@ -313,16 +313,14 @@ window.selectTimeSlot = function(el) {
   el.classList.add('active'); el.querySelector('input').checked = true;
 };
 
-// ═══ 支付宝一键支付 ═══
+// ═══ 收钱吧在线支付 ═══
 window.openAlipayPay = function() {
-  var url = 'https://qr.alipay.com/fkx16352ttjqubrzxzhrjce';
-  // 先尝试 window.open
+  var url = 'https://i.wosai.cn/55ZAEo';
   var w = window.open(url, '_blank');
   if (!w || w.closed) {
-    // 弹窗被拦截，降级到当前页跳转
     window.location.href = url;
   }
-  toast('正在打开支付宝...', 'info');
+  toast('正在打开支付页面...', 'info');
 };
 
 // ═══ 上传支付凭证 ═══
