@@ -211,8 +211,7 @@
               (isPending ? '⏳ 待核实' : '✅ 已核实') +
             '</span>' +
           '</div>' +
-          (o.proof ? '<div style="margin-top:12px;"><p style="font-size:11px;color:var(--text-muted);margin-bottom:4px;">📎 支付凭证：</p><img src="' + o.proof + '" style="max-width:100%;max-height:200px;border-radius:8px;cursor:pointer;" onclick="this.style.maxHeight=this.style.maxHeight==\'200px\'?\'none\':\'200px\'"></div>' : '') +
-          (isPending ? '<div class="alert-box" style="margin-top:12px;">📱 请核对支付凭证与收款记录，确认到账后点下方核实</div>' +
+          (isPending ? '<div class="alert-box" style="margin-top:12px;">📱 请在收钱吧后台核对收款记录，确认到账后点下方核实</div>' +
           '<div class="order-actions">' +
             '<button class="btn-paid" onclick="markPaid(\'' + o.id + '\')">✅ 确认到账 · 核实通过</button>' +
             '<button onclick="deleteOrderById(\'' + o.id + '\')">🗑 删除</button>' +

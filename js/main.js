@@ -323,27 +323,6 @@ window.openAlipayPay = function() {
   toast('正在打开支付页面...', 'info');
 };
 
-// ═══ 上传支付凭证 ═══
-window.handleProofUpload = function(input) {
-  var file = input.files[0]; if (!file) return;
-  if (file.size > 5 * 1024 * 1024) { toast('图片不能超过5MB', 'error'); return; }
-  var reader = new FileReader();
-  reader.onload = function(e) {
-    var img = new Image();
-    img.onload = function() {
-      var canvas = document.createElement('canvas');
-      var maxW = 800, scale = Math.min(1, maxW / img.width);
-      canvas.width = img.width * scale; canvas.height = img.height * scale;
-      var ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      state.proofData = canvas.toDataURL('image/jpeg', 0.7);
-      var preview = $('#uploadPreview'); preview.src = state.proofData; preview.style.display = 'block';
-      $('#uploadPlaceholder').style.display = 'none';
-      $('#uploadArea').classList.add('has-file');
-    };
-    img.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
-};
 
 // ═══ 提交预约 ═══
 window.submitFullBooking = function() {
@@ -354,13 +333,11 @@ window.submitFullBooking = function() {
   var timeSlot = (document.querySelector('input[name="timeSlot"]:checked') || {}).value;
   var style = (document.querySelector('input[name="style"]:checked') || {}).value || '日系清新';
   var note = ($('#bkNote').value || '').trim() || '无';
-  var payment = (document.querySelector('input[name="payment"]:checked') || {}).value || 'alipay';
 
   if (!name) { toast('请填写称呼', 'error'); goToStep(1); return; }
   if (!wechat) { toast('请填写微信号', 'error'); goToStep(1); return; }
   if (!date) { toast('请选择预约日期', 'error'); goToStep(2); return; }
   if (!timeSlot) { toast('请选择时间段', 'error'); goToStep(2); return; }
-  if (!state.proofData) { toast('请上传支付凭证', 'error'); return; }
 
   var slotLabels = { afternoon: '14:00-19:00 下午·郁郁葱葱', evening: '19:00-22:00 晚间·灯火阑珊', night: '22:00-3:00 凌晨·轻声细语' };
   var total = count * CONFIG.pricePerPhoto;
@@ -369,9 +346,8 @@ window.submitFullBooking = function() {
     id: 'YH' + Date.now().toString(36).toUpperCase(),
     name: name, wechat: wechat, count: count, date: date,
     timeSlot: timeSlot, timeLabel: slotLabels[timeSlot] || timeSlot,
-    style: style, note: note, payment: payment,
+    style: style, note: note,
     total: total, deposit: CONFIG.deposit, status: 'pending',
-    proof: state.proofData,
     createdAt: new Date().toISOString()
   };
 
@@ -387,11 +363,10 @@ window.submitFullBooking = function() {
 
 window.resetBooking = function() {
   $('#bookingForm').reset();
-  state.proofData = null; state.currentStep = 1;
-  $('#uploadPreview').style.display = 'none'; $('#uploadPlaceholder').style.display = 'block';
-  $('#uploadArea').classList.remove('has-file');
+  state.currentStep = 1;
   if ($('#bkCount')) $('#bkCount').value = 1;
-  updatePricePreview();   clearDraft();
+  updatePricePreview();
+  clearDraft();
   goToStep(1);
 };
 
