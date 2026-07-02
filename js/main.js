@@ -315,7 +315,7 @@ window.selectTimeSlot = function(el) {
 
 // ═══ 收钱吧在线支付 ═══
 window.openAlipayPay = function() {
-  var url = 'https://i.wosai.cn/55ZAEo';
+  var url = 'https://i.wosai.cn/59X26O';
   var w = window.open(url, '_blank');
   if (!w || w.closed) {
     window.location.href = url;
