@@ -420,19 +420,18 @@ window.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('scroll', function() { var nb = $('#navbar'); if (nb) nb.classList.toggle('scrolled', window.scrollY > 10); }, {passive: true});
   var di = $('#bkDate');
   if (di) {
+    di.setAttribute('min', new Date().toISOString().split('T')[0]);
+    // 显示近四天推荐
     var today = new Date();
-    var maxDay = new Date(today); maxDay.setDate(maxDay.getDate() + 3);
-    di.setAttribute('min', today.toISOString().split('T')[0]);
-    di.setAttribute('max', maxDay.toISOString().split('T')[0]);
     var days = ['周日','周一','周二','周三','周四','周五','周六'];
     var hint = $('#bkDateHint');
     if (hint) {
       var tips = [];
       for (var d = 0; d < 4; d++) {
         var dt = new Date(today); dt.setDate(dt.getDate() + d);
-        tips.push((dt.getMonth()+1)+'.'+dt.getDate()+' '+days[dt.getDay()]);
+        tips.push('<strong>' + (dt.getMonth()+1) + '.' + dt.getDate() + ' ' + days[dt.getDay()] + '</strong>');
       }
-      hint.textContent = '可选日期：' + tips.join('  |  ');
+      hint.innerHTML = '⭐ 近四天可约：' + tips.join(' ｜ ');
     }
   }
   updatePricePreview();
