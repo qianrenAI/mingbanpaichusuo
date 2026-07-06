@@ -140,7 +140,23 @@ ul { list-style: none; }
 .hero-logo { width: 280px; max-width: 85vw; margin: 0 auto 24px; filter: drop-shadow(0 4px 20px rgba(232,200,122,0.15)); }
 .hero-subtitle { font-family: var(--font-serif); font-size: 15px; color: var(--accent); letter-spacing: 4px; margin-bottom: 12px; }
 .hero-desc { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.8; margin-bottom: 32px; }
-.hero-actions { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.hero-actions { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; align-items: center; }
+.hero-badge {
+  display: inline-block; padding: 6px 20px; border-radius: 20px;
+  background: rgba(39,174,96,0.15); color: #4cd964; font-size: 13px;
+  letter-spacing: 2px; margin-bottom: 20px; border: 1px solid rgba(39,174,96,0.25);
+}
+.hero-price { margin: 16px 0 20px; }
+.hero-price-big {
+  font-size: 64px; font-weight: 900; color: #4cd964;
+  font-family: var(--font-sans); letter-spacing: -2px;
+  text-shadow: 0 0 40px rgba(76,217,100,0.4);
+}
+.hero-price-label { display: block; font-size: 16px; color: rgba(255,255,255,0.7); margin-top: 2px; letter-spacing: 2px; }
+.btn-hero { background: #4cd964; border-color: #4cd964; color: #1a1a2e; font-size: 18px; padding: 18px 36px; box-shadow: 0 4px 24px rgba(76,217,100,0.35); animation: heroPulse 2s ease-in-out infinite; }
+@keyframes heroPulse { 0%, 100% { box-shadow: 0 4px 24px rgba(76,217,100,0.35); } 50% { box-shadow: 0 4px 40px rgba(76,217,100,0.6); } }
+.btn-ghost-light { background: transparent; border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); padding: 12px 28px; font-size: 14px; border-radius: var(--radius); transition: 0.2s; }
+.btn-ghost-light:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
 .hero-douyin {
   display: flex; align-items: center; justify-content: center; gap: 8px;
   color: rgba(255,255,255,0.5); font-size: 13px;
