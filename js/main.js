@@ -271,6 +271,7 @@ window.resumeDraft = function() {
   $('#bkWechat').value = d.wechat || '';
   $('#bkCount').value = d.count || 1;
   $('#bkDate').value = d.date || '';
+  if (d.date) { var db = document.querySelector('.date-btn[data-date=\"' + d.date + '\"]'); if (db) { $$('.date-btn').forEach(function(b){b.classList.remove('selected');}); db.classList.add('selected'); } }
   if (d.timeSlot) { var ts = document.querySelector('input[name="timeSlot"][value="' + d.timeSlot + '"]'); if (ts) { ts.checked = true; var tsl = ts.closest('.time-slot'); if (tsl) tsl.classList.add('active'); } }
   var st = document.querySelector('input[name="style"][value="' + (d.style || '日系清新') + '"]'); if (st) st.checked = true;
   $('#bkNote').value = d.note !== '无' ? d.note : '';
@@ -303,6 +304,7 @@ function resumeDraftAuto(d) {
   $('#bkWechat').value = d.wechat || '';
   $('#bkCount').value = d.count || 1;
   $('#bkDate').value = d.date || '';
+  if (d.date) { var db = document.querySelector('.date-btn[data-date=\"' + d.date + '\"]'); if (db) { $$('.date-btn').forEach(function(b){b.classList.remove('selected');}); db.classList.add('selected'); } }
   if (d.timeSlot) { var ts = document.querySelector('input[name="timeSlot"][value="' + d.timeSlot + '"]'); if (ts) { ts.checked = true; var tsl = ts.closest('.time-slot'); if (tsl) tsl.classList.add('active'); } }
   var st = document.querySelector('input[name="style"][value="' + (d.style || '日系清新') + '"]'); if (st) st.checked = true;
   $('#bkNote').value = d.note !== '无' ? d.note : '';
@@ -329,6 +331,13 @@ window.goToStep = function(n) {
   // 进入支付步骤时保存草稿
   if (n === 3) { saveDraft(); }
   window.scrollTo(0, $('#stepper').offsetTop - 70);
+};
+
+// ═══ 日期选择 ═══
+window.selectDate = function(el, dateStr) {
+  $$('.date-btn').forEach(function(b) { b.classList.remove('selected'); });
+  el.classList.add('selected');
+  $('#bkDate').value = dateStr;
 };
 
 // ═══ 时间段选择 ═══
@@ -449,21 +458,27 @@ window.addEventListener('DOMContentLoaded', function() {
     viewer.addEventListener('touchend', function(e) { var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) { if (dx > 0) viewerPrev(e); else viewerNext(e); } });
   }
   window.addEventListener('scroll', function() { var nb = $('#navbar'); if (nb) nb.classList.toggle('scrolled', window.scrollY > 10); }, {passive: true});
-  var di = $('#bkDate');
-  if (di) {
-    di.setAttribute('min', new Date().toISOString().split('T')[0]);
-    // 显示近四天推荐
+  // 日期选择器
+  var dp = $('#datePicker');
+  if (dp) {
     var today = new Date();
     var days = ['周日','周一','周二','周三','周四','周五','周六'];
     var hint = $('#bkDateHint');
-    if (hint) {
-      var tips = [];
-      for (var d = 0; d < 4; d++) {
-        var dt = new Date(today); dt.setDate(dt.getDate() + d);
-        tips.push('<strong>' + (dt.getMonth()+1) + '.' + dt.getDate() + ' ' + days[dt.getDay()] + '</strong>');
-      }
-      hint.innerHTML = '⭐ 近四天可约：' + tips.join(' ｜ ');
+    var html = '';
+    var todayStr = today.toISOString().split('T')[0];
+    for (var d = 0; d < 7; d++) {
+      var dt = new Date(today); dt.setDate(dt.getDate() + d);
+      var ds = dt.toISOString().split('T')[0];
+      var isToday = d === 0;
+      html += '<div class="date-btn' + (isToday ? ' selected' : '') + '" data-date="' + ds + '" onclick="selectDate(this,\'' + ds + '\')">' +
+        '<span class="d-weekday">' + days[dt.getDay()] + '</span>' +
+        '<span class="d-date">' + (dt.getMonth()+1) + '.' + dt.getDate() + '</span>' +
+        (isToday ? '<span class="d-today">今天</span>' : '') +
+      '</div>';
     }
+    dp.innerHTML = html;
+    $('#bkDate').value = todayStr;
+    if (hint) hint.textContent = '⭐ 未来7天可约，点击选择';
   }
   updatePricePreview();
   setTimeout(function() {

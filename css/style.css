@@ -495,6 +495,21 @@ ul { list-style: none; }
 .step-panel.active { display: block; }
 .step-title { font-family: var(--font-serif); font-size: 17px; margin-bottom: 20px; color: var(--text); text-align: center; }
 
+/* ═══════════════════ 日期选择 ═══════════════════ */
+.date-picker { display: flex; gap: 6px; flex-wrap: wrap; }
+.date-btn {
+  flex: 1; min-width: 70px; padding: 12px 6px; text-align: center;
+  border: 2px solid rgba(0,0,0,0.08); border-radius: var(--radius-sm);
+  background: var(--card); cursor: pointer; transition: 0.2s; font-family: var(--font-sans);
+}
+.date-btn:hover { border-color: var(--primary); }
+.date-btn.selected { border-color: var(--primary); background: rgba(196,30,58,0.05); box-shadow: 0 0 0 3px rgba(196,30,58,0.06); }
+.date-btn .d-weekday { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
+.date-btn .d-date { display: block; font-size: 18px; font-weight: 700; color: var(--text); }
+.date-btn.selected .d-weekday { color: var(--primary); }
+.date-btn.selected .d-date { color: var(--primary); }
+.date-btn .d-today { font-size: 9px; color: #27ae60; font-weight: 700; }
+
 /* ═══════════════════ 时间段卡片 ═══════════════════ */
 .time-slots { display: flex; flex-direction: column; gap: 10px; }
 .time-slot { cursor: pointer; display: block; }
