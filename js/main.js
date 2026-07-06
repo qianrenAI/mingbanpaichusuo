@@ -418,7 +418,23 @@ window.addEventListener('DOMContentLoaded', function() {
     viewer.addEventListener('touchend', function(e) { var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy; if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) { if (dx > 0) viewerPrev(e); else viewerNext(e); } });
   }
   window.addEventListener('scroll', function() { var nb = $('#navbar'); if (nb) nb.classList.toggle('scrolled', window.scrollY > 10); }, {passive: true});
-  var di = $('#bkDate'); if (di) di.setAttribute('min', new Date().toISOString().split('T')[0]);
+  var di = $('#bkDate');
+  if (di) {
+    var today = new Date();
+    var maxDay = new Date(today); maxDay.setDate(maxDay.getDate() + 3);
+    di.setAttribute('min', today.toISOString().split('T')[0]);
+    di.setAttribute('max', maxDay.toISOString().split('T')[0]);
+    var days = ['周日','周一','周二','周三','周四','周五','周六'];
+    var hint = $('#bkDateHint');
+    if (hint) {
+      var tips = [];
+      for (var d = 0; d < 4; d++) {
+        var dt = new Date(today); dt.setDate(dt.getDate() + d);
+        tips.push((dt.getMonth()+1)+'.'+dt.getDate()+' '+days[dt.getDay()]);
+      }
+      hint.textContent = '可选日期：' + tips.join('  |  ');
+    }
+  }
   updatePricePreview();
   setTimeout(function() {
     var splash = $('#splash'); if (splash) splash.classList.add('fade-out');
