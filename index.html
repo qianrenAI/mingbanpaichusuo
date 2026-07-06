@@ -207,24 +207,23 @@
   </div>
 </div>
 
-<!-- ═══ 第三步：支付定金 ═══ -->
+<!-- ═══ 第三步a：在线支付 ═══ -->
 <div class="step-panel" id="stepPanel3">
   <h3 class="step-title">第三步 · 支付定金 ¥9.9</h3>
-
-  <!-- 支付宝一键支付 -->
   <div style="text-align:center;margin-bottom:20px;">
-    <button type="button" class="btn btn-primary full-width btn-large" onclick="openAlipayPay()" style="background:#e67e22;border-color:#e67e22;font-size:18px;padding:18px;">
+    <button type="button" class="btn btn-primary full-width btn-large" onclick="openAlipayPay();showPayReturnBtn()" style="background:#e67e22;border-color:#e67e22;font-size:18px;padding:18px;">
       💳 在线支付 ¥9.9
     </button>
-    <p style="font-size:12px;color:#999;margin-top:6px;margin-bottom:20px;">支持微信 / 支付宝，点击直接付款</p>
+    <p style="font-size:12px;color:#999;margin-top:6px;">支持微信 / 支付宝，点击跳转收钱吧付款</p>
   </div>
-
-  <!-- 上传凭证 -->
-  <p style="font-size:12px;color:var(--text-muted);text-align:center;margin-bottom:16px;">支付完成后返回本页点击下方按钮</p>
-
-  <div style="display:flex;gap:8px;">
-    <button type="button" class="btn btn-outline" onclick="goToStep(2)" style="flex:1;">← 上一步</button>
-    <button type="button" class="btn btn-primary" onclick="submitFullBooking()" style="flex:1;background:#07c160;border-color:#07c160;" id="btnSubmitBooking">我已完成支付，提交预约</button>
+  <div id="payReturnSection" style="display:none;">
+    <div style="border-top:1px dashed rgba(0,0,0,0.1);padding-top:16px;margin-top:16px;">
+      <p style="text-align:center;font-size:13px;color:var(--text-muted);margin-bottom:12px;">支付完成后，点下方按钮提交预约</p>
+      <button type="button" class="btn btn-primary full-width btn-large" onclick="submitFullBooking()" style="background:#07c160;border-color:#07c160;">✅ 我已完成支付，提交预约</button>
+    </div>
+  </div>
+  <div style="margin-top:16px;">
+    <button type="button" class="btn btn-outline full-width" onclick="goToStep(2)">← 上一步</button>
   </div>
 </div>
 

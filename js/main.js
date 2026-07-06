@@ -323,6 +323,13 @@ window.openAlipayPay = function() {
   toast('正在打开支付页面...', 'info');
 };
 
+// 支付后显示确认按钮
+window.showPayReturnBtn = function() {
+  var section = document.getElementById('payReturnSection');
+  if (section) section.style.display = 'block';
+  window.scrollBy(0, 100);
+};
+
 
 // ═══ 提交预约 ═══
 window.submitFullBooking = function() {
