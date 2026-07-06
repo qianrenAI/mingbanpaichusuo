@@ -244,7 +244,8 @@ function saveDraft() {
     timeSlot: (document.querySelector('input[name="timeSlot"]:checked') || {}).value || '',
     style: (document.querySelector('input[name="style"]:checked') || {}).value || '日系清新',
     note: ($('#bkNote').value || '').trim() || '无',
-    savedAt: Date.now()
+    savedAt: Date.now(),
+    paid: true  // 标记已发起支付
   };
   localStorage.setItem('yh_draft', JSON.stringify(draft));
 }
@@ -283,11 +284,34 @@ window.clearDraftBanner = function() {
   clearDraft(); $('#draftBanner').classList.add('hidden'); goToStep(1);
 };
 
-// 检查草稿
+// 检查草稿 - 如果已发起支付，自动回到确认页
 function checkDraft() {
   var d = loadDraft();
-  if (d) { $('#draftBanner').classList.remove('hidden'); }
-  else { $('#draftBanner').classList.add('hidden'); }
+  if (d && d.paid) {
+    // 已发起支付，自动回第三步确认页
+    resumeDraftAuto(d);
+  } else if (d) {
+    $('#draftBanner').classList.remove('hidden');
+  } else {
+    $('#draftBanner').classList.add('hidden');
+  }
+}
+
+// 支付后自动恢复
+function resumeDraftAuto(d) {
+  $('#bkName').value = d.name || '';
+  $('#bkWechat').value = d.wechat || '';
+  $('#bkCount').value = d.count || 1;
+  $('#bkDate').value = d.date || '';
+  if (d.timeSlot) { var ts = document.querySelector('input[name="timeSlot"][value="' + d.timeSlot + '"]'); if (ts) { ts.checked = true; var tsl = ts.closest('.time-slot'); if (tsl) tsl.classList.add('active'); } }
+  var st = document.querySelector('input[name="style"][value="' + (d.style || '日系清新') + '"]'); if (st) st.checked = true;
+  $('#bkNote').value = d.note !== '无' ? d.note : '';
+  updatePricePreview();
+  $('#draftBanner').classList.add('hidden');
+  goToStep(3);
+  // 显示确认按钮
+  var section = document.getElementById('payReturnSection');
+  if (section) section.style.display = 'block';
 }
 
 window.goToStep = function(n) {
