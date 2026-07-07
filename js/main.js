@@ -6,80 +6,25 @@
 var CONFIG = { pricePerPhoto: 20, deposit: 9.9 };
 var isWeChat = /MicroMessenger/i.test(navigator.userAgent);
 
-var PHOTOS = [
-  {id:1,s:'images/photos/DSC_0854.jpg',t:'images/thumbs/DSC_0854.jpg',title:'DSC 0854',c:'distant'},
-  {id:2,s:'images/photos/DSC_2708.jpg',t:'images/thumbs/DSC_2708.jpg',title:'DSC 2708',c:'distant'},
-  {id:3,s:'images/photos/DSC_2719.jpg',t:'images/thumbs/DSC_2719.jpg',title:'DSC 2719',c:'distant'},
-  {id:4,s:'images/photos/DSC_4223.jpg',t:'images/thumbs/DSC_4223.jpg',title:'DSC 4223',c:'distant'},
-  {id:5,s:'images/photos/DSC_4497 - 副本.jpg',t:'images/thumbs/DSC_4497 - 副本.jpg',title:'DSC 4497 副本',c:'distant'},
-  {id:6,s:'images/photos/IMG_6837.jpg',t:'images/thumbs/IMG_6837.jpg',title:'IMG 6837',c:'close'},
-  {id:7,s:'images/photos/IMG_6838.jpg',t:'images/thumbs/IMG_6838.jpg',title:'IMG 6838',c:'close'},
-  {id:8,s:'images/photos/IMG_6840 - 副本.jpg',t:'images/thumbs/IMG_6840 - 副本.jpg',title:'IMG 6840 副本',c:'close'},
-  {id:9,s:'images/photos/IMG_6840.jpg',t:'images/thumbs/IMG_6840.jpg',title:'IMG 6840',c:'close'},
-  {id:10,s:'images/photos/IMG_6927.jpg',t:'images/thumbs/IMG_6927.jpg',title:'IMG 6927',c:'close'},
-  {id:11,s:'images/photos/IMG_7023.jpg',t:'images/thumbs/IMG_7023.jpg',title:'IMG 7023',c:'close'},
-  {id:12,s:'images/photos/IMG_7066.jpg',t:'images/thumbs/IMG_7066.jpg',title:'IMG 7066',c:'close'},
-  {id:13,s:'images/photos/IMG_7082.jpg',t:'images/thumbs/IMG_7082.jpg',title:'IMG 7082',c:'distant'},
-  {id:14,s:'images/photos/IMG_7083.jpg',t:'images/thumbs/IMG_7083.jpg',title:'IMG 7083',c:'distant'},
-  {id:15,s:'images/photos/IMG_9044.jpg',t:'images/thumbs/IMG_9044.jpg',title:'IMG 9044',c:'distant'},
-  {id:16,s:'images/photos/NIU_1037.jpg',t:'images/thumbs/NIU_1037.jpg',title:'NIU 1037',c:'close'},
-  {id:17,s:'images/photos/NIU_2161.jpg',t:'images/thumbs/NIU_2161.jpg',title:'NIU 2161',c:'close'},
-  {id:18,s:'images/photos/NIU_2180.jpg',t:'images/thumbs/NIU_2180.jpg',title:'NIU 2180',c:'close'},
-  {id:19,s:'images/photos/NIU_2212.jpg',t:'images/thumbs/NIU_2212.jpg',title:'NIU 2212',c:'close'},
-  {id:20,s:'images/photos/NIU_2253.jpg',t:'images/thumbs/NIU_2253.jpg',title:'NIU 2253',c:'close'},
-  {id:21,s:'images/photos/NIU_2460.jpg',t:'images/thumbs/NIU_2460.jpg',title:'NIU 2460',c:'close'},
-  {id:22,s:'images/photos/NIU_2468.jpg',t:'images/thumbs/NIU_2468.jpg',title:'NIU 2468',c:'close'},
-  {id:23,s:'images/photos/NIU_2496.jpg',t:'images/thumbs/NIU_2496.jpg',title:'NIU 2496',c:'close'},
-  {id:24,s:'images/photos/NIU_2781.jpg',t:'images/thumbs/NIU_2781.jpg',title:'NIU 2781',c:'close'},
-  {id:25,s:'images/photos/NIU_2792.jpg',t:'images/thumbs/NIU_2792.jpg',title:'NIU 2792',c:'close'},
-  {id:26,s:'images/photos/NIU_3558.jpg',t:'images/thumbs/NIU_3558.jpg',title:'NIU 3558',c:'close'},
-  {id:27,s:'images/photos/NIU_3616.jpg',t:'images/thumbs/NIU_3616.jpg',title:'NIU 3616',c:'close'},
-  {id:28,s:'images/photos/NIU_3625.jpg',t:'images/thumbs/NIU_3625.jpg',title:'NIU 3625',c:'close'},
-  {id:29,s:'images/photos/NIU_3630.jpg',t:'images/thumbs/NIU_3630.jpg',title:'NIU 3630',c:'close'},
-  {id:30,s:'images/photos/NIU_3638.jpg',t:'images/thumbs/NIU_3638.jpg',title:'NIU 3638',c:'close'},
-  {id:31,s:'images/photos/NIU_3643.jpg',t:'images/thumbs/NIU_3643.jpg',title:'NIU 3643',c:'close'},
-  {id:32,s:'images/photos/NIU_3657.jpg',t:'images/thumbs/NIU_3657.jpg',title:'NIU 3657',c:'close'},
-  {id:33,s:'images/photos/NIU_3672.jpg',t:'images/thumbs/NIU_3672.jpg',title:'NIU 3672',c:'close'},
-  {id:34,s:'images/photos/NIU_3695.jpg',t:'images/thumbs/NIU_3695.jpg',title:'NIU 3695',c:'close'},
-  {id:35,s:'images/photos/NIU_3705.jpg',t:'images/thumbs/NIU_3705.jpg',title:'NIU 3705',c:'close'},
-  {id:36,s:'images/photos/NIU_3920.jpg',t:'images/thumbs/NIU_3920.jpg',title:'NIU 3920',c:'close'},
-  {id:37,s:'images/photos/NIU_4468.jpg',t:'images/thumbs/NIU_4468.jpg',title:'NIU 4468',c:'close'},
-  {id:38,s:'images/photos/NIU_4527.jpg',t:'images/thumbs/NIU_4527.jpg',title:'NIU 4527',c:'close'},
-  {id:39,s:'images/photos/NIU_4567.jpg',t:'images/thumbs/NIU_4567.jpg',title:'NIU 4567',c:'close'},
-  {id:40,s:'images/photos/NIU_4880.jpg',t:'images/thumbs/NIU_4880.jpg',title:'NIU 4880',c:'close'},
-  {id:41,s:'images/photos/NIU_5748.jpg',t:'images/thumbs/NIU_5748.jpg',title:'NIU 5748',c:'close'},
-  {id:42,s:'images/photos/NIU_5750.jpg',t:'images/thumbs/NIU_5750.jpg',title:'NIU 5750',c:'close'},
-  {id:43,s:'images/photos/NIU_5765.jpg',t:'images/thumbs/NIU_5765.jpg',title:'NIU 5765',c:'close'},
-  {id:44,s:'images/photos/NIU_5772.jpg',t:'images/thumbs/NIU_5772.jpg',title:'NIU 5772',c:'distant'},
-  {id:45,s:'images/photos/NIU_5774.jpg',t:'images/thumbs/NIU_5774.jpg',title:'NIU 5774',c:'distant'},
-  {id:46,s:'images/photos/NIU_5776.jpg',t:'images/thumbs/NIU_5776.jpg',title:'NIU 5776',c:'distant'},
-  {id:47,s:'images/photos/NIU_6042.jpg',t:'images/thumbs/NIU_6042.jpg',title:'NIU 6042',c:'distant'},
-  {id:48,s:'images/photos/NIU_6155.jpg',t:'images/thumbs/NIU_6155.jpg',title:'NIU 6155',c:'close'},
-  {id:49,s:'images/photos/NIU_6171.jpg',t:'images/thumbs/NIU_6171.jpg',title:'NIU 6171',c:'close'},
-  {id:50,s:'images/photos/NIU_6181.jpg',t:'images/thumbs/NIU_6181.jpg',title:'NIU 6181',c:'close'},
-  {id:51,s:'images/photos/NIU_6184.jpg',t:'images/thumbs/NIU_6184.jpg',title:'NIU 6184',c:'close'},
-  {id:52,s:'images/photos/NIU_6779.jpg',t:'images/thumbs/NIU_6779.jpg',title:'NIU 6779',c:'close'},
-  {id:53,s:'images/photos/NIU_6793.jpg',t:'images/thumbs/NIU_6793.jpg',title:'NIU 6793',c:'close'}
-];
-var state = { currentFilter: 'all', currentStep: 1, viewerIndex: -1, filteredPhotos: [], proofData: null, galleryPage: 0 };
+var PHOTOS = [];
+var state = { currentFilter: 'couple-close', currentStep: 1, viewerIndex: -1, filteredPhotos: [], proofData: null, galleryPage: 0 };
 var GALLERY_PAGE_SIZE = 12;
 var $ = function(s) { return document.querySelector(s); };
 var $$ = function(s) { return document.querySelectorAll(s); };
 function getCatLabel(c) { var m = { 'couple-close': '情侣近景', 'couple-far': '情侣远景', 'female-close': '女生近景', 'female-far': '女生远景', 'male': '男生特辑' }; return m[c] || c; }
 function renderGallery(filter) {
-  filter = filter || state.currentFilter; state.currentFilter = filter;
+  filter = filter || 'couple-close'; state.currentFilter = filter;
   var grid = $('#galleryGrid'); if (!grid) return;
-  state.filteredPhotos = filter === 'all' ? PHOTOS.slice() : PHOTOS.filter(function(p) { return p.c === filter; });
+  state.filteredPhotos = PHOTOS.filter(function(p) { return p.c === filter; });
   var btns = $$('.filter-btn');
   for (var i = 0; i < btns.length; i++) { btns[i].classList.toggle('active', btns[i].getAttribute('data-filter') === filter); }
-  if (filter === 'all') {
-    var counts = { all: PHOTOS.length, 'couple-close': 0, 'couple-far': 0, 'female-close': 0, 'female-far': 0, 'male': 0 };
-    for (var j = 0; j < PHOTOS.length; j++) counts[PHOTOS[j].c]++;
-    for (var k = 0; k < btns.length; k++) {
-      var f = btns[k].getAttribute('data-filter'), ex = btns[k].querySelector('.count');
-      if (ex) ex.remove();
-      if (f !== 'all' && counts[f]) { var sp = document.createElement('span'); sp.className = 'count'; sp.textContent = counts[f]; btns[k].appendChild(sp); }
-    }
+  // 更新各分类计数
+  var counts = { 'couple-close': 0, 'couple-far': 0, 'female-close': 0, 'female-far': 0, 'male': 0 };
+  for (var j = 0; j < PHOTOS.length; j++) { var c = PHOTOS[j].c; if (counts[c] !== undefined) counts[c]++; }
+  for (var k = 0; k < btns.length; k++) {
+    var f = btns[k].getAttribute('data-filter'), ex = btns[k].querySelector('.count');
+    if (ex) ex.remove();
+    if (counts[f]) { var sp = document.createElement('span'); sp.className = 'count'; sp.textContent = counts[f]; btns[k].appendChild(sp); }
   }
   if (!state.filteredPhotos.length) { grid.innerHTML = '<div class="gallery-empty"><div class="empty-icon">📸</div><p>该分类暂无作品</p></div>'; return; }
   state.galleryPage = 1;
