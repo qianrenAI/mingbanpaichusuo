@@ -6,7 +6,6 @@
 var CONFIG = { pricePerPhoto: 20, deposit: 9.9 };
 var isWeChat = /MicroMessenger/i.test(navigator.userAgent);
 
-var PHOTOS = [];
 function getCatLabel(c) { var m = { 'couple-close': '情侣近景', 'couple-far': '情侣远景', 'female-close': '女生近景', 'female-far': '女生远景', 'male': '男生特辑' }; return m[c] || c; }
 function renderGallery(filter) {
   filter = filter || state.currentFilter; state.currentFilter = filter;
@@ -340,7 +339,7 @@ window.navigateTo = function(p) {
   var at = document.querySelector('.tab-item[data-tab="' + p + '"]'); if (at) at.classList.add('active');
   closeNav();
   if (p === 'gallery') renderGallery();
-  if (p === 'booking') { checkDraft(); goToStep(1); renderPaymentQR(); }
+  if (p === 'booking') { checkDraft(); goToStep(1); }
 };
 window.closeNav = function() {
   var t = $('#navToggle'), m = $('#navMenu');
