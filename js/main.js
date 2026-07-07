@@ -61,6 +61,10 @@ var PHOTOS = [
   {id:52,s:'images/photos/NIU_6779.jpg',t:'images/thumbs/NIU_6779.jpg',title:'NIU 6779',c:'male'},
   {id:53,s:'images/photos/NIU_6793.jpg',t:'images/thumbs/NIU_6793.jpg',title:'NIU 6793',c:'male'}
 ];
+var state = { currentFilter: 'all', currentStep: 1, viewerIndex: -1, filteredPhotos: [], proofData: null, galleryPage: 0 };
+var GALLERY_PAGE_SIZE = 12;
+var $ = function(s) { return document.querySelector(s); };
+var $$ = function(s) { return document.querySelectorAll(s); };
 function getCatLabel(c) { var m = { 'couple-close': '情侣近景', 'couple-far': '情侣远景', 'female-close': '女生近景', 'female-far': '女生远景', 'male': '男生特辑' }; return m[c] || c; }
 function renderGallery(filter) {
   filter = filter || state.currentFilter; state.currentFilter = filter;
