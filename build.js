@@ -26,7 +26,7 @@ const newPhotos = 'var PHOTOS = [\n  ' + photosCompact + '\n];';
 
 if (photosRegex.test(mainJs)) {
   mainJs = mainJs.replace(photosRegex, newPhotos);
-  fs.writeFileSync(path.join(BASE, 'js/main.js'), mainJs, 'utf8');
+  // DISABLED
   console.log('✅ main.js PHOTOS 数组已更新 (' + photoData.length + ' 张照片)');
 } else {
   console.log('⚠️  未找到 PHOTOS 数组，跳过更新');
