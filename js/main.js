@@ -65,7 +65,7 @@ var state = { currentFilter: 'all', currentStep: 1, viewerIndex: -1, filteredPho
 var GALLERY_PAGE_SIZE = 12;
 var $ = function(s) { return document.querySelector(s); };
 var $$ = function(s) { return document.querySelectorAll(s); };
-function getCatLabel(c) { var m = { distant: '远景', close: '近景' }; return m[c] || c; }
+function getCatLabel(c) { var m = { 'couple-close': '情侣近景', 'couple-far': '情侣远景', 'female-close': '女生近景', 'female-far': '女生远景', 'male': '男生特辑' }; return m[c] || c; }
 function renderGallery(filter) {
   filter = filter || state.currentFilter; state.currentFilter = filter;
   var grid = $('#galleryGrid'); if (!grid) return;
@@ -73,7 +73,7 @@ function renderGallery(filter) {
   var btns = $$('.filter-btn');
   for (var i = 0; i < btns.length; i++) { btns[i].classList.toggle('active', btns[i].getAttribute('data-filter') === filter); }
   if (filter === 'all') {
-    var counts = { all: PHOTOS.length, distant: 0, close: 0 };
+    var counts = { all: PHOTOS.length, 'couple-close': 0, 'couple-far': 0, 'female-close': 0, 'female-far': 0, 'male': 0 };
     for (var j = 0; j < PHOTOS.length; j++) counts[PHOTOS[j].c]++;
     for (var k = 0; k < btns.length; k++) {
       var f = btns[k].getAttribute('data-filter'), ex = btns[k].querySelector('.count');
