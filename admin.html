@@ -3,325 +3,280 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
   <title>管理后台 · 明办拍出所</title>
   <link rel="stylesheet" href="css/style.css?v=5">
   <style>
-    .admin-login {
-      min-height: 100vh; display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      padding: 40px 20px; background: #1a1a2e;
-    }
-    .admin-login h2 { font-family: var(--font-serif); color: var(--accent); font-size: 22px; margin-bottom: 24px; letter-spacing: 4px; }
-    .admin-login input { padding: 14px 18px; border: 1.5px solid rgba(232,200,122,0.3); border-radius: 8px; background: rgba(255,255,255,0.05); color: #fff; font-size: 18px; text-align: center; letter-spacing: 6px; width: 200px; outline: none; }
-    .admin-login input:focus { border-color: var(--accent); }
-    .admin-login .error { color: #ff6b6b; font-size: 13px; margin-top: 12px; display: none; }
-    .admin-panel { display: none; padding-bottom: 100px; }
-    .admin-panel.active { display: block; }
-    .admin-header { background: #1a1a2e; padding: 20px 16px; display: flex; align-items: center; justify-content: space-between; }
-    .admin-header h1 { font-family: var(--font-serif); color: var(--accent); font-size: 18px; letter-spacing: 2px; }
-    .admin-header .admin-user { color: rgba(255,255,255,0.5); font-size: 12px; }
-    .admin-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 20px 16px; }
-    .stat-card { background: var(--card); border-radius: var(--radius); padding: 16px; text-align: center; box-shadow: var(--shadow); }
-    .stat-number { font-size: 28px; font-weight: 700; color: var(--primary); }
-    .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-    .admin-section { padding: 0 16px 20px; }
-    .admin-section h3 { font-family: var(--font-serif); font-size: 16px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(0,0,0,0.06); }
-    .admin-tabs { display: flex; gap: 0; background: var(--bg-alt); border-radius: var(--radius); padding: 4px; margin-bottom: 20px; }
-    .admin-tab { flex: 1; padding: 10px; text-align: center; font-size: 13px; border-radius: 8px; cursor: pointer; transition: 0.2s; color: var(--text-muted); }
-    .admin-tab.active { background: var(--card); color: var(--primary); font-weight: 700; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-    .order-card { background: var(--card); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); border-left: 3px solid transparent; }
-    .order-card.pending { border-left-color: #e67e22; }
-    .order-card.paid { border-left-color: #27ae60; opacity: 0.8; }
-    .order-card .order-id { font-size: 11px; color: var(--text-muted); font-family: monospace; }
-    .order-card .order-info { font-size: 14px; margin: 8px 0; }
-    .order-card .order-info strong { color: var(--primary); }
-    .order-card .order-actions { display: flex; gap: 8px; margin-top: 8px; }
-    .order-card .order-actions button { padding: 8px 20px; border-radius: 6px; font-size: 13px; border: 1.5px solid rgba(0,0,0,0.1); background: var(--card); font-weight: 700; }
-    .order-card .order-actions .btn-paid { background: #27ae60; color: #fff; border-color: #27ae60; }
-    .status-badge { display: inline-block; padding: 3px 12px; border-radius: 10px; font-size: 11px; font-weight: 700; }
-    .status-pending { background: #fef3e2; color: #e67e22; }
-    .status-paid { background: #d4edda; color: #155724; }
-    .admin-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 14px; }
-    .admin-empty .icon { font-size: 40px; margin-bottom: 12px; }
-    .photo-manage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-    .photo-manage-item { aspect-ratio: 1; border-radius: 8px; overflow: hidden; position: relative; background: var(--bg-alt); }
-    .photo-manage-item img { width: 100%; height: 100%; object-fit: cover; }
-    .photo-manage-item .photo-tag { position: absolute; bottom: 4px; left: 4px; padding: 2px 8px; font-size: 10px; border-radius: 8px; background: rgba(0,0,0,0.6); color: #fff; }
-    .admin-footer { text-align: center; padding: 20px; font-size: 11px; color: var(--text-muted); }
-    .admin-footer a { color: var(--primary); text-decoration: underline; }
-    .alert-box { background: #fef3e2; border: 1px solid #f0c78e; border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; color: #e67e22; }
-    @media (min-width: 480px) { .admin-stats { grid-template-columns: repeat(4, 1fr); max-width: 600px; margin: 0 auto; } .admin-section { max-width: 600px; margin: 0 auto; } }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:var(--font-sans);background:var(--bg);color:var(--text)}
+    .admin-login{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;background:#1a1a2e}
+    .admin-login h2{font-family:var(--font-serif);color:#e8c87a;font-size:22px;margin-bottom:24px;letter-spacing:4px}
+    .admin-login input{padding:14px 18px;border:1.5px solid rgba(232,200,122,0.3);border-radius:8px;background:rgba(255,255,255,0.05);color:#fff;font-size:18px;text-align:center;letter-spacing:6px;width:200px;outline:none}
+    .admin-login input:focus{border-color:#e8c87a}
+    .admin-login .error{color:#ff6b6b;font-size:13px;margin-top:12px;display:none}
+    .admin-panel{display:none;padding-bottom:100px;max-width:800px;margin:0 auto}
+    .admin-panel.show{display:block}
+    .admin-header{background:#1a1a2e;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+    .admin-header h1{font-family:var(--font-serif);color:#e8c87a;font-size:17px;letter-spacing:2px}
+    .admin-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:16px}
+    .stat-card{background:#fff;border-radius:12px;padding:16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
+    .stat-num{font-size:26px;font-weight:700;color:var(--primary)}
+    .stat-label{font-size:11px;color:var(--text-muted);margin-top:2px}
+    .stat-num.green{color:#27ae60}.stat-num.orange{color:#e67e22}
+
+    .admin-tabs{display:flex;gap:0;background:var(--bg-alt);border-radius:12px;padding:4px;margin:0 16px 16px}
+    .admin-tab{flex:1;padding:10px;text-align:center;font-size:13px;border-radius:10px;cursor:pointer;color:var(--text-muted);transition:0.2s;border:none;background:none}
+    .admin-tab.active{background:#fff;color:var(--primary);font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+
+    .section{padding:0 16px 20px}
+    .section h3{font-family:var(--font-serif);font-size:16px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:space-between}
+    .section h3 span{font-size:12px;color:var(--text-muted);font-weight:normal}
+
+    .order-card{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 6px rgba(0,0,0,0.06);border-left:3px solid transparent}
+    .order-card.pending{border-left-color:#e67e22}
+    .order-card.paid{border-left-color:#27ae60;opacity:0.8}
+    .order-meta{font-size:11px;color:var(--text-muted);margin-bottom:4px;display:flex;justify-content:space-between}
+    .order-info{font-size:13px;line-height:1.7;margin-bottom:8px}
+    .order-info strong{color:var(--primary)}
+    .order-tag{display:inline-block;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:700}
+    .tag-pending{background:#fef3e2;color:#e67e22}.tag-paid{background:#d4edda;color:#155724}
+    .tag-wechat{background:#e8f5e9;color:#2e7d32}.tag-alipay{background:#e3f2fd;color:#1565c0}
+    .order-actions{display:flex;gap:8px;margin-top:8px}
+    .order-actions button{padding:6px 16px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:0.15s;border:1px solid rgba(0,0,0,0.1);background:#fff}
+    .btn-confirm{background:#27ae60!important;color:#fff!important;border-color:#27ae60!important}
+    .btn-delete{background:#fff!important;color:#999!important}
+    .btn-confirm:hover{background:#219a52!important}
+    .btn-delete:hover{color:#e74c3c!important;border-color:#e74c3c!important}
+
+    .toolbar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+    .toolbar input,.toolbar select{padding:8px 12px;border:1px solid rgba(0,0,0,0.1);border-radius:8px;font-size:13px;outline:none;flex:1;min-width:100px}
+    .toolbar input:focus,.toolbar select:focus{border-color:var(--primary)}
+    .btn-sm{padding:8px 14px;border-radius:8px;font-size:12px;cursor:pointer;border:1px solid var(--primary);background:var(--primary);color:#fff;font-weight:700;white-space:nowrap}
+    .btn-sm.outline{background:#fff;color:var(--primary)}
+
+    .empty{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px}
+    .empty .icon{font-size:40px;margin-bottom:8px}
+
+    .footer-bar{text-align:center;padding:20px;font-size:11px;color:var(--text-muted)}
+    .footer-bar a{color:var(--primary);text-decoration:underline}
+    @media(min-width:600px){.admin-stats{grid-template-columns:repeat(4,1fr)}}
   </style>
 </head>
 <body>
-  <div id="adminLogin" class="admin-login">
-    <h2>明办拍出所</h2>
-    <p style="color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:20px;">管理后台</p>
-    <input type="password" id="adminPwd" placeholder="输入密码" maxlength="6" inputmode="numeric">
-    <button class="btn btn-primary" onclick="adminLogin()" style="margin-top:16px;">进入后台</button>
-    <div class="error" id="adminError">密码错误</div>
-    <p style="color:rgba(255,255,255,0.2);font-size:11px;margin-top:40px;">默认密码: 888888</p>
+<div id="adminLogin" class="admin-login">
+  <h2>明办拍出所</h2>
+  <p style="color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:20px">管理后台</p>
+  <input type="password" id="adminPwd" placeholder="输入密码" maxlength="6" inputmode="numeric">
+  <button class="btn btn-primary" onclick="login()" style="margin-top:16px">进入后台</button>
+  <div class="error" id="adminError">密码错误</div>
+  <p style="color:rgba(255,255,255,0.15);font-size:11px;margin-top:40px">默认密码: 888888 双击可修改</p>
+</div>
+
+<div id="adminPanel" class="admin-panel">
+  <div class="admin-header">
+    <h1>管理后台</h1>
+    <span style="color:rgba(255,255,255,0.4);font-size:12px" id="lastRefresh"></span>
   </div>
 
-  <div id="adminPanel" class="admin-panel">
-    <div class="admin-header">
-      <h1>管理后台</h1>
-      <span class="admin-user">摄影师</span>
-    </div>
-
-    <div class="admin-stats" id="adminStats">
-      <div class="stat-card"><div class="stat-number" id="statOrders">0</div><div class="stat-label">总订单</div></div>
-      <div class="stat-card"><div class="stat-number" id="statPending" style="color:#e67e22;">0</div><div class="stat-label">待核实</div></div>
-      <div class="stat-card"><div class="stat-number" id="statPaid" style="color:#27ae60;">0</div><div class="stat-label">已核实</div></div>
-      <div class="stat-card"><div class="stat-number" id="statRevenue">0</div><div class="stat-label">定金收入</div></div>
-    </div>
-
-    <div class="admin-section">
-      <div class="admin-tabs">
-        <div class="admin-tab active" onclick="switchAdminTab('orders')">订单</div>
-        <div class="admin-tab" onclick="switchAdminTab('photos')">作品</div>
-        <div class="admin-tab" onclick="switchAdminTab('joins')">加入</div>
-        <div class="admin-tab" onclick="switchAdminTab('settings')">设置</div>
-      </div>
-
-      <div id="tabOrders" class="admin-tab-content">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-          <h3 style="margin:0;padding:0;border:none;">预约订单</h3>
-          <div style="display:flex;gap:4px;">
-            <button class="btn btn-outline" style="font-size:11px;padding:4px 10px;" onclick="filterOrders('all')">全部</button>
-            <button class="btn btn-outline" style="font-size:11px;padding:4px 10px;color:#e67e22;border-color:#e67e22;" onclick="filterOrders('pending')">待核实</button>
-            <button class="btn btn-outline" style="font-size:11px;padding:4px 10px;color:#27ae60;border-color:#27ae60;" onclick="filterOrders('paid')">已核实</button>
-          </div>
-        </div>
-        <div id="orderList"></div>
-      </div>
-
-      <div id="tabJoins" class="admin-tab-content" style="display:none;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-          <h3 style="margin:0;padding:0;border:none;">加入申请</h3>
-          <button class="btn btn-outline" onclick="renderJoins()" style="font-size:11px;padding:4px 10px;">🔄 刷新</button>
-        </div>
-        <div id="joinList"></div>
-      </div>
-
-      <div id="tabPhotos" class="admin-tab-content" style="display:none;">
-        <h3>作品管理</h3>
-        <div style="margin-bottom:16px;display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-outline" style="font-size:12px;padding:8px 12px;" onclick="filterAdminPhotos('all')">全部</button>
-          <button class="btn btn-outline" style="font-size:12px;padding:8px 12px;" onclick="filterAdminPhotos('distant')">远景</button>
-          <button class="btn btn-outline" style="font-size:12px;padding:8px 12px;" onclick="filterAdminPhotos('close')">近景</button>
-        </div>
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px;" id="photoCountAdmin"></p>
-        <div id="photoManageGrid" class="photo-manage-grid"></div>
-        <div class="admin-empty" id="photoEmpty">
-          <div class="icon">📸</div><p>暂无作品</p>
-        </div>
-      </div>
-
-      <div id="tabSettings" class="admin-tab-content" style="display:none;">
-        <h3>设置</h3>
-        <div class="service-item" style="margin-bottom:12px;"><div class="service-icon">💰</div><div class="service-content"><h3>单价</h3><p>当前：20元/张（含精修）</p></div></div>
-        <div class="service-item" style="margin-bottom:12px;"><div class="service-icon">💳</div><div class="service-content"><h3>定金</h3><p>当前：20元</p></div></div>
-        <div class="service-item" style="margin-bottom:12px;"><div class="service-icon">🖼️</div><div class="service-content"><h3>作品统计</h3><p id="adminPhotoStats">加载中...</p></div></div>
-        <button class="btn btn-outline full-width" onclick="if(confirm('确认清除所有订单数据？')){localStorage.removeItem('yh_orders');renderOrders();renderStats();}" style="margin-top:16px;">清除订单数据</button>
-      </div>
-    </div>
-
-    <div class="admin-footer">
-      <a href="index.html">← 返回前台</a><br><br>
-      <button class="btn btn-ghost" onclick="adminLogout()" style="font-size:12px;">退出登录</button>
-    </div>
+  <div class="admin-stats">
+    <div class="stat-card"><div class="stat-num orange" id="sPending">0</div><div class="stat-label">待核实订单</div></div>
+    <div class="stat-card"><div class="stat-num green" id="sPaid">0</div><div class="stat-label">已核实订单</div></div>
+    <div class="stat-card"><div class="stat-num" id="sRevenue">¥0</div><div class="stat-label">定金收入</div></div>
+    <div class="stat-card"><div class="stat-num" id="sJoins">0</div><div class="stat-label">加入申请</div></div>
   </div>
 
-  <script>
-    var ADMIN_PWD = '888888';
-    var adminPhotoFilter = 'all';
-    var orderFilter = 'all';
+  <div class="admin-tabs">
+    <button class="admin-tab active" onclick="tab('orders')">订单</button>
+    <button class="admin-tab" onclick="tab('joins')">加入</button>
+    <button class="admin-tab" onclick="tab('settings')">设置</button>
+  </div>
 
-    window.adminLogin = function() {
-      if (document.getElementById('adminPwd').value === ADMIN_PWD) {
-        document.getElementById('adminLogin').style.display = 'none';
-        document.getElementById('adminPanel').classList.add('active');
-        renderOrders(); renderStats(); initPhotoManage(); updatePhotoStats(); renderJoins();
-      } else {
-        document.getElementById('adminError').style.display = 'block';
-      }
-    };
+  <!-- 订单 -->
+  <div class="section" id="tabOrders">
+    <h3>预约订单 <span id="orderCount"></span></h3>
+    <div class="toolbar">
+      <input type="text" id="searchOrder" placeholder="搜索姓名/微信号..." oninput="renderOrders()">
+      <select id="filterStatus" onchange="renderOrders()">
+        <option value="all">全部状态</option>
+        <option value="pending">待核实</option>
+        <option value="paid">已核实</option>
+      </select>
+      <button class="btn-sm outline" onclick="exportCSV()">导出CSV</button>
+      <button class="btn-sm outline" onclick="renderOrders();updateStats()">🔄刷新</button>
+    </div>
+    <div id="orderList"></div>
+  </div>
 
-    document.getElementById('adminPwd').addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') adminLogin();
-    });
+  <!-- 加入 -->
+  <div class="section" id="tabJoins" style="display:none">
+    <h3>加入申请 <span id="joinCount"></span></h3>
+    <button class="btn-sm outline" onclick="renderJoins()" style="margin-bottom:12px">🔄 刷新</button>
+    <div id="joinList"></div>
+  </div>
 
-    window.adminLogout = function() {
-      document.getElementById('adminPanel').classList.remove('active');
-      document.getElementById('adminLogin').style.display = 'flex';
-      document.getElementById('adminPwd').value = '';
-      document.getElementById('adminError').style.display = 'none';
-    };
+  <!-- 设置 -->
+  <div class="section" id="tabSettings" style="display:none">
+    <h3>设置</h3>
+    <div style="background:#fff;border-radius:12px;padding:16px;margin-bottom:10px;box-shadow:0 1px 6px rgba(0,0,0,0.06)">
+      <p style="font-size:13px;color:var(--text-light);line-height:2">💰 单价：¥20/张（含精修调色与人像修图）</p>
+      <p style="font-size:13px;color:var(--text-light);line-height:2">💳 定金：¥9.9</p>
+      <p style="font-size:13px;color:var(--text-light);line-height:2">🌐 域名：www.mingbanpaichusuo.com</p>
+      <p style="font-size:13px;color:var(--text-light);line-height:2">📸 作品：<span id="photoCount">加载中...</span></p>
+      <p style="font-size:13px;color:var(--text-light);line-height:2">💾 数据存储在浏览器本地</p>
+    </div>
+    <button class="btn btn-outline full-width" onclick="if(confirm('确认清除所有订单和加入申请？此操作不可撤销。')){localStorage.removeItem('yh_orders');localStorage.removeItem('yh_joins');renderOrders();renderJoins();updateStats()}" style="margin-top:8px;color:#e74c3c;border-color:#e74c3c">清除全部数据</button>
+  </div>
 
-    window.switchAdminTab = function(tab) {
-      document.querySelectorAll('.admin-tab').forEach(function(t) { t.classList.remove('active'); });
-      document.querySelectorAll('.admin-tab-content').forEach(function(c) { c.style.display = 'none'; });
-      event.target.classList.add('active');
-      document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).style.display = 'block';
-      if (tab === 'orders') { renderOrders(); renderStats(); }
-      if (tab === 'joins') renderJoins();
-    };
+  <div class="footer-bar">
+    <a href="index.html">← 返回前台</a> · <button onclick="logout()" style="background:none;border:none;color:var(--primary);cursor:pointer;font-size:11px">退出登录</button>
+    <br><br><span style="opacity:0.4">密码双击登录页底部文字可修改</span>
+  </div>
+</div>
 
-    // ═══ 订单 ═══
-    window.filterOrders = function(f) {
-      orderFilter = f;
-      renderOrders();
-    };
+<script>
+var PWD = '888888';
+var sp = localStorage.getItem('admin_pwd'); if (sp) PWD = sp;
+var roleIcons = { photographer:'📸', assistant:'💡', sales:'🤝', investor:'🚀' };
 
-    function getOrders() {
-      return JSON.parse(localStorage.getItem('yh_orders') || '[]');
-    }
+function login() {
+  if (document.getElementById('adminPwd').value === PWD) {
+    document.getElementById('adminLogin').style.display = 'none';
+    document.getElementById('adminPanel').classList.add('show');
+    renderOrders(); updateStats(); renderJoins(); updatePhotoCount();
+    document.getElementById('lastRefresh').textContent = new Date().toLocaleTimeString('zh-CN');
+  } else {
+    document.getElementById('adminError').style.display = 'block';
+  }
+}
+function logout() {
+  document.getElementById('adminPanel').classList.remove('show');
+  document.getElementById('adminLogin').style.display = 'flex';
+  document.getElementById('adminPwd').value = '';
+  document.getElementById('adminError').style.display = 'none';
+}
+document.getElementById('adminPwd').addEventListener('keydown', function(e){ if(e.key==='Enter') login(); });
 
-    function renderOrders() {
-      var orders = getOrders();
-      var list = document.getElementById('orderList');
+function tab(name) {
+  document.querySelectorAll('.admin-tab').forEach(function(t){ t.classList.remove('active') });
+  event.target.classList.add('active');
+  document.getElementById('tabOrders').style.display = name==='orders'?'block':'none';
+  document.getElementById('tabJoins').style.display = name==='joins'?'block':'none';
+  document.getElementById('tabSettings').style.display = name==='settings'?'block':'none';
+  if (name==='orders') renderOrders();
+  if (name==='joins') renderJoins();
+  if (name==='settings') updatePhotoCount();
+}
 
-      // 筛选
-      if (orderFilter === 'pending') orders = orders.filter(function(o) { return o.status !== 'paid'; });
-      if (orderFilter === 'paid') orders = orders.filter(function(o) { return o.status === 'paid'; });
+// ═══ 订单 ═══
+function getOrders() { return JSON.parse(localStorage.getItem('yh_orders')||'[]'); }
 
-      if (orders.length === 0) {
-        list.innerHTML = '<div class="admin-empty"><div class="icon">📋</div><p>暂无订单</p></div>';
-        return;
-      }
+function renderOrders() {
+  var orders = getOrders();
+  var search = (document.getElementById('searchOrder').value||'').trim().toLowerCase();
+  var status = document.getElementById('filterStatus').value;
+  if (search) orders = orders.filter(function(o){ return (o.name||'').toLowerCase().indexOf(search)>=0 || (o.wechat||'').toLowerCase().indexOf(search)>=0 || (o.id||'').toLowerCase().indexOf(search)>=0 });
+  if (status!=='all') orders = orders.filter(function(o){ return status==='paid'?o.status==='paid':o.status!=='paid' });
+  orders.sort(function(a,b){ return new Date(b.createdAt) - new Date(a.createdAt) });
+  document.getElementById('orderCount').textContent = '共 '+orders.length+' 条';
 
-      // 按时间倒序
-      orders.reverse();
+  var list = document.getElementById('orderList');
+  if (!orders.length) { list.innerHTML = '<div class="empty"><div class="icon">📋</div><p>暂无订单</p></div>'; return; }
 
-      list.innerHTML = orders.map(function(o, i) {
-        var isPending = o.status !== 'paid';
-        return '<div class="order-card ' + (isPending ? 'pending' : 'paid') + '">' +
-          '<div class="order-id">#' + o.id + ' · ' + new Date(o.createdAt).toLocaleString('zh-CN') + '</div>' +
-          '<div class="order-info">' +
-            '👤 ' + o.name + (o.wechat && o.wechat !== '未填写' ? ' · 💬 ' + o.wechat : '') + '<br>' +
-            '👥 ' + o.count + '人 · 📅 ' + o.date + (o.timeLabel ? ' · 🕐 ' + o.timeLabel : '') + '<br>' +
-            '🎨 ' + o.style + ' · <strong>定金 ¥' + o.deposit + '</strong> · ' + (o.payment === 'wechat' ? '💚微信' : '💙支付宝') + '<br>' +
-            (o.note && o.note !== '无' ? '💬 ' + o.note + '<br>' : '') +
-          '</div>' +
-          '<div>' +
-            '<span class="status-badge ' + (isPending ? 'status-pending' : 'status-paid') + '">' +
-              (isPending ? '⏳ 待核实' : '✅ 已核实') +
-            '</span>' +
-          '</div>' +
-          (isPending ? '<div class="alert-box" style="margin-top:12px;">📱 请在收钱吧后台核对收款记录，确认到账后点下方核实</div>' +
-          '<div class="order-actions">' +
-            '<button class="btn-paid" onclick="markPaid(\'' + o.id + '\')">✅ 确认到账 · 核实通过</button>' +
-            '<button onclick="deleteOrderById(\'' + o.id + '\')">🗑 删除</button>' +
-          '</div>' : '') +
-        '</div>';
-      }).join('');
-    }
+  list.innerHTML = orders.map(function(o,i){
+    var isP = o.status!=='paid';
+    return '<div class="order-card '+ (isP?'pending':'paid') +'">'+
+      '<div class="order-meta"><span>#'+o.id+'</span><span>'+new Date(o.createdAt).toLocaleString('zh-CN')+'</span></div>'+
+      '<div class="order-info">'+
+        '👤 '+o.name+(o.wechat&&o.wechat!=='未填写'?' · 💬 '+o.wechat:'')+'<br>'+
+        '👥 '+o.count+'人 · 📅 '+o.date+(o.timeLabel?' · 🕐 '+o.timeLabel:'')+'<br>'+
+        '💳 定金<strong> ¥'+(o.deposit||'9.9')+'</strong> · '+
+        '<span class="order-tag '+(isP?'tag-pending':'tag-paid')+'">'+(isP?'⏳待核实':'✅已核实')+'</span>'+
+        (o.note&&o.note!=='无'?'<br>💬 '+o.note:'')+
+      '</div>'+
+      (isP? '<div class="order-actions"><button class="btn-confirm" onclick="markPaid(\''+o.id+'\')">✅ 确认到账</button><button class="btn-delete" onclick="delOrder(\''+o.id+'\')">删除</button></div>' : '<div class="order-actions"><button class="btn-delete" onclick="delOrder(\''+o.id+'\')">删除</button></div>')+
+    '</div>';
+  }).join('');
+}
 
-    window.markPaid = function(id) {
-      if (!confirm('确认该用户已付款到账？')) return;
-      var orders = getOrders();
-      for (var i = 0; i < orders.length; i++) {
-        if (orders[i].id === id) { orders[i].status = 'paid'; break; }
-      }
-      localStorage.setItem('yh_orders', JSON.stringify(orders));
-      renderOrders(); renderStats();
-    };
+function markPaid(id) {
+  if (!confirm('确认该用户已付款到账？')) return;
+  var orders = getOrders();
+  for (var i=0;i<orders.length;i++) { if (orders[i].id===id) { orders[i].status='paid'; break; } }
+  localStorage.setItem('yh_orders', JSON.stringify(orders));
+  renderOrders(); updateStats();
+}
+function delOrder(id) {
+  if (!confirm('确认删除此订单？')) return;
+  var orders = getOrders().filter(function(o){ return o.id!==id });
+  localStorage.setItem('yh_orders', JSON.stringify(orders));
+  renderOrders(); updateStats();
+}
 
-    window.deleteOrderById = function(id) {
-      if (!confirm('确认删除此订单？')) return;
-      var orders = getOrders().filter(function(o) { return o.id !== id; });
-      localStorage.setItem('yh_orders', JSON.stringify(orders));
-      renderOrders(); renderStats();
-    };
+function exportCSV() {
+  var orders = getOrders();
+  if (!orders.length) { alert('暂无数据可导出'); return; }
+  var csv = '订单号,姓名,微信号,人数,日期,时间段,风格,备注,定金,状态,创建时间\n';
+  orders.forEach(function(o){
+    csv += [o.id,o.name,o.wechat||'',o.count,o.date,(o.timeLabel||''),(o.style||''),(o.note||''),o.deposit||'9.9',o.status==='paid'?'已核实':'待核实',o.createdAt].join(',')+'\n';
+  });
+  var blob = new Blob(['﻿'+csv], {type:'text/csv;charset=utf-8'});
+  var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = '明办拍出所订单_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
 
-    function renderStats() {
-      var orders = getOrders();
-      var total = orders.length;
-      var pending = orders.filter(function(o) { return o.status !== 'paid'; }).length;
-      var paid = orders.filter(function(o) { return o.status === 'paid'; }).length;
-      var revenue = orders.filter(function(o) { return o.status === 'paid'; }).reduce(function(s, o) { return s + (o.deposit || 0); }, 0);
-      document.getElementById('statOrders').textContent = total;
-      document.getElementById('statPending').textContent = pending;
-      document.getElementById('statPaid').textContent = paid;
-      document.getElementById('statRevenue').textContent = '¥' + revenue;
-    }
+// ═══ 加入 ═══
+function renderJoins() {
+  var joins = JSON.parse(localStorage.getItem('yh_joins')||'[]');
+  joins.sort(function(a,b){ return new Date(b.createdAt) - new Date(a.createdAt) });
+  document.getElementById('joinCount').textContent = '共 '+joins.length+' 条';
+  var list = document.getElementById('joinList');
+  if (!joins.length) { list.innerHTML = '<div class="empty"><div class="icon">🤝</div><p>暂无加入申请</p></div>'; return; }
+  list.innerHTML = joins.map(function(j){
+    return '<div class="order-card"><div class="order-meta"><span>#'+j.id+'</span><span>'+new Date(j.createdAt).toLocaleString('zh-CN')+'</span></div>'+
+      '<div class="order-info">'+(roleIcons[j.role]||'👤')+' <strong>'+j.roleName+'</strong> · '+j.name+' · 📞 '+j.contact+'</div>'+
+      '<button class="btn-delete" onclick="delJoin(\''+j.id+'\')" style="padding:4px 12px;font-size:11px;border:1px solid rgba(0,0,0,0.1);border-radius:4px">删除</button></div>';
+  }).join('');
+}
+function delJoin(id) {
+  if (!confirm('确认删除？')) return;
+  var joins = JSON.parse(localStorage.getItem('yh_joins')||'[]').filter(function(j){ return j.id!==id });
+  localStorage.setItem('yh_joins', JSON.stringify(joins));
+  renderJoins(); updateStats();
+}
 
-    // ═══ 作品 ═══
-    window.filterAdminPhotos = function(cat) { adminPhotoFilter = cat; initPhotoManage(); };
+// ═══ 统计 ═══
+function updateStats() {
+  var orders = getOrders();
+  var pending = orders.filter(function(o){ return o.status!=='paid' }).length;
+  var paid = orders.filter(function(o){ return o.status==='paid' }).length;
+  var rev = orders.filter(function(o){ return o.status==='paid' }).reduce(function(s,o){ return s+(o.deposit||9.9) },0);
+  var joins = JSON.parse(localStorage.getItem('yh_joins')||'[]').length;
+  document.getElementById('sPending').textContent = pending;
+  document.getElementById('sPaid').textContent = paid;
+  document.getElementById('sRevenue').textContent = '¥'+rev;
+  document.getElementById('sJoins').textContent = joins;
+}
+function updatePhotoCount() {
+  if (typeof PHOTOS !== 'undefined' && PHOTOS.length) {
+    document.getElementById('photoCount').textContent = PHOTOS.length+'张（5个分类）';
+  } else {
+    document.getElementById('photoCount').textContent = '暂无数据';
+  }
+}
 
-    function getCatLabel(c) { var map = { distant: '远景', close: '近景' }; return map[c] || c; }
+// ═══ 实时同步 ═══
+window.addEventListener('storage', function(e) {
+  if (e.key==='yh_orders') { renderOrders(); updateStats(); }
+  if (e.key==='yh_joins') { renderJoins(); updateStats(); }
+});
 
-    function initPhotoManage() {
-      var grid = document.getElementById('photoManageGrid');
-      var empty = document.getElementById('photoEmpty');
-      var count = document.getElementById('photoCountAdmin');
-
-      if (typeof PHOTOS === 'undefined' || PHOTOS.length === 0) {
-        empty.style.display = 'block'; grid.innerHTML = ''; count.textContent = ''; return;
-      }
-
-      var list = adminPhotoFilter === 'all' ? PHOTOS : PHOTOS.filter(function(p) { return p.c === adminPhotoFilter; });
-      count.textContent = '共 ' + list.length + ' 张';
-
-      if (list.length === 0) { empty.style.display = 'block'; grid.innerHTML = ''; }
-      else {
-        empty.style.display = 'none';
-        grid.innerHTML = list.map(function(p) {
-          return '<div class="photo-manage-item"><img src="' + (p.thumb_sm || p.t) + '" alt="' + p.title + '" loading="lazy" onerror="this.style.display=\'none\'"><span class="photo-tag">' + getCatLabel(p.c) + '</span></div>';
-        }).join('');
-      }
-    }
-
-    function updatePhotoStats() {
-      var el = document.getElementById('adminPhotoStats');
-      if (typeof PHOTOS !== 'undefined' && PHOTOS.length > 0) {
-        var counts = { distant: 0, close: 0 };
-        for (var i = 0; i < PHOTOS.length; i++) { counts[PHOTOS[i].c]++; }
-        el.textContent = '总计 ' + PHOTOS.length + ' 张 | 远景 ' + (counts.distant || 0) + ' | 近景 ' + (counts.close || 0);
-      } else { el.textContent = '无数据'; }
-    }
-
-    // ═══ 加入申请 ═══
-    function renderJoins() {
-      var joins = JSON.parse(localStorage.getItem('yh_joins') || '[]');
-      var list = document.getElementById('joinList');
-      if (joins.length === 0) {
-        list.innerHTML = '<div class="admin-empty"><div class="icon">🤝</div><p>暂无加入申请</p></div>';
-        return;
-      }
-      joins.reverse();
-      var icons = { photographer:'📸', assistant:'💡', sales:'🤝', investor:'🚀' };
-      list.innerHTML = joins.map(function(j) {
-        return '<div class="order-card"><div class="order-id">#' + j.id + ' · ' + new Date(j.createdAt).toLocaleString('zh-CN') + '</div>' +
-          '<div class="order-info">' + (icons[j.role]||'👤') + ' <strong>' + j.roleName + '</strong> · ' + j.name + ' · 📞 ' + j.contact + '</div>' +
-          '<button onclick="deleteJoin(\'' + j.id + '\')" style="margin-top:8px;padding:4px 12px;font-size:11px;border:1px solid rgba(0,0,0,0.1);border-radius:4px;">删除</button></div>';
-      }).join('');
-    }
-
-    window.deleteJoin = function(id) {
-      if (!confirm('确认删除？')) return;
-      var joins = JSON.parse(localStorage.getItem('yh_joins') || '[]').filter(function(j) { return j.id !== id; });
-      localStorage.setItem('yh_joins', JSON.stringify(joins));
-      renderJoins();
-    };
-
-    // ═══ 密码修改 ═══
-    document.querySelector('.admin-login p:last-child').addEventListener('dblclick', function() {
-      var np = prompt('设置新密码（6位数字）:', ADMIN_PWD);
-      if (np && /^\d{6}$/.test(np)) { localStorage.setItem('admin_pwd', np); ADMIN_PWD = np; alert('密码已修改！'); }
-    });
-
-    var sp = localStorage.getItem('admin_pwd');
-    if (sp) ADMIN_PWD = sp;
-
-    // 实时监听其他标签页的数据变化
-    window.addEventListener('storage', function(e) {
-      if (e.key === 'yh_orders') { renderOrders(); renderStats(); }
-      if (e.key === 'yh_joins') renderJoins();
-    });
-  </script>
+// 密码修改
+document.querySelector('.admin-login p:last-child').addEventListener('dblclick', function(){
+  var np = prompt('设置新密码（6位数字）:', PWD);
+  if (np && /^\d{6}$/.test(np)) { localStorage.setItem('admin_pwd', np); PWD = np; alert('密码已修改！'); }
+});
+</script>
 </body>
 </html>
